@@ -7,8 +7,8 @@ import CreateItem from "../CreateItem/CreateItem";
 import Divider from "@material-ui/core/Divider";
 import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
 
-const WHOLE_LIST_QUERY = gql`
-  query WHOLE_LIST_QUERY {
+export const GET_TODOS = gql`
+  query GET_TODOS {
     items {
       id
       title
@@ -34,7 +34,7 @@ const useStyles = makeStyles((theme: Theme) =>
 
 const Items = props => {
   const classes = useStyles();
-  const { data, loading, error } = useQuery(WHOLE_LIST_QUERY);
+  const { data, loading, error } = useQuery(GET_TODOS);
   if (loading) return <Spinner />;
   if (error) return <p>error</p>;
   return (
@@ -42,7 +42,7 @@ const Items = props => {
       {data.items.map(item => {
         return (
           <>
-            <Item data={item} key={item.id} />
+            <Item itemData={item} key={item.id} />
             <Divider />
           </>
         );

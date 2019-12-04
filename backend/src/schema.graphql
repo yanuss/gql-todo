@@ -12,8 +12,16 @@ type Mutation {
     image: String
     done: Boolean
   ): Item!
+  updateToDo(
+    id: String!
+    done: Boolean!
+    title: String
+    description: String
+    image: String # date:
+  ): Item!
 }
 
 type Query {
   items: [Item]!
+  item(where: ItemWhereUniqueInput!): Item
 }

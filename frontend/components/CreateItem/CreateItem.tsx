@@ -1,17 +1,42 @@
 import React, { useState } from "react";
 import gql from "graphql-tag";
+import { useMutation } from "@apollo/react-hooks";
 import Fab from "@material-ui/core/Fab";
 import AddIcon from "@material-ui/icons/Add";
 import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
 import TextField from "@material-ui/core/TextField";
 import Divider from "@material-ui/core/Divider";
+import Button from "@material-ui/core/Button";
+import DateFnsUtils from "@date-io/date-fns";
+import { GET_TODOS } from "../Items/Items";
 import {
-  // MuiPickersUtilsProvider,
+  MuiPickersUtilsProvider,
   // KeyboardTimePicker,
   KeyboardDatePicker
 } from "@material-ui/pickers";
+import { display } from "@material-ui/system";
 
-// const CREATE_ITEM_MUTATION = gql``;
+const ADD_TODO = gql`
+  mutation ADD_TODO(
+    $title: String!
+    $image: String
+    $done: Boolean
+    $description: String
+  ) {
+    createItem(
+      title: $title
+      image: $image
+      done: $done
+      description: $description
+    ) {
+      id
+      title
+      image
+      done
+      description
+    }
+  }
+`;
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -26,7 +51,10 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     form: {
       margin: theme.spacing(1),
-      width: 200
+      width: 400,
+      "& > *": {
+        display: "block"
+      }
     }
     // extendedIcon: {
     //   marginRight: theme.spacing(1)
@@ -34,14 +62,21 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 );
 
-const CreateItem = ({ data }) => {
+const initialInputs = {
+  title: "",
+  description: "",
+  selectedDate: "",
+  image: "",
+  date: null,
+  done: false
+};
+
+const CreateItem = ({ itemData }) => {
+  const [createItem, { data, loading, error }] = useMutation(ADD_TODO);
   const classes = useStyles();
   const [showForm, setShowForm] = useState(true);
   const [inputs, setInputs] = useState({
-    title: "",
-    description: "",
-    selectedDate: "",
-    image: ""
+    ...initialInputs
   });
 
   const handleShowForm = () => {
@@ -56,14 +91,29 @@ const CreateItem = ({ data }) => {
   };
 
   const handleDateChange = (date: Date | null) => {
-    console.log(date);
-    setSelectedDate(date);
+    setInputs({ ...inputs, date });
   };
 
   return (
     <div className={classes.root}>
       {showForm && (
-        <form className={classes.form} noValidate autoComplete="off">
+        <form
+          className={classes.form}
+          noValidate
+          autoComplete="off"
+          onSubmit={e => {
+            e.preventDefault();
+            createItem({
+              variables: { ...inputs },
+              refetchQueries: [
+                {
+                  query: GET_TODOS
+                }
+              ],
+              onCompleted: setInputs({ ...initialInputs })
+            });
+          }}
+        >
           <TextField
             id="standard-basic"
             label="Title"
@@ -78,20 +128,25 @@ const CreateItem = ({ data }) => {
             value={inputs.description}
             onChange={handleChange}
           />
-          <KeyboardDatePicker
-            disableToolbar
-            variant="inline"
-            format="MM/dd/yyyy"
-            margin="normal"
-            id="date-picker-inline"
-            label="Date picker inline"
-            value={inputs.selectedDate}
-            onChange={handleDateChange}
-            name="selectedDate"
-            KeyboardButtonProps={{
-              "aria-label": "change date"
-            }}
-          />
+          <MuiPickersUtilsProvider utils={DateFnsUtils}>
+            <KeyboardDatePicker
+              disableToolbar
+              variant="inline"
+              format="MM/dd/yyyy"
+              margin="normal"
+              id="date-picker-inline"
+              label="Date"
+              value={inputs.date}
+              onChange={handleDateChange}
+              name="selectedDate"
+              KeyboardButtonProps={{
+                "aria-label": "change date"
+              }}
+            />
+          </MuiPickersUtilsProvider>
+          <Button variant="contained" color="primary" type="submit">
+            Save
+          </Button>
         </form>
       )}
       {/* <Divider /> */}
