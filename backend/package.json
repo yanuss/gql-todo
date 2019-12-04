@@ -1,0 +1,26 @@
+{
+  "name": "qgl-todo-backend",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "nodemon -e js,graphql -x node src/index.js",
+    "dev": "nodemon -e js,graphql -x node --inspect src/index.js",
+    "deploy": "prisma deploy --env-file variables.env"
+  },
+  "author": "PJ",
+  "license": "ISC",
+  "dependencies": {
+    "babel-preset-env": "^1.7.0",
+    "bcryptjs": "^2.4.3",
+    "cors": "^2.8.5",
+    "dotenv": "^8.2.0",
+    "graphql": "^14.5.8",
+    "graphql-cli": "^3.0.14",
+    "graphql-yoga": "^1.18.3",
+    "jsonwebtoken": "^8.5.1",
+    "nodemon": "^2.0.1",
+    "prisma": "^1.34.10",
+    "prisma-binding": "^2.3.16"
+  }
+}
