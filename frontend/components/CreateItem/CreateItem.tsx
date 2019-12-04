@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import gql from "graphql-tag";
 import { useMutation } from "@apollo/react-hooks";
 import Fab from "@material-ui/core/Fab";
@@ -8,6 +8,7 @@ import TextField from "@material-ui/core/TextField";
 import Divider from "@material-ui/core/Divider";
 import Button from "@material-ui/core/Button";
 import DateFnsUtils from "@date-io/date-fns";
+import Dialog from "@material-ui/core/Dialog";
 import { GET_TODOS } from "../Items/Items";
 import {
   MuiPickersUtilsProvider,
@@ -15,6 +16,7 @@ import {
   KeyboardDatePicker
 } from "@material-ui/pickers";
 import { display } from "@material-ui/system";
+import { UPDATE_TODO } from "../Item/Item";
 
 const ADD_TODO = gql`
   mutation ADD_TODO(
@@ -65,23 +67,42 @@ const useStyles = makeStyles((theme: Theme) =>
 const initialInputs = {
   title: "",
   description: "",
-  selectedDate: "",
   image: "",
   date: null,
   done: false
 };
 
-const CreateItem = ({ itemData }) => {
-  const [createItem, { data, loading, error }] = useMutation(ADD_TODO);
+const CreateItem = ({ open, itemData, handleClose }) => {
+  const [
+    updateTodo
+    // { data, loading, error }
+  ] = useMutation(UPDATE_TODO);
+  const [
+    createItem
+    //  { data, loading, error }
+  ] = useMutation(ADD_TODO);
+
   const classes = useStyles();
-  const [showForm, setShowForm] = useState(true);
+  // const [showForm, setShowForm] = useState(true);
   const [inputs, setInputs] = useState({
     ...initialInputs
   });
 
-  const handleShowForm = () => {
-    setShowForm(!showForm);
-  };
+  useEffect(() => {
+    if (itemData.id) {
+      setInputs({ ...itemData, done: false });
+    }
+  }, [itemData]);
+
+  useEffect(() => {
+    if (!open) {
+      setInputs({ ...initialInputs });
+    }
+  }, [open]);
+
+  // const handleShowForm = () => {
+  //   setShowForm(!showForm);
+  // };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setInputs({
@@ -93,16 +114,29 @@ const CreateItem = ({ itemData }) => {
   const handleDateChange = (date: Date | null) => {
     setInputs({ ...inputs, date });
   };
-
   return (
-    <div className={classes.root}>
-      {showForm && (
-        <form
-          className={classes.form}
-          noValidate
-          autoComplete="off"
-          onSubmit={e => {
-            e.preventDefault();
+    <Dialog
+      open={open}
+      onClose={handleClose}
+      aria-labelledby="form-dialog-title"
+    >
+      <form
+        className={classes.form}
+        noValidate
+        autoComplete="off"
+        onSubmit={e => {
+          e.preventDefault();
+          if (itemData.id) {
+            updateTodo({
+              variables: { ...inputs },
+              refetchQueries: [
+                {
+                  query: GET_TODOS
+                }
+              ],
+              onCompleted: [setInputs({ ...initialInputs }), handleClose()]
+            });
+          } else {
             createItem({
               variables: { ...inputs },
               refetchQueries: [
@@ -110,50 +144,46 @@ const CreateItem = ({ itemData }) => {
                   query: GET_TODOS
                 }
               ],
-              onCompleted: setInputs({ ...initialInputs })
+              onCompleted: [setInputs({ ...initialInputs }), handleClose()]
             });
-          }}
-        >
-          <TextField
-            id="standard-basic"
-            label="Title"
-            name="title"
-            value={inputs.title}
-            onChange={handleChange}
+          }
+        }}
+      >
+        <TextField
+          id="standard-basic"
+          label="Title"
+          name="title"
+          value={inputs.title}
+          onChange={handleChange}
+        />
+        <TextField
+          id="standard-basic"
+          label="Description"
+          name="description"
+          value={inputs.description}
+          onChange={handleChange}
+        />
+        <MuiPickersUtilsProvider utils={DateFnsUtils}>
+          <KeyboardDatePicker
+            disableToolbar
+            variant="inline"
+            format="MM/dd/yyyy"
+            margin="normal"
+            id="date-picker-inline"
+            label="Date"
+            value={inputs.date}
+            onChange={handleDateChange}
+            name="date"
+            KeyboardButtonProps={{
+              "aria-label": "change date"
+            }}
           />
-          <TextField
-            id="standard-basic"
-            label="Description"
-            name="description"
-            value={inputs.description}
-            onChange={handleChange}
-          />
-          <MuiPickersUtilsProvider utils={DateFnsUtils}>
-            <KeyboardDatePicker
-              disableToolbar
-              variant="inline"
-              format="MM/dd/yyyy"
-              margin="normal"
-              id="date-picker-inline"
-              label="Date"
-              value={inputs.date}
-              onChange={handleDateChange}
-              name="selectedDate"
-              KeyboardButtonProps={{
-                "aria-label": "change date"
-              }}
-            />
-          </MuiPickersUtilsProvider>
-          <Button variant="contained" color="primary" type="submit">
-            Save
-          </Button>
-        </form>
-      )}
-      {/* <Divider /> */}
-      <Fab color="primary" aria-label="add" onClick={handleShowForm}>
-        <AddIcon />
-      </Fab>
-    </div>
+        </MuiPickersUtilsProvider>
+        <Button variant="contained" color="primary" type="submit">
+          Save
+        </Button>
+      </form>
+    </Dialog>
   );
 };
 

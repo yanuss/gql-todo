@@ -6,8 +6,11 @@ import Grow from "@material-ui/core/Grow"; //annimate show hide
 import Box from "@material-ui/core/Box";
 import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
 import { GET_TODOS } from "../Items/Items";
+import DeleteForeverIcon from "@material-ui/icons/Delete";
+import Edit from "@material-ui/icons/Edit";
+import IconButton from "@material-ui/core/IconButton";
 
-const UPDATE_TODO = gql`
+export const UPDATE_TODO = gql`
   mutation UPDATE_TODO(
     $id: String!
     $title: String
@@ -32,6 +35,14 @@ const UPDATE_TODO = gql`
   }
 `;
 
+const DELETE_TODO = gql`
+  mutation UPDATE_TODO($id: ID!) {
+    deleteItem(where: { id: $id }) {
+      id
+    }
+  }
+`;
+
 const GET_SINGLE_TODO = gql`
   query GET_SINGLE_TODO($id: ID!) {
     item(where: { id: $id }) {
@@ -52,6 +63,11 @@ const useStyles = makeStyles((theme: Theme) =>
       alignItems: "center",
       // justifyContent: "center",
       // flexDirection: "column",
+      "&:after": {
+        content: " ",
+        position: "absolute",
+        borderBottom: `${theme.spacing(0.5)} solid ${theme.palette.text}`
+      },
       "& > *": {
         margin: theme.spacing(1)
       }
@@ -62,16 +78,19 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 );
 
-const Item = ({ itemData }) => {
+const Item = ({ itemData, setModalData, handleShowModal }) => {
   const [updateTodo, { data, loading, error }] = useMutation(UPDATE_TODO);
+  const [deleteTodo] = useMutation(DELETE_TODO);
   const classes = useStyles();
   // console.log(itemData);
-  return (
+
+  const content = (
     <div className={classes.root}>
       <Checkbox
         checked={itemData.done}
         onChange={() => {
           updateTodo({
+            //TODO: add optimistic update
             variables: { id: itemData.id, done: !itemData.done },
             refetchQueries: [
               // {
@@ -96,8 +115,37 @@ const Item = ({ itemData }) => {
         <Box fontWeight="fontWeightBold">{itemData.title}</Box>
         <Box>{itemData.description}</Box>
       </div>
+      <IconButton
+        aria-label="delete"
+        className={classes.margin}
+        onClick={() => {
+          setModalData({
+            ...itemData
+          });
+          handleShowModal(true);
+        }}
+      >
+        <Edit fontSize="small" />
+      </IconButton>
+      <IconButton
+        aria-label="delete"
+        className={classes.margin}
+        onClick={() => {
+          deleteTodo({
+            variables: { id: itemData.id },
+            refetchQueries: [
+              {
+                query: GET_TODOS
+              }
+            ]
+          });
+        }}
+      >
+        <DeleteForeverIcon fontSize="small" />
+      </IconButton>
     </div>
   );
+  return itemData.done ? <del>{content}</del> : <>{content}</>;
 };
 
 export default Item;

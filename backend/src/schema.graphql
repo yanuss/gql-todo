@@ -19,6 +19,7 @@ type Mutation {
     description: String
     image: String # date:
   ): Item!
+  deleteItem(where: ItemWhereUniqueInput!): Item
 }
 
 type Query {

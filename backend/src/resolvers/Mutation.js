@@ -1,3 +1,4 @@
+const { forwardTo } = require("prisma-binding");
 const Mutation = {
   async createItem(parent, args, ctx, info) {
     const item = await ctx.db.mutation.createItem({ data: { ...args } }, info);
@@ -15,7 +16,8 @@ const Mutation = {
       },
       info
     );
-  }
+  },
+  deleteItem: forwardTo("db")
 };
 
 module.exports = Mutation;
