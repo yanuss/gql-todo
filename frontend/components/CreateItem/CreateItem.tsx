@@ -179,7 +179,12 @@ const CreateItem = ({ open, itemData, handleClose }) => {
             }}
           />
         </MuiPickersUtilsProvider>
-        <Button variant="contained" color="primary" type="submit">
+        <Button
+          variant="contained"
+          color="primary"
+          type="submit"
+          disabled={!inputs.title}
+        >
           Save
         </Button>
       </form>

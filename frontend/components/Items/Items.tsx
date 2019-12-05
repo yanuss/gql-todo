@@ -49,15 +49,14 @@ const Items = props => {
       {/* <Grid container direction="column" justify="flex-start" alignItems="center"> */}
       {data.items.map(item => {
         return (
-          <>
+          <React.Fragment key={item.id}>
             <Item
               itemData={item}
-              key={item.id}
               setModalData={setModalData}
               handleShowModal={handleShowModal}
             />
             <Divider />
-          </>
+          </React.Fragment>
         );
       })}
       <Fab

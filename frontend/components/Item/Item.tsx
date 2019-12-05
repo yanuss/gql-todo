@@ -6,9 +6,9 @@ import Grow from "@material-ui/core/Grow"; //annimate show hide
 import Box from "@material-ui/core/Box";
 import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
 import { GET_TODOS } from "../Items/Items";
-import DeleteForeverIcon from "@material-ui/icons/Delete";
 import Edit from "@material-ui/icons/Edit";
 import IconButton from "@material-ui/core/IconButton";
+import DeleteTodo from "../DeleteTodo/DeleteTodo";
 
 export const UPDATE_TODO = gql`
   mutation UPDATE_TODO(
@@ -31,14 +31,6 @@ export const UPDATE_TODO = gql`
       done
       description
       # date
-    }
-  }
-`;
-
-const DELETE_TODO = gql`
-  mutation UPDATE_TODO($id: ID!) {
-    deleteItem(where: { id: $id }) {
-      id
     }
   }
 `;
@@ -80,9 +72,7 @@ const useStyles = makeStyles((theme: Theme) =>
 
 const Item = ({ itemData, setModalData, handleShowModal }) => {
   const [updateTodo, { data, loading, error }] = useMutation(UPDATE_TODO);
-  const [deleteTodo] = useMutation(DELETE_TODO);
   const classes = useStyles();
-  // console.log(itemData);
 
   const content = (
     <div className={classes.root}>
@@ -127,22 +117,7 @@ const Item = ({ itemData, setModalData, handleShowModal }) => {
       >
         <Edit fontSize="small" />
       </IconButton>
-      <IconButton
-        aria-label="delete"
-        className={classes.margin}
-        onClick={() => {
-          deleteTodo({
-            variables: { id: itemData.id },
-            refetchQueries: [
-              {
-                query: GET_TODOS
-              }
-            ]
-          });
-        }}
-      >
-        <DeleteForeverIcon fontSize="small" />
-      </IconButton>
+      <DeleteTodo id={itemData.id} />
     </div>
   );
   return itemData.done ? <del>{content}</del> : <>{content}</>;

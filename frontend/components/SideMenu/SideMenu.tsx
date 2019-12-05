@@ -74,8 +74,8 @@ const SideMenu = props => {
       <Divider />
       <List>
         {["MyList"].map((text, index) => (
-          <Link href="/mylist" passHref>
-            <ListItem button component="a" key={text}>
+          <Link href="/mylist" passHref key={index}>
+            <ListItem button component="a">
               <ListItemIcon>
                 {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
               </ListItemIcon>
