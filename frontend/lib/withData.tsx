@@ -6,11 +6,10 @@ import { endpoint, prodEndpoint } from "../config";
 function createClient({ headers }) {
   return new ApolloClient({
     uri: process.env.NODE_ENV === "development" ? endpoint : prodEndpoint,
-    // cache: new InMemoryCache(),
     request: operation => {
       operation.setContext({
         fetchOptions: {
-          // credentials: "include"
+          // credentials: 'include',
         },
         headers
       });
@@ -40,4 +39,7 @@ function createClient({ headers }) {
   });
 }
 
-export default withApollo(createClient, { getDataFromTree: "ssr" });
+export default withApollo(
+  createClient
+  // { getDataFromTree: "ssr" }
+);

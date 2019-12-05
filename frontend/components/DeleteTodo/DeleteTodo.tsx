@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useMutation } from "@apollo/react-hooks";
 import gql from "graphql-tag";
 import DeleteForeverIcon from "@material-ui/icons/Delete";
@@ -11,7 +11,7 @@ import { GET_TODOS } from "../Items/Items";
 import clsx from "clsx";
 
 const DELETE_TODO = gql`
-  mutation UPDATE_TODO($id: ID!) {
+  mutation DELETE_TODO($id: ID!) {
     deleteItem(where: { id: $id }) {
       id
     }
@@ -47,9 +47,7 @@ const DeleteTodo = ({ id }) => {
   const classes = useStyles();
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState(false);
-  const [deleteTodo, { loading }] = useMutation(DELETE_TODO);
   const timer = React.useRef<number>();
-
   const buttonClassname = clsx({
     [classes.buttonSuccess]: success,
     [classes.buttonError]: error
@@ -60,8 +58,24 @@ const DeleteTodo = ({ id }) => {
     setSuccess(false);
     timer.current = setTimeout(() => {
       setError(false);
-    }, 1500);
+    }, 2000);
   };
+
+  const [deleteTodo, { data, loading }] = useMutation(DELETE_TODO, {
+    variables: { id },
+    update: (cache, { data: { deleteItem } }) => {
+      const data = cache.readQuery({ query: GET_TODOS });
+      const updatedItems = [...data.items].filter(
+        item => item.id !== deleteItem.id
+      );
+      cache.writeQuery({ query: GET_TODOS, data: { items: updatedItems } });
+    },
+    // refetchQueries: [ {query: GET_TODOS}],
+    onCompleted: () => {
+      setSuccess(true);
+    },
+    onError: handleError
+  });
 
   return (
     <IconButton
@@ -69,19 +83,8 @@ const DeleteTodo = ({ id }) => {
       className={buttonClassname}
       disabled={loading}
       onClick={() => {
-        if (!loading) {
-          setSuccess(false);
-          deleteTodo({
-            variables: { id },
-            refetchQueries: [
-              {
-                query: GET_TODOS
-              }
-            ],
-            onCompleted: [setSuccess(true)],
-            onError: [handleError()]
-          });
-        }
+        setSuccess(false);
+        deleteTodo();
       }}
     >
       <DeleteForeverIcon fontSize="small" />
