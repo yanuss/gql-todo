@@ -20,7 +20,7 @@ type Mutation {
     image: String # date:
   ): Item!
   deleteItem(where: ItemWhereUniqueInput!): Item
-  signup(email: String!, password: String!, name: String!): User!
+  signup(email: String!, password: String!, name: String!, image: String): User!
 }
 
 type Query {
