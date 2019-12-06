@@ -70,9 +70,10 @@ const DeleteTodo = ({ id }) => {
       );
       cache.writeQuery({ query: GET_TODOS, data: { items: updatedItems } });
     },
-    // refetchQueries: [ {query: GET_TODOS}],
+    // refetchQueries: [{ query: GET_TODOS }],
     onCompleted: () => {
       setSuccess(true);
+      //start updating cache at this point?
     },
     onError: handleError
   });

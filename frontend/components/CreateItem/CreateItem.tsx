@@ -10,6 +10,10 @@ import Button from "@material-ui/core/Button";
 import DateFnsUtils from "@date-io/date-fns";
 import Dialog from "@material-ui/core/Dialog";
 import { GET_TODOS } from "../Items/Items";
+import CardMedia from "@material-ui/core/CardMedia";
+
+import Input from "@material-ui/core/Input";
+
 import {
   MuiPickersUtilsProvider,
   // KeyboardTimePicker,
@@ -73,17 +77,7 @@ const initialInputs = {
 };
 
 const CreateItem = ({ open, itemData, handleClose }) => {
-  const [
-    updateTodo
-    // { data, loading, error }
-  ] = useMutation(UPDATE_TODO);
-  const [
-    createItem
-    //  { data, loading, error }
-  ] = useMutation(ADD_TODO);
-
   const classes = useStyles();
-  // const [showForm, setShowForm] = useState(true);
   const [inputs, setInputs] = useState({
     ...initialInputs
   });
@@ -100,10 +94,6 @@ const CreateItem = ({ open, itemData, handleClose }) => {
     }
   }, [open]);
 
-  // const handleShowForm = () => {
-  //   setShowForm(!showForm);
-  // };
-
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setInputs({
       ...inputs,
@@ -114,6 +104,58 @@ const CreateItem = ({ open, itemData, handleClose }) => {
   const handleDateChange = (date: Date | null) => {
     setInputs({ ...inputs, date });
   };
+
+  const uploadFile = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = e.target.files;
+    const data = new FormData();
+    data.append("file", files[0]);
+    data.append("upload_preset", "gql-todo");
+    const res = await fetch(
+      "https://api.cloudinary.com/v1_1/yanus/image/upload",
+      {
+        method: "POST",
+        body: data
+      }
+    );
+    const file = await res.json();
+    setInputs({
+      ...inputs,
+      image: file.secure_url,
+      largeImage: file.eager[0].secure_url
+    });
+  };
+
+  const [
+    updateTodo
+    // { data, loading, error }
+  ] = useMutation(UPDATE_TODO, {
+    variables: { ...inputs },
+    refetchQueries: [
+      {
+        query: GET_TODOS
+      }
+    ],
+    onCompleted: () => {
+      setInputs({ ...initialInputs });
+      handleClose();
+    }
+  });
+  const [
+    createItem
+    //  { data, loading, error }
+  ] = useMutation(ADD_TODO, {
+    variables: { ...inputs },
+    refetchQueries: [
+      {
+        query: GET_TODOS
+      }
+    ],
+    onCompleted: () => {
+      setInputs({ ...initialInputs });
+      handleClose();
+    }
+  });
+
   return (
     <Dialog
       open={open}
@@ -127,25 +169,9 @@ const CreateItem = ({ open, itemData, handleClose }) => {
         onSubmit={e => {
           e.preventDefault();
           if (itemData.id) {
-            updateTodo({
-              variables: { ...inputs },
-              refetchQueries: [
-                {
-                  query: GET_TODOS
-                }
-              ],
-              onCompleted: [setInputs({ ...initialInputs }), handleClose()]
-            });
+            updateTodo();
           } else {
-            createItem({
-              variables: { ...inputs },
-              refetchQueries: [
-                {
-                  query: GET_TODOS
-                }
-              ],
-              onCompleted: [setInputs({ ...initialInputs }), handleClose()]
-            });
+            createItem();
           }
         }}
       >
@@ -163,6 +189,17 @@ const CreateItem = ({ open, itemData, handleClose }) => {
           value={inputs.description}
           onChange={handleChange}
         />
+        <Input
+          disabled={false}
+          error={false}
+          name="picture"
+          onChange={uploadFile}
+          type="file"
+          color="primary"
+          placeholder="Upload an image"
+          // value={inputs.image}
+        />
+        {inputs.image && <CardMedia component="img" image={inputs.image} />}
         <MuiPickersUtilsProvider utils={DateFnsUtils}>
           <KeyboardDatePicker
             disableToolbar
