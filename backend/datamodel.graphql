@@ -1,9 +1,17 @@
+enum Permission {
+  USER
+  ADMIN
+}
+
 type User {
   id: ID! @id
   name: String!
-  email: String!
+  email: String! @unique
   password: String!
   image: String
+  resetToken: String
+  resetTokenExpiry: Float
+  parmissions: [Permission] @scalarList(strategy: RELATION)
 }
 
 type Item {
