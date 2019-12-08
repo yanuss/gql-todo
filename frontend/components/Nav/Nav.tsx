@@ -13,6 +13,7 @@ import { drawerWidth } from "../Page/Page";
 import Avatar from "@material-ui/core/Avatar";
 import User from "../User/User";
 import CircularProgress from "@material-ui/core/CircularProgress";
+import Signout from "../Signout/Singout";
 
 const NavWrapper = styled.nav`
   flex-grow: 1;
@@ -73,7 +74,13 @@ const Nav = props => {
               if (loading) return <CircularProgress size={34} />;
               if (data.me) {
                 return (
-                  <Avatar alt={data.me.name || ""} src={data.me.image || ""} />
+                  <>
+                    <Avatar
+                      alt={data.me.name || ""}
+                      src={data.me.image || ""}
+                    />
+                    <Signout />
+                  </>
                 );
               } else {
                 return <p>login</p>;

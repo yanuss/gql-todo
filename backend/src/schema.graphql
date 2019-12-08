@@ -4,6 +4,9 @@
 #   id: ID!
 #   name: String!
 # }
+type SuccessMessage {
+  message: String
+}
 
 type Mutation {
   createItem(
@@ -22,6 +25,7 @@ type Mutation {
   deleteItem(where: ItemWhereUniqueInput!): Item
   signup(email: String!, password: String!, name: String!, image: String): User!
   signin(email: String!, password: String!): User!
+  signout: SuccessMessage
 }
 
 type Query {
