@@ -3,7 +3,7 @@ import gql from "graphql-tag";
 import { useMutation } from "@apollo/react-hooks";
 import { CURRENT_USER_QUERY } from "../User/User";
 import Button from "@material-ui/core/Button";
-
+import { GET_TODOS } from "../Items/Items";
 const SIGNOUT_MUTATION = gql`
   mutation SIGNOUT_MUTATION {
     signout {
@@ -21,6 +21,9 @@ const Signout = () => {
     refetchQueries: [
       {
         query: CURRENT_USER_QUERY
+      },
+      {
+        query: GET_TODOS
       }
     ]
     // onCompleted: () => {

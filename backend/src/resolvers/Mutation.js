@@ -9,7 +9,13 @@ const maxAge = 1000 * 60 * 60 * 24 * 10; // 10 days
 
 const Mutation = {
   async createItem(parent, args, ctx, info) {
-    const item = await ctx.db.mutation.createItem({ data: { ...args } }, info);
+    if (!ctx.request.userId) {
+      throw new Error("You must be logged in");
+    }
+    const item = await ctx.db.mutation.createItem(
+      { data: { user: { connect: { id: ctx.request.userId } }, ...args } },
+      info
+    );
     return item;
   },
   updateToDo(parent, args, ctx, info) {
@@ -27,7 +33,6 @@ const Mutation = {
   },
   deleteItem: forwardTo("db"),
   async signup(parent, args, ctx, info) {
-    console.log(args);
     args.email = args.email.toLowerCase();
     const email = await ctx.db.query.user({ where: { email: args.email } });
 
