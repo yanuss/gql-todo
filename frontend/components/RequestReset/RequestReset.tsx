@@ -8,7 +8,6 @@ import CircularProgress from "@material-ui/core/CircularProgress";
 import { green } from "@material-ui/core/colors";
 import { red } from "@material-ui/core/colors";
 import clsx from "clsx";
-import { CURRENT_USER_QUERY } from "../User/User";
 
 const REQUEST_RESET_MUTATION = gql`
   mutation REQUEST_RESET_MUTATION($email: String!) {

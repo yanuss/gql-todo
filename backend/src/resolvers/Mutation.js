@@ -3,6 +3,7 @@ const jwt = require("jsonwebtoken");
 const { randomBytes } = require("crypto");
 const { promisify } = require("util");
 const { forwardTo } = require("prisma-binding");
+const { transport, makeANiceEmail } = require("../mail");
 
 const maxAge = 1000 * 60 * 60 * 24 * 10; // 10 days
 
@@ -26,8 +27,10 @@ const Mutation = {
   },
   deleteItem: forwardTo("db"),
   async signup(parent, args, ctx, info) {
+    console.log(args);
     args.email = args.email.toLowerCase();
-    const email = await ctx.db.query.user({ where: { email } });
+    const email = await ctx.db.query.user({ where: { email: args.email } });
+
     if (email) {
       throw new Error(`User already exist ${email}`);
     }
@@ -91,14 +94,13 @@ const Mutation = {
     });
     // 3. Email them that reset token
     const mailRes = await transport.sendMail({
-      from: "wes@wesbos.com",
+      from: "gqltodonoreply@gmail.com",
       to: user.email,
       subject: "Your Password Reset Token",
       html: makeANiceEmail(`Your Password Reset Token is here!
       \n\n
       <a href="${process.env.FRONTEND_URL}/reset?resetToken=${resetToken}">Click Here to Reset</a>`)
     });
-
     // 4. Return the message
     return { message: "Thanks!" };
   },
