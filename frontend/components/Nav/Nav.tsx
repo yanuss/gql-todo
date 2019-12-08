@@ -10,6 +10,7 @@ import MenuIcon from "@material-ui/icons/Menu";
 import SideMenu from "../SideMenu/SideMenu";
 import clsx from "clsx";
 import { drawerWidth } from "../Page/Page";
+import User from "../User/User";
 
 const NavWrapper = styled.nav`
   flex-grow: 1;
@@ -46,6 +47,12 @@ const Nav = props => {
 
   return (
     <NavWrapper>
+      <User>
+        {data => {
+          // console.log(data);s
+          return <p>dupa</p>;
+        }}
+      </User>
       <AppBar
         position="static"
         className={clsx(classes.appBar, {

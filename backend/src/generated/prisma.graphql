@@ -1,5 +1,5 @@
 # source: https://eu1.prisma.sh/pawel-janus/gql-todo/dev
-# timestamp: Fri Dec 06 2019 15:09:06 GMT+0100 (Central European Standard Time)
+# timestamp: Sun Dec 08 2019 13:32:21 GMT+0100 (Central European Standard Time)
 
 type AggregateItem {
   count: Int!
@@ -24,6 +24,7 @@ type Item implements Node {
   done: Boolean!
   createdAt: DateTime
   updatedAt: DateTime
+  user: User
 }
 
 """A connection to a list of items."""
@@ -42,6 +43,7 @@ input ItemCreateInput {
   description: String!
   image: String
   done: Boolean!
+  user: UserCreateOneInput
 }
 
 """An edge in a connection."""
@@ -122,6 +124,7 @@ input ItemUpdateInput {
   description: String
   image: String
   done: Boolean
+  user: UserUpdateOneInput
 }
 
 input ItemUpdateManyMutationInput {
@@ -348,6 +351,7 @@ input ItemWhereInput {
 
   """All values greater than or equal the given value."""
   updatedAt_gte: DateTime
+  user: UserWhereInput
 }
 
 input ItemWhereUniqueInput {
@@ -361,18 +365,18 @@ Long can represent values between -(2^63) and 2^63 - 1.
 scalar Long
 
 type Mutation {
-  createUser(data: UserCreateInput!): User!
   createItem(data: ItemCreateInput!): Item!
-  updateUser(data: UserUpdateInput!, where: UserWhereUniqueInput!): User
+  createUser(data: UserCreateInput!): User!
   updateItem(data: ItemUpdateInput!, where: ItemWhereUniqueInput!): Item
-  deleteUser(where: UserWhereUniqueInput!): User
+  updateUser(data: UserUpdateInput!, where: UserWhereUniqueInput!): User
   deleteItem(where: ItemWhereUniqueInput!): Item
-  upsertUser(where: UserWhereUniqueInput!, create: UserCreateInput!, update: UserUpdateInput!): User!
+  deleteUser(where: UserWhereUniqueInput!): User
   upsertItem(where: ItemWhereUniqueInput!, create: ItemCreateInput!, update: ItemUpdateInput!): Item!
-  updateManyUsers(data: UserUpdateManyMutationInput!, where: UserWhereInput): BatchPayload!
+  upsertUser(where: UserWhereUniqueInput!, create: UserCreateInput!, update: UserUpdateInput!): User!
   updateManyItems(data: ItemUpdateManyMutationInput!, where: ItemWhereInput): BatchPayload!
-  deleteManyUsers(where: UserWhereInput): BatchPayload!
+  updateManyUsers(data: UserUpdateManyMutationInput!, where: UserWhereInput): BatchPayload!
   deleteManyItems(where: ItemWhereInput): BatchPayload!
+  deleteManyUsers(where: UserWhereInput): BatchPayload!
 }
 
 enum MutationType {
@@ -408,12 +412,12 @@ enum Permission {
 }
 
 type Query {
-  users(where: UserWhereInput, orderBy: UserOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [User]!
   items(where: ItemWhereInput, orderBy: ItemOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Item]!
-  user(where: UserWhereUniqueInput!): User
+  users(where: UserWhereInput, orderBy: UserOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [User]!
   item(where: ItemWhereUniqueInput!): Item
-  usersConnection(where: UserWhereInput, orderBy: UserOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): UserConnection!
+  user(where: UserWhereUniqueInput!): User
   itemsConnection(where: ItemWhereInput, orderBy: ItemOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): ItemConnection!
+  usersConnection(where: UserWhereInput, orderBy: UserOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): UserConnection!
 
   """Fetches an object given its ID"""
   node(
@@ -423,8 +427,8 @@ type Query {
 }
 
 type Subscription {
-  user(where: UserSubscriptionWhereInput): UserSubscriptionPayload
   item(where: ItemSubscriptionWhereInput): ItemSubscriptionPayload
+  user(where: UserSubscriptionWhereInput): UserSubscriptionPayload
 }
 
 type User implements Node {
@@ -435,7 +439,7 @@ type User implements Node {
   image: String
   resetToken: String
   resetTokenExpiry: Float
-  parmissions: [Permission!]!
+  permissions: [Permission!]!
 }
 
 """A connection to a list of items."""
@@ -456,10 +460,15 @@ input UserCreateInput {
   image: String
   resetToken: String
   resetTokenExpiry: Float
-  parmissions: UserCreateparmissionsInput
+  permissions: UserCreatepermissionsInput
 }
 
-input UserCreateparmissionsInput {
+input UserCreateOneInput {
+  create: UserCreateInput
+  connect: UserWhereUniqueInput
+}
+
+input UserCreatepermissionsInput {
   set: [Permission!]
 }
 
@@ -497,7 +506,7 @@ type UserPreviousValues {
   image: String
   resetToken: String
   resetTokenExpiry: Float
-  parmissions: [Permission!]!
+  permissions: [Permission!]!
 }
 
 type UserSubscriptionPayload {
@@ -537,6 +546,16 @@ input UserSubscriptionWhereInput {
   node: UserWhereInput
 }
 
+input UserUpdateDataInput {
+  name: String
+  email: String
+  password: String
+  image: String
+  resetToken: String
+  resetTokenExpiry: Float
+  permissions: UserUpdatepermissionsInput
+}
+
 input UserUpdateInput {
   name: String
   email: String
@@ -544,7 +563,7 @@ input UserUpdateInput {
   image: String
   resetToken: String
   resetTokenExpiry: Float
-  parmissions: UserUpdateparmissionsInput
+  permissions: UserUpdatepermissionsInput
 }
 
 input UserUpdateManyMutationInput {
@@ -554,11 +573,25 @@ input UserUpdateManyMutationInput {
   image: String
   resetToken: String
   resetTokenExpiry: Float
-  parmissions: UserUpdateparmissionsInput
+  permissions: UserUpdatepermissionsInput
 }
 
-input UserUpdateparmissionsInput {
+input UserUpdateOneInput {
+  create: UserCreateInput
+  connect: UserWhereUniqueInput
+  disconnect: Boolean
+  delete: Boolean
+  update: UserUpdateDataInput
+  upsert: UserUpsertNestedInput
+}
+
+input UserUpdatepermissionsInput {
   set: [Permission!]
+}
+
+input UserUpsertNestedInput {
+  update: UserUpdateDataInput!
+  create: UserCreateInput!
 }
 
 input UserWhereInput {
