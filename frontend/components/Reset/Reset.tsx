@@ -19,9 +19,17 @@ import clsx from "clsx";
 import { CURRENT_USER_QUERY } from "../User/User";
 import Link from "next/link";
 
-const SIGNIN_MUTATION = gql`
-  mutation SIGNIN_MUTATION($email: String!, $password: String!) {
-    signin(email: $email, password: $password) {
+const RESET_MUTATION = gql`
+  mutation RESET_MUTATION(
+    $resetToken: String!
+    $password: String!
+    $confirmPassword: String!
+  ) {
+    resetPassword(
+      resetToken: $resetToken
+      password: $password
+      confirmPassword: $confirmPassword
+    ) {
       id
       email
       name
@@ -60,25 +68,29 @@ const useStyles = makeStyles((theme: Theme) =>
 );
 
 interface State {
-  email: string;
   password: string;
+  confirmPassword: string;
   showPassword: boolean;
+  showConfirmPassword: boolean;
 }
 const initialInputs = {
-  email: "",
   password: "",
-  showPassword: false
+  confirmPassword: "",
+  showPassword: false,
+  showConfirmPassword: false
 };
 
-const Singin = () => {
+const Singin = props => {
+  const classes = useStyles();
   const [inputs, setInputs] = useState<State>({
     ...initialInputs
   });
 
-  const [signin, { data, loading, error }] = useMutation(SIGNIN_MUTATION, {
+  const [signin, { data, loading, error }] = useMutation(RESET_MUTATION, {
     variables: {
-      email: inputs.email,
-      password: inputs.password
+      resetToken: props.resetToken,
+      password: inputs.password,
+      confirmPassword: inputs.confirmPassword
     },
     refetchQueries: [
       {
@@ -97,8 +109,8 @@ const Singin = () => {
     });
   };
 
-  const handleClickShowPassword = () => {
-    setInputs({ ...inputs, showPassword: !inputs.showPassword });
+  const handleClickShowPassword = field => {
+    setInputs({ ...inputs, [field]: !inputs[field] });
   };
 
   const handleMouseDownPassword = (
@@ -107,7 +119,6 @@ const Singin = () => {
     event.preventDefault();
   };
 
-  const classes = useStyles();
   return (
     <form
       className={classes.container}
@@ -116,19 +127,6 @@ const Singin = () => {
         signin();
       }}
     >
-      <TextField
-        // id="filled-password-input"
-        onChange={handleChange}
-        label="Email"
-        name="email"
-        className={classes.textField}
-        value={inputs.email}
-        // type="eMail"
-        autoComplete="current-email"
-        margin="normal"
-        variant="outlined"
-        required
-      />
       <FormControl
         className={clsx(classes.margin, classes.textField)}
         variant="outlined"
@@ -146,11 +144,45 @@ const Singin = () => {
             <InputAdornment position="end">
               <IconButton
                 aria-label="toggle password visibility"
-                onClick={handleClickShowPassword}
+                onClick={() => handleClickShowPassword("showPassword")}
                 onMouseDown={handleMouseDownPassword}
                 edge="end"
+                name="showPassword"
               >
                 {inputs.showPassword ? <Visibility /> : <VisibilityOff />}
+              </IconButton>
+            </InputAdornment>
+          }
+          labelWidth={70}
+        />
+      </FormControl>
+      <FormControl
+        className={clsx(classes.margin, classes.textField)}
+        variant="outlined"
+      >
+        <InputLabel required htmlFor="outlined-adornment-password">
+          Connfirm Password
+        </InputLabel>
+        <OutlinedInput
+          id="outlined-adornment-password"
+          type={inputs.showConfirmPassword ? "text" : "password"}
+          value={inputs.confirmPassword}
+          onChange={handleChange}
+          name="confirmPassword"
+          endAdornment={
+            <InputAdornment position="end">
+              <IconButton
+                aria-label="toggle password visibility"
+                onClick={() => handleClickShowPassword("showConfirmPassword")}
+                onMouseDown={handleMouseDownPassword}
+                edge="end"
+                name="showConfirmPassword"
+              >
+                {inputs.showConfirmPassword ? (
+                  <Visibility />
+                ) : (
+                  <VisibilityOff />
+                )}
               </IconButton>
             </InputAdornment>
           }
@@ -163,16 +195,11 @@ const Singin = () => {
         type="submit"
         disabled={loading}
       >
-        Signin
+        Change Password
         {loading && (
           <CircularProgress size={34} className={classes.buttonProgress} />
         )}
       </Button>
-      <Link href="/requestReset" passHref>
-        <Button variant="contained" color="primary" component="a">
-          Forgot Password?
-        </Button>
-      </Link>
     </form>
   );
 };

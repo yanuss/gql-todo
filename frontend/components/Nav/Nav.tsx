@@ -14,6 +14,7 @@ import Avatar from "@material-ui/core/Avatar";
 import User from "../User/User";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import Signout from "../Signout/Singout";
+import Link from "next/link";
 
 const NavWrapper = styled.nav`
   flex-grow: 1;
@@ -72,7 +73,7 @@ const Nav = props => {
           <User>
             {(data, loading) => {
               if (loading) return <CircularProgress size={34} />;
-              if (data.me) {
+              if (data && data.me) {
                 return (
                   <>
                     <Avatar
@@ -83,7 +84,11 @@ const Nav = props => {
                   </>
                 );
               } else {
-                return <p>login</p>;
+                return (
+                  <Link href="/signin" passHref>
+                    <Button component="a">Login</Button>
+                  </Link>
+                );
               }
             }}
           </User>
