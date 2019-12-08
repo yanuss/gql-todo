@@ -37,7 +37,7 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 );
 
-const Items = props => {
+const Items = () => {
   const classes = useStyles();
   const { data, loading, error } = useQuery(GET_TODOS);
   const [showModal, handleShowModal] = useState(false);

@@ -1,7 +1,7 @@
 import withApollo from "next-with-apollo";
-import ApolloClient, { InMemoryCache } from "apollo-boost";
+import ApolloClient from "apollo-boost";
 import { endpoint, prodEndpoint } from "../config";
-// import { LOCAL_STATE_QUERY } from "../components/Cart";
+// import { LOCAL_STATE_QUERY } from "../components/Cart";s
 
 function createClient({ headers }) {
   return new ApolloClient({
@@ -9,23 +9,25 @@ function createClient({ headers }) {
     request: operation => {
       operation.setContext({
         fetchOptions: {
-          // credentials: 'include',
+          credentials: "include"
         },
         headers
       });
     }
-    // local data
+    //local data
     // clientState: {
     //   resolvers: {
     //     Mutation: {
     //       toggleCart(_, variables, { cache }) {
-    //         // read the cartOpen value from the cache
+    //         //readt the cartOpen value form cache
     //         const { cartOpen } = cache.readQuery({
     //           query: LOCAL_STATE_QUERY
     //         });
-    //         // Write the cart State to the opposite
+    //         //write cart state to opposite
     //         const data = {
-    //           data: { cartOpen: !cartOpen }
+    //           data: {
+    //             cartOpen: !cartOpen
+    //           }
     //         };
     //         cache.writeData(data);
     //         return data;
@@ -39,7 +41,4 @@ function createClient({ headers }) {
   });
 }
 
-export default withApollo(
-  createClient
-  // { getDataFromTree: "ssr" }
-);
+export default withApollo(createClient);

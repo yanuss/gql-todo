@@ -6,6 +6,7 @@ import Meta from "../Meta/Meta";
 import { ThemeProvider, createMuiTheme } from "@material-ui/core/styles";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import { useDarkMode } from "../userDarkMode";
+import useLayoutEffect from "../../lib/use-isomorphic-layout-effect";
 
 import useMediaQuery from "@material-ui/core/useMediaQuery";
 
@@ -39,15 +40,19 @@ const Page = props => {
   const classes = useStyles();
   const [open, setOpen] = React.useState(false);
 
-  const theme = React.useMemo(
-    () =>
-      createMuiTheme({
-        palette: {
-          type: selectedDarkmode ? "dark" : "light"
-        }
-      }),
-    [prefersDarkMode, selectedDarkmode]
-  );
+  const theme = React.useMemo(() => {
+    // if (componentMounted) {
+    return createMuiTheme({
+      palette: {
+        type: selectedDarkmode ? "dark" : "light"
+      }
+    });
+    // }
+  }, [prefersDarkMode, selectedDarkmode]);
+
+  useLayoutEffect(() => {
+    console.log("hello there");
+  }, []);
 
   const handleDrawerOpen = () => {
     setOpen(true);

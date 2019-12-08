@@ -12,6 +12,18 @@ class MyApp extends App {
     pageProps.query = ctx.query;
     return { pageProps };
   }
+
+  componentDidMount() {
+    // Remove the server-side injected CSS.
+    const jssStyles = document.querySelector("#jss-server-side");
+    if (jssStyles) {
+      jssStyles.parentElement.removeChild(jssStyles);
+    }
+  }
+
+  // renderHead() {
+  //   return <Meta />;
+  // }
   render() {
     const { Component, pageProps, apollo } = this.props;
     return (

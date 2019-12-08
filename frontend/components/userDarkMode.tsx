@@ -1,19 +1,19 @@
 import { useEffect, useState } from "react";
 
 export const useDarkMode = () => {
-  const [palette, sePalette] = useState("light");
+  const [palette, setPalette] = useState("light");
   const [componentMounted, setComponentMounted] = useState(false);
 
   const setMode = mode => {
     window.localStorage.setItem("palete", mode);
-    sePalette(mode);
+    setPalette(mode);
   };
 
   const togglePalette = () => {
     if (palette === "light") {
-      setMode("dark");
+      setPalette("dark");
     } else {
-      setMode("light");
+      setPalette("light");
     }
   };
 
@@ -23,10 +23,10 @@ export const useDarkMode = () => {
     window.matchMedia &&
     window.matchMedia("(prefers-color-scheme: dark)").matches &&
     !localTheme
-      ? setMode("dark")
+      ? setPalette("dark")
       : localTheme
-      ? sePalette(localTheme)
-      : setMode("light");
+      ? setPalette(localTheme)
+      : setPalette("light");
 
     setComponentMounted(true);
   }, []);

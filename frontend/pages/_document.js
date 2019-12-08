@@ -1,12 +1,12 @@
 import React from "react";
-import Document, { Html, Head, Main, NextScript } from "next/document";
+import Document, { Head, Main, NextScript } from "next/document";
 import { ServerStyleSheets } from "@material-ui/core/styles";
-// import theme from "../src/theme";
+// import theme from '../src/theme';
 
 export default class MyDocument extends Document {
   render() {
     return (
-      <Html lang="en">
+      <html lang="en">
         <Head>
           <meta charSet="utf-8" />
           <meta
@@ -24,7 +24,7 @@ export default class MyDocument extends Document {
           <Main />
           <NextScript />
         </body>
-      </Html>
+      </html>
     );
   }
 }
@@ -72,3 +72,41 @@ MyDocument.getInitialProps = async ctx => {
     ]
   };
 };
+
+// import React from "react";
+// import NextDocument from "next/document";
+// // import { ServerStyleSheet as StyledComponentSheets } from "styled-components";
+// import { ServerStyleSheets as MaterialUiServerStyleSheets } from "@material-ui/styles";
+
+// export default class Document extends NextDocument {
+//   static async getInitialProps(ctx) {
+//     // const styledComponentSheet = new StyledComponentSheets();
+//     const materialUiSheets = new MaterialUiServerStyleSheets();
+//     const originalRenderPage = ctx.renderPage;
+
+//     try {
+//       ctx.renderPage = () =>
+//         originalRenderPage({
+//           enhanceApp: App => props =>
+//             // styledComponentSheet.collectStyles(
+//             materialUiSheets.collect(<App {...props} />)
+//           // )
+//         });
+
+//       const initialProps = await NextDocument.getInitialProps(ctx);
+
+//       return {
+//         ...initialProps,
+//         styles: [
+//           <React.Fragment key="styles">
+//             {initialProps.styles}
+//             {materialUiSheets.getStyleElement()}
+//             {/* {styledComponentSheet.getStyleElement()} */}
+//           </React.Fragment>
+//         ]
+//       };
+//     } finally {
+//       // styledComponentSheet.seal();
+//     }
+//   }
+// }
