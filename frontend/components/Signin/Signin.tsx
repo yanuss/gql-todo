@@ -18,14 +18,9 @@ import { red } from "@material-ui/core/colors";
 import clsx from "clsx";
 import { CURRENT_USER_QUERY } from "../User/User";
 
-const SIGNNUP_MUTATION = gql`
-  mutation SIGNNUP_MUTATION(
-    $name: String!
-    $email: String!
-    $password: String!
-    $image: String
-  ) {
-    signup(name: $name, email: $email, password: $password, image: $image) {
+const SIGNIN_MUTATION = gql`
+  mutation SIGNIN_MUTATION($email: String!, $password: String!) {
+    signin(email: $email, password: $password) {
       id
       email
       name
@@ -64,30 +59,25 @@ const useStyles = makeStyles((theme: Theme) =>
 );
 
 interface State {
-  name: string;
   email: string;
   password: string;
-  image: string;
   showPassword: boolean;
 }
 const initialInputs = {
-  name: "",
   email: "",
   password: "",
-  image: "",
   showPassword: false
 };
 
-const Singup = () => {
+const Singin = () => {
   const [inputs, setInputs] = useState<State>({
     ...initialInputs
   });
-  const [signup, { data, loading, error }] = useMutation(SIGNNUP_MUTATION, {
+
+  const [signin, { data, loading, error }] = useMutation(SIGNIN_MUTATION, {
     variables: {
-      name: inputs.name,
       email: inputs.email,
-      password: inputs.password,
-      image: inputs.image
+      password: inputs.password
     },
     refetchQueries: [
       {
@@ -103,25 +93,6 @@ const Singup = () => {
     setInputs({
       ...inputs,
       [e.target.name]: e.target.value
-    });
-  };
-
-  const uploadFile = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const files = e.target.files;
-    const data = new FormData();
-    data.append("file", files[0]);
-    data.append("upload_preset", "gql-todo");
-    const res = await fetch(
-      "https://api.cloudinary.com/v1_1/yanus/image/upload",
-      {
-        method: "POST",
-        body: data
-      }
-    );
-    const file = await res.json();
-    setInputs({
-      ...inputs,
-      image: file.secure_url
     });
   };
 
@@ -141,21 +112,9 @@ const Singup = () => {
       className={classes.container}
       onSubmit={e => {
         e.preventDefault();
-        signup();
+        signin();
       }}
     >
-      <TextField
-        // id="filled-password-input"
-        onChange={handleChange}
-        label="Name"
-        name="name"
-        className={classes.textField}
-        value={inputs.name}
-        autoComplete="current-name"
-        margin="normal"
-        variant="outlined"
-        required
-      />
       <TextField
         // id="filled-password-input"
         onChange={handleChange}
@@ -197,30 +156,13 @@ const Singup = () => {
           labelWidth={70}
         />
       </FormControl>
-      <TextField
-        // id="filled-password-input"
-        onChange={uploadFile}
-        label="Avatar Img"
-        className={classes.textField}
-        type="file"
-        autoComplete="current-password"
-        margin="normal"
-        variant="outlined"
-      />
-      {inputs.image && (
-        <Avatar
-          alt={inputs.name}
-          src={inputs.image}
-          className={classes.bigAvatar}
-        />
-      )}
       <Button
         variant="contained"
         color="primary"
         type="submit"
         disabled={loading}
       >
-        Signup
+        Signin
         {loading && (
           <CircularProgress size={34} className={classes.buttonProgress} />
         )}
@@ -229,4 +171,4 @@ const Singup = () => {
   );
 };
 
-export default Singup;
+export default Singin;

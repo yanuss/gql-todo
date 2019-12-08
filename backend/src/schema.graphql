@@ -21,6 +21,7 @@ type Mutation {
   ): Item!
   deleteItem(where: ItemWhereUniqueInput!): Item
   signup(email: String!, password: String!, name: String!, image: String): User!
+  signin(email: String!, password: String!): User!
 }
 
 type Query {

@@ -10,7 +10,9 @@ import MenuIcon from "@material-ui/icons/Menu";
 import SideMenu from "../SideMenu/SideMenu";
 import clsx from "clsx";
 import { drawerWidth } from "../Page/Page";
+import Avatar from "@material-ui/core/Avatar";
 import User from "../User/User";
+import CircularProgress from "@material-ui/core/CircularProgress";
 
 const NavWrapper = styled.nav`
   flex-grow: 1;
@@ -47,12 +49,6 @@ const Nav = props => {
 
   return (
     <NavWrapper>
-      <User>
-        {data => {
-          // console.log(data);s
-          return <p>dupa</p>;
-        }}
-      </User>
       <AppBar
         position="static"
         className={clsx(classes.appBar, {
@@ -69,10 +65,21 @@ const Nav = props => {
           >
             <MenuIcon />
           </IconButton>
-          <Typography variant="h6" className={classes.title}>
+          <Typography variant="sh6" className={classes.title}>
             ToDo list
           </Typography>
-          <Button color="inherit">Login</Button>
+          <User>
+            {(data, loading) => {
+              if (loading) return <CircularProgress size={34} />;
+              if (data.me) {
+                return (
+                  <Avatar alt={data.me.name || ""} src={data.me.image || ""} />
+                );
+              } else {
+                return <p>login</p>;
+              }
+            }}
+          </User>
         </Toolbar>
       </AppBar>
       <SideMenu {...props} />

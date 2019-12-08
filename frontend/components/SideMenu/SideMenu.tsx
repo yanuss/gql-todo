@@ -73,27 +73,35 @@ const SideMenu = props => {
       </div>
       <Divider />
       <List>
-        {["MyList"].map((text, index) => (
-          <Link href="/mylist" passHref key={index}>
-            <ListItem button component="a">
-              <ListItemIcon>
-                {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
-              </ListItemIcon>
-              <ListItemText primary={text} />
-            </ListItem>
-          </Link>
-        ))}
+        {/* {["MyList"].map((text, index) => ( */}
+        <Link href="/mylist" passHref>
+          <ListItem button component="a">
+            {/* <ListItemIcon> */}
+            {/* {index % 2 === 0 ? <InboxIcon /> : <MailIcon />} */}
+            {/* </ListItemIcon> */}
+            <ListItemText primary={"TODO"} />
+          </ListItem>
+        </Link>
+        <Link href="/signin" passHref>
+          <ListItem button component="a">
+            {/* <ListItemIcon> */}
+            {/* {index % 2 === 0 ? <InboxsIcon /> : <MailIcon />} */}
+            {/* </ListItemIcon> */}
+            <ListItemText primary={"signin"} />
+          </ListItem>
+        </Link>
+        <Link href="/signup" passHref>
+          <ListItem button component="a">
+            {/* <ListItemIcon> */}
+            {/* {index % 2 === 0 ? <InboxIcon /> : <MailIcon />} */}
+            {/* </ListItemIcon> */}
+            <ListItemText primary={"signup"} />
+          </ListItem>
+        </Link>
+        {/* ))} */}
       </List>
       <Divider />
       <List>
-        {["All mail", "Trash", "Spam"].map((text, index) => (
-          <ListItem button key={text}>
-            <ListItemIcon>
-              {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
-            </ListItemIcon>
-            <ListItemText primary={text} />
-          </ListItem>
-        ))}
         <Switch
           checked={props.palette === "dark"}
           onChange={props.togglePalette}
