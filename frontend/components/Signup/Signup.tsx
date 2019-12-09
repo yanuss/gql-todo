@@ -18,6 +18,7 @@ import { red } from "@material-ui/core/colors";
 import clsx from "clsx";
 import { CURRENT_USER_QUERY } from "../User/User";
 import FacebookSignup from "./FaceBookSignup";
+import GoogleSiginin from "./GoogleSignin";
 
 const SIGNNUP_MUTATION = gql`
   mutation SIGNNUP_MUTATION(
@@ -227,6 +228,7 @@ const Singup = () => {
         )}
       </Button>
       <FacebookSignup />
+      <GoogleSiginin />
     </form>
   );
 };

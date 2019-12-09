@@ -28,6 +28,13 @@ type Mutation {
     image: String
   ): User!
   facebookSigninWithToken(idToken: String!): User!
+  googleSignin(
+    email: String!
+    name: String!
+    googleUserId: String!
+    image: String
+  ): User!
+  googleSigninWithToken(idToken: String!): User!
   signout: SuccessMessage
   requestReset(email: String!): SuccessMessage
   resetPassword(

@@ -2,14 +2,13 @@ import React, { useState } from "react";
 import gql from "graphql-tag";
 import { useMutation } from "@apollo/react-hooks";
 import FacebookLogin from "react-facebook-login/dist/facebook-login-render-props";
-// import FacebookLogin from "react-facebook-login";
-
 import { fbAppId } from "../../config";
 import { CURRENT_USER_QUERY } from "../User/User";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import Button from "@material-ui/core/Button";
 import { green } from "@material-ui/core/colors";
 import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
+import FacebookIcon from "@material-ui/icons/Facebook";
 
 const FACEBOOK_SIGNUP_MUTATION = gql`
   mutation FACEBOOK_SIGNUP_MUTATION(
@@ -108,6 +107,7 @@ const FacebookSignup = () => {
             type="submit"
             disabled={loading}
             onClick={renderProps.onClick}
+            startIcon={<FacebookIcon />}
           >
             Login with Facebook
             {loading && (

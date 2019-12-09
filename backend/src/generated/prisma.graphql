@@ -1,5 +1,5 @@
 # source: https://eu1.prisma.sh/pawel-janus/gql-todo/dev
-# timestamp: Mon Dec 09 2019 13:58:24 GMT+0100 (Central European Standard Time)
+# timestamp: Tue Dec 10 2019 00:07:39 GMT+0100 (Central European Standard Time)
 
 type AggregateItem {
   count: Int!
@@ -716,6 +716,7 @@ type User implements Node {
   permissions: [Permission!]!
   items(where: ItemWhereInput, orderBy: ItemOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Item!]
   facebookUserId: String
+  googleUserId: String
 }
 
 """A connection to a list of items."""
@@ -737,6 +738,7 @@ input UserCreateInput {
   resetToken: String
   resetTokenExpiry: Float
   facebookUserId: String
+  googleUserId: String
   permissions: UserCreatepermissionsInput
   items: ItemCreateManyWithoutUserInput
 }
@@ -759,6 +761,7 @@ input UserCreateWithoutItemsInput {
   resetToken: String
   resetTokenExpiry: Float
   facebookUserId: String
+  googleUserId: String
   permissions: UserCreatepermissionsInput
 }
 
@@ -788,6 +791,8 @@ enum UserOrderByInput {
   resetTokenExpiry_DESC
   facebookUserId_ASC
   facebookUserId_DESC
+  googleUserId_ASC
+  googleUserId_DESC
 }
 
 type UserPreviousValues {
@@ -800,6 +805,7 @@ type UserPreviousValues {
   resetTokenExpiry: Float
   permissions: [Permission!]!
   facebookUserId: String
+  googleUserId: String
 }
 
 type UserSubscriptionPayload {
@@ -847,6 +853,7 @@ input UserUpdateInput {
   resetToken: String
   resetTokenExpiry: Float
   facebookUserId: String
+  googleUserId: String
   permissions: UserUpdatepermissionsInput
   items: ItemUpdateManyWithoutUserInput
 }
@@ -859,6 +866,7 @@ input UserUpdateManyMutationInput {
   resetToken: String
   resetTokenExpiry: Float
   facebookUserId: String
+  googleUserId: String
   permissions: UserUpdatepermissionsInput
 }
 
@@ -881,6 +889,7 @@ input UserUpdateWithoutItemsDataInput {
   resetToken: String
   resetTokenExpiry: Float
   facebookUserId: String
+  googleUserId: String
   permissions: UserUpdatepermissionsInput
 }
 
@@ -1200,6 +1209,46 @@ input UserWhereInput {
 
   """All values not ending with the given string."""
   facebookUserId_not_ends_with: String
+  googleUserId: String
+
+  """All values that are not equal to given value."""
+  googleUserId_not: String
+
+  """All values that are contained in given list."""
+  googleUserId_in: [String!]
+
+  """All values that are not contained in given list."""
+  googleUserId_not_in: [String!]
+
+  """All values less than the given value."""
+  googleUserId_lt: String
+
+  """All values less than or equal the given value."""
+  googleUserId_lte: String
+
+  """All values greater than the given value."""
+  googleUserId_gt: String
+
+  """All values greater than or equal the given value."""
+  googleUserId_gte: String
+
+  """All values containing the given string."""
+  googleUserId_contains: String
+
+  """All values not containing the given string."""
+  googleUserId_not_contains: String
+
+  """All values starting with the given string."""
+  googleUserId_starts_with: String
+
+  """All values not starting with the given string."""
+  googleUserId_not_starts_with: String
+
+  """All values ending with the given string."""
+  googleUserId_ends_with: String
+
+  """All values not ending with the given string."""
+  googleUserId_not_ends_with: String
   items_every: ItemWhereInput
   items_some: ItemWhereInput
   items_none: ItemWhereInput
@@ -1209,4 +1258,5 @@ input UserWhereUniqueInput {
   id: ID
   email: String
   facebookUserId: String
+  googleUserId: String
 }

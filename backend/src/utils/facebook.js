@@ -16,7 +16,7 @@ async function createPrismaUserFromFacebook(ctx, facebookUser) {
     data: {
       email: facebookUser.email,
       name: facebookUser.name,
-      picture: facebookUser.picture.data.url,
+      image: facebookUser.picture.data.url,
       facebookUserId: facebookUser.id,
       permissions: { set: ["USER"] }
     }
