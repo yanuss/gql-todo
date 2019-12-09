@@ -5,8 +5,6 @@ import Header from "../Header/Header";
 import { ThemeProvider, createMuiTheme } from "@material-ui/core/styles";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import { useDarkMode } from "../userDarkMode";
-import useLayoutEffect from "../../lib/use-isomorphic-layout-effect";
-
 import useMediaQuery from "@material-ui/core/useMediaQuery";
 
 export const drawerWidth = 240;
@@ -48,10 +46,6 @@ const Page = props => {
     });
     // }
   }, [prefersDarkMode, selectedDarkmode]);
-
-  useLayoutEffect(() => {
-    console.log("hello there");
-  }, []);
 
   const handleDrawerOpen = () => {
     setOpen(true);
