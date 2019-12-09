@@ -17,7 +17,9 @@ import { green } from "@material-ui/core/colors";
 import { red } from "@material-ui/core/colors";
 import clsx from "clsx";
 import { CURRENT_USER_QUERY } from "../User/User";
+import { GET_TODOS } from "../Items/Items";
 import Link from "next/link";
+import Router from "next/router";
 
 const SIGNIN_MUTATION = gql`
   mutation SIGNIN_MUTATION($email: String!, $password: String!) {
@@ -83,10 +85,16 @@ const Singin = () => {
     refetchQueries: [
       {
         query: CURRENT_USER_QUERY
+      },
+      {
+        query: GET_TODOS
       }
     ],
     onCompleted: () => {
       setInputs({ ...initialInputs });
+      Router.push({
+        pathname: "/mylist"
+      });
     }
   });
 

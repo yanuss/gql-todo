@@ -1,9 +1,10 @@
-import React, { useState } from "react";
+import React, { useEffect } from "react";
 import gql from "graphql-tag";
 import { useMutation } from "@apollo/react-hooks";
 import { CURRENT_USER_QUERY } from "../User/User";
 import Button from "@material-ui/core/Button";
 import { GET_TODOS } from "../Items/Items";
+
 const SIGNOUT_MUTATION = gql`
   mutation SIGNOUT_MUTATION {
     signout {
@@ -12,12 +13,8 @@ const SIGNOUT_MUTATION = gql`
   }
 `;
 
-const Signout = () => {
-  const [
-    signout
-    // { data, loading, error }
-  ] = useMutation(SIGNOUT_MUTATION, {
-    // variables: { ...inputs },
+const useSignout = () => {
+  const [signout] = useMutation(SIGNOUT_MUTATION, {
     refetchQueries: [
       {
         query: CURRENT_USER_QUERY
@@ -26,12 +23,13 @@ const Signout = () => {
         query: GET_TODOS
       }
     ]
-    // onCompleted: () => {
-    //   setInputs({ ...initialInputs });
-    //   handleClose();
-    // }
   });
 
+  return { signout };
+};
+
+const SignoutButton = () => {
+  const { signout } = useSignout();
   return (
     <Button
       variant="contained"
@@ -39,11 +37,11 @@ const Signout = () => {
       onClick={() => {
         signout();
       }}
-      // disabled={!inputs.title}
     >
-      Signout
+      Logout
     </Button>
   );
 };
 
-export default Signout;
+export { useSignout };
+export default SignoutButton;

@@ -15,6 +15,7 @@ import User from "../User/User";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import Signout from "../Signout/Singout";
 import Link from "next/link";
+import AvatarMenu from "../AvatarMenu/AvatarMenu";
 
 const NavWrapper = styled.nav`
   flex-grow: 1;
@@ -67,7 +68,7 @@ const Nav = props => {
           >
             <MenuIcon />
           </IconButton>
-          <Typography variant="sh6" className={classes.title}>
+          <Typography variant="h6" className={classes.title}>
             ToDo list
           </Typography>
           <User>
@@ -75,13 +76,7 @@ const Nav = props => {
               if (loading) return <CircularProgress size={34} />;
               if (data && data.me) {
                 return (
-                  <>
-                    <Avatar
-                      alt={data.me.name || ""}
-                      src={data.me.image || ""}
-                    />
-                    <Signout />
-                  </>
+                  <AvatarMenu data={data} togglePalette={props.togglePalette} />
                 );
               } else {
                 return (
