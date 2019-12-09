@@ -2,7 +2,6 @@ import React from "react";
 import { makeStyles, Theme, createStyles } from "@material-ui/core/styles";
 import clsx from "clsx";
 import Header from "../Header/Header";
-import Meta from "../Meta/Meta";
 import { ThemeProvider, createMuiTheme } from "@material-ui/core/styles";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import { useDarkMode } from "../userDarkMode";
@@ -64,8 +63,6 @@ const Page = props => {
 
   return (
     <ThemeProvider theme={theme}>
-      <CssBaseline />
-      <Meta />
       <Header
         handleDrawerOpen={handleDrawerOpen}
         handleDrawerClose={handleDrawerClose}
@@ -73,7 +70,7 @@ const Page = props => {
         palette={palette}
         togglePalette={togglePalette}
       />
-      {/* <body> */}
+      <CssBaseline />
       <main
         className={clsx(classes.content, {
           [classes.contentShift]: open
@@ -81,7 +78,6 @@ const Page = props => {
       >
         {props.children}
       </main>
-      {/* </body> */}
     </ThemeProvider>
   );
 };

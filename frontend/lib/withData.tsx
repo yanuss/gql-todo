@@ -14,31 +14,7 @@ function createClient({ headers }) {
         headers
       });
     }
-    //local data
-    // clientState: {
-    //   resolvers: {
-    //     Mutation: {
-    //       toggleCart(_, variables, { cache }) {
-    //         //readt the cartOpen value form cache
-    //         const { cartOpen } = cache.readQuery({
-    //           query: LOCAL_STATE_QUERY
-    //         });
-    //         //write cart state to opposite
-    //         const data = {
-    //           data: {
-    //             cartOpen: !cartOpen
-    //           }
-    //         };
-    //         cache.writeData(data);
-    //         return data;
-    //       }
-    //     }
-    //   },
-    //   defaults: {
-    //     cartOpen: false
-    //   }
-    // }
   });
 }
 
-export default withApollo(createClient);
+export default withApollo(createClient, { getDataFromTree: "ssr" });

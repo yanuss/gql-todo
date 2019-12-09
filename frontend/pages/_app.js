@@ -2,7 +2,7 @@ import App from "next/app";
 import Page from "../components/Page/Page";
 import { ApolloProvider } from "react-apollo";
 import withData from "../lib/withData";
-
+import Meta from "../components/Meta/Meta";
 class MyApp extends App {
   static async getInitialProps({ Component, ctx }) {
     let pageProps = {};
@@ -21,9 +21,9 @@ class MyApp extends App {
     }
   }
 
-  // renderHead() {
-  //   return <Meta />;
-  // }
+  renderHead() {
+    return <Meta />;
+  }
   render() {
     const { Component, pageProps, apollo } = this.props;
     return (
