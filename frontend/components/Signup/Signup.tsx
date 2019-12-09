@@ -17,6 +17,7 @@ import { green } from "@material-ui/core/colors";
 import { red } from "@material-ui/core/colors";
 import clsx from "clsx";
 import { CURRENT_USER_QUERY } from "../User/User";
+import FacebookSignup from "./FaceBookSignup";
 
 const SIGNNUP_MUTATION = gql`
   mutation SIGNNUP_MUTATION(
@@ -79,6 +80,7 @@ const initialInputs = {
 };
 
 const Singup = () => {
+  const classes = useStyles();
   const [inputs, setInputs] = useState<State>({
     ...initialInputs
   });
@@ -135,7 +137,6 @@ const Singup = () => {
     event.preventDefault();
   };
 
-  const classes = useStyles();
   return (
     <form
       className={classes.container}
@@ -225,6 +226,7 @@ const Singup = () => {
           <CircularProgress size={34} className={classes.buttonProgress} />
         )}
       </Button>
+      <FacebookSignup />
     </form>
   );
 };

@@ -19,7 +19,6 @@ import {
   // KeyboardTimePicker,
   KeyboardDatePicker
 } from "@material-ui/pickers";
-import { display } from "@material-ui/system";
 import { UPDATE_TODO } from "../Item/Item";
 
 const ADD_TODO = gql`

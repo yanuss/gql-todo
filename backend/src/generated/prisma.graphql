@@ -1,5 +1,5 @@
 # source: https://eu1.prisma.sh/pawel-janus/gql-todo/dev
-# timestamp: Sun Dec 08 2019 21:13:06 GMT+0100 (Central European Standard Time)
+# timestamp: Mon Dec 09 2019 13:58:24 GMT+0100 (Central European Standard Time)
 
 type AggregateItem {
   count: Int!
@@ -709,12 +709,13 @@ type User implements Node {
   id: ID!
   name: String!
   email: String!
-  password: String!
+  password: String
   image: String
   resetToken: String
   resetTokenExpiry: Float
   permissions: [Permission!]!
   items(where: ItemWhereInput, orderBy: ItemOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Item!]
+  facebookUserId: String
 }
 
 """A connection to a list of items."""
@@ -731,10 +732,11 @@ input UserCreateInput {
   id: ID
   name: String!
   email: String!
-  password: String!
+  password: String
   image: String
   resetToken: String
   resetTokenExpiry: Float
+  facebookUserId: String
   permissions: UserCreatepermissionsInput
   items: ItemCreateManyWithoutUserInput
 }
@@ -752,10 +754,11 @@ input UserCreateWithoutItemsInput {
   id: ID
   name: String!
   email: String!
-  password: String!
+  password: String
   image: String
   resetToken: String
   resetTokenExpiry: Float
+  facebookUserId: String
   permissions: UserCreatepermissionsInput
 }
 
@@ -783,17 +786,20 @@ enum UserOrderByInput {
   resetToken_DESC
   resetTokenExpiry_ASC
   resetTokenExpiry_DESC
+  facebookUserId_ASC
+  facebookUserId_DESC
 }
 
 type UserPreviousValues {
   id: ID!
   name: String!
   email: String!
-  password: String!
+  password: String
   image: String
   resetToken: String
   resetTokenExpiry: Float
   permissions: [Permission!]!
+  facebookUserId: String
 }
 
 type UserSubscriptionPayload {
@@ -840,6 +846,7 @@ input UserUpdateInput {
   image: String
   resetToken: String
   resetTokenExpiry: Float
+  facebookUserId: String
   permissions: UserUpdatepermissionsInput
   items: ItemUpdateManyWithoutUserInput
 }
@@ -851,6 +858,7 @@ input UserUpdateManyMutationInput {
   image: String
   resetToken: String
   resetTokenExpiry: Float
+  facebookUserId: String
   permissions: UserUpdatepermissionsInput
 }
 
@@ -872,6 +880,7 @@ input UserUpdateWithoutItemsDataInput {
   image: String
   resetToken: String
   resetTokenExpiry: Float
+  facebookUserId: String
   permissions: UserUpdatepermissionsInput
 }
 
@@ -1151,6 +1160,46 @@ input UserWhereInput {
 
   """All values greater than or equal the given value."""
   resetTokenExpiry_gte: Float
+  facebookUserId: String
+
+  """All values that are not equal to given value."""
+  facebookUserId_not: String
+
+  """All values that are contained in given list."""
+  facebookUserId_in: [String!]
+
+  """All values that are not contained in given list."""
+  facebookUserId_not_in: [String!]
+
+  """All values less than the given value."""
+  facebookUserId_lt: String
+
+  """All values less than or equal the given value."""
+  facebookUserId_lte: String
+
+  """All values greater than the given value."""
+  facebookUserId_gt: String
+
+  """All values greater than or equal the given value."""
+  facebookUserId_gte: String
+
+  """All values containing the given string."""
+  facebookUserId_contains: String
+
+  """All values not containing the given string."""
+  facebookUserId_not_contains: String
+
+  """All values starting with the given string."""
+  facebookUserId_starts_with: String
+
+  """All values not starting with the given string."""
+  facebookUserId_not_starts_with: String
+
+  """All values ending with the given string."""
+  facebookUserId_ends_with: String
+
+  """All values not ending with the given string."""
+  facebookUserId_not_ends_with: String
   items_every: ItemWhereInput
   items_some: ItemWhereInput
   items_none: ItemWhereInput
@@ -1159,4 +1208,5 @@ input UserWhereInput {
 input UserWhereUniqueInput {
   id: ID
   email: String
+  facebookUserId: String
 }

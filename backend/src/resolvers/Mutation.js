@@ -4,6 +4,10 @@ const { randomBytes } = require("crypto");
 const { promisify } = require("util");
 const { forwardTo } = require("prisma-binding");
 const { transport, makeANiceEmail } = require("../mail");
+const {
+  createPrismaUserFromFacebook,
+  getFacebookUser
+} = require("../utils/facebook");
 
 const maxAge = 1000 * 60 * 60 * 24 * 10; // 10 days
 
@@ -78,6 +82,64 @@ const Mutation = {
     });
     // 5. Return the user
     return user;
+  },
+  async facebookSignin(parent, args, ctx, info) {
+    args.email = args.email.toLowerCase();
+    const userWithEmail = await ctx.db.query.user({
+      where: { email: args.email }
+    });
+    if (!userWithEmail.facebookUserId) {
+      throw new Error(`User already exist ${userWithEmail.email}`);
+    }
+    let user;
+    try {
+      user = await ctx.db.query.user(
+        { where: { facebookUserId: args.facebookUserId } },
+        info
+      );
+      if (!user) {
+        user = await ctx.db.mutation.createUser(
+          {
+            data: {
+              ...args,
+              permissions: { set: ["USER"] }
+            }
+          },
+          info
+        );
+      }
+      const token = jwt.sign({ userId: user.id }, process.env.APP_SECRET);
+      ctx.response.cookie("token", token, {
+        SameSite: "None",
+        httpOnly: true,
+        maxAge
+      });
+      return user;
+    } catch (error) {
+      throw new Error(error);
+    }
+  },
+  async facebookSigninWithToken(parent, { idToken }, ctx, info) {
+    let user = null;
+    try {
+      const facebookUser = await getFacebookUser(idToken);
+      user = await ctx.db.query.user(
+        { where: { facebookUserId: facebookUser.id } },
+        info
+      );
+      if (!user) {
+        user = await createPrismaUserFromFacebook(ctx, facebookUser);
+      }
+      const token = jwt.sign({ userId: user.id }, process.env.APP_SECRET);
+      ctx.response.cookie("token", token, {
+        SameSite: "None",
+        httpOnly: true,
+        maxAge
+      });
+      return user;
+    } catch (error) {
+      throw new Error(error);
+    }
   },
   signout(parent, args, ctx, info) {
     ctx.response.clearCookie("token");

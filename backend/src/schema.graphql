@@ -21,6 +21,13 @@ type Mutation {
   deleteItem(where: ItemWhereUniqueInput!): Item
   signup(email: String!, password: String!, name: String!, image: String): User!
   signin(email: String!, password: String!): User!
+  facebookSignin(
+    email: String!
+    name: String!
+    facebookUserId: String!
+    image: String
+  ): User!
+  facebookSigninWithToken(idToken: String!): User!
   signout: SuccessMessage
   requestReset(email: String!): SuccessMessage
   resetPassword(

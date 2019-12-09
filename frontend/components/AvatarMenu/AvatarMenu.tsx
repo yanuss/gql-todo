@@ -6,8 +6,10 @@ import { useSignout } from "../Signout/Singout";
 import Avatar from "@material-ui/core/Avatar";
 import Brightness4Icon from "@material-ui/icons/Brightness4";
 import Brightness4OutlinedIcon from "@material-ui/icons/Brightness4Outlined";
+import PowerSettingsNewIcon from "@material-ui/icons/PowerSettingsNew";
 import ListItemIcon from "@material-ui/core/ListItemIcon";
 import Typography from "@material-ui/core/Typography";
+import PersonOutlineRoundedIcon from "@material-ui/icons/PersonOutlineRounded";
 // import { useDarkMode } from "../../lib/useDarkMode";
 import Fade from "@material-ui/core/Fade";
 import { useTheme } from "@material-ui/core/styles";
@@ -53,8 +55,12 @@ const AvatarMenu = props => {
         }}
         TransitionComponent={Fade}
       >
-        <MenuItem onClick={handleClose}>Profile</MenuItem>
-        <MenuItem onClick={handleClose}>My account</MenuItem>
+        <MenuItem onClick={handleClose}>
+          <ListItemIcon>
+            <PersonOutlineRoundedIcon fontSize="small" />
+          </ListItemIcon>
+          <Typography variant="inherit">Profile</Typography>
+        </MenuItem>
         <MenuItem onClick={props.togglePalette}>
           <ListItemIcon>
             {palette.type === "light" ? (
@@ -67,7 +73,12 @@ const AvatarMenu = props => {
             Theme {palette.type === "light" ? "light" : "dark"}
           </Typography>
         </MenuItem>
-        <MenuItem onClick={signout}>Logout</MenuItem>
+        <MenuItem onClick={signout}>
+          <ListItemIcon>
+            <PowerSettingsNewIcon fontSize="small" />
+          </ListItemIcon>
+          <Typography variant="inherit">Logout</Typography>
+        </MenuItem>
       </Menu>
     </>
   );
