@@ -84,16 +84,9 @@ const Nav = props => {
             <User>
               {(data, loading) => {
                 if (loading) return <CircularProgress size={34} />;
-                if (data && data.me) {
-                  return (
-                    <AvatarMenu
-                      data={data}
-                      togglePalette={props.togglePalette}
-                    />
-                  );
-                } else {
-                  return null;
-                }
+                return (
+                  <AvatarMenu data={data} togglePalette={props.togglePalette} />
+                );
               }}
             </User>
           </div>

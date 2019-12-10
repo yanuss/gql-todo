@@ -14,11 +14,14 @@ const CURRENT_USER_QUERY = gql`
   }
 `;
 
+const useUser = () => {
+  const { data, loading, error } = useQuery(CURRENT_USER_QUERY);
+  return { data, loading, error };
+};
 const User = props => {
   const { data, loading, error } = useQuery(CURRENT_USER_QUERY);
-  // console.log(data);
   return props.children(data, loading, error);
 };
 
+export { CURRENT_USER_QUERY, useUser };
 export default User;
-export { CURRENT_USER_QUERY };

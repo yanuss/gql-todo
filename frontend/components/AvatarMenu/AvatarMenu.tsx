@@ -13,6 +13,8 @@ import PersonOutlineRoundedIcon from "@material-ui/icons/PersonOutlineRounded";
 import Tooltip from "@material-ui/core/Tooltip";
 import Fab from "@material-ui/core/Fab";
 import Fade from "@material-ui/core/Fade";
+import AccountCircleIcon from "@material-ui/icons/AccountCircle";
+import IconButton from "@material-ui/core/IconButton";
 import {
   createStyles,
   Theme,
@@ -52,61 +54,71 @@ const AvatarMenu = props => {
 
   return (
     <>
-      <Tooltip title="Open menu" aria-label="menu">
-        <Fab
-          component={Avatar}
-          // className={classes.avatar}
-          // variant="circle"
-          alt={props.data.me.name || ""}
-          src={props.data.me.image || ""}
-          aria-controls="menu"
-          aria-haspopup="true"
-          onClick={handleClick}
-          size="medium"
-        />
-      </Tooltip>
-      <Menu
-        id="customized-menu"
-        anchorEl={anchorEl}
-        keepMounted
-        open={Boolean(anchorEl)}
-        onClose={handleClose}
-        elevation={0}
-        getContentAnchorEl={null}
-        anchorOrigin={{
-          vertical: "bottom",
-          horizontal: "center"
-        }}
-        transformOrigin={{
-          vertical: "top",
-          horizontal: "center"
-        }}
-        TransitionComponent={Fade}
-      >
-        <MenuItem>
-          <Avatar
-            alt={props.data.me.name || ""}
-            src={props.data.me.image || ""}
-            aria-controls="simple-menu"
-            aria-haspopup="true"
-          />
-          <div className={classes.accountInfoContainer}>
-            <Typography variant="inherit" className={classes.accountInfo}>
-              {props.data.me.name}
-            </Typography>
-            <Typography variant="inherit" className={classes.accountInfo}>
-              {props.data.me.email}
-            </Typography>
-          </div>
-        </MenuItem>
-        <Divider />
-        {/* <MenuItem onClick={handleClose}>
+      {!props.data.me && (
+        <Tooltip title="You are not logged in" aria-label="profile">
+          <IconButton aria-label="profile">
+            <AccountCircleIcon />
+          </IconButton>
+        </Tooltip>
+      )}
+      {props.data && props.data.me && (
+        <>
+          <Tooltip title="Open menu" aria-label="menu">
+            <Fab
+              component={Avatar}
+              // className={classes.avatar}
+              // variant="circle"
+              alt={props.data.me.name || ""}
+              src={props.data.me.image || ""}
+              aria-controls="menu"
+              aria-haspopup="true"
+              onClick={handleClick}
+              size="medium"
+            />
+          </Tooltip>
+
+          <Menu
+            id="customized-menu"
+            anchorEl={anchorEl}
+            keepMounted
+            open={Boolean(anchorEl)}
+            onClose={handleClose}
+            elevation={0}
+            getContentAnchorEl={null}
+            anchorOrigin={{
+              vertical: "bottom",
+              horizontal: "center"
+            }}
+            transformOrigin={{
+              vertical: "top",
+              horizontal: "center"
+            }}
+            TransitionComponent={Fade}
+          >
+            <MenuItem>
+              <Avatar
+                alt={props.data.me.name || ""}
+                src={props.data.me.image || ""}
+                aria-controls="simple-menu"
+                aria-haspopup="true"
+              />
+              <div className={classes.accountInfoContainer}>
+                <Typography variant="inherit" className={classes.accountInfo}>
+                  {props.data.me.name}
+                </Typography>
+                <Typography variant="inherit" className={classes.accountInfo}>
+                  {props.data.me.email}
+                </Typography>
+              </div>
+            </MenuItem>
+            <Divider />
+            {/* <MenuItem onClick={handleClose}>
           <ListItemIcon>
             <PersonOutlineRoundedIcon fontSize="small" />
           </ListItemIcon>
           <Typography variant="inherit">Profile</Typography>
         </MenuItem> */}
-        {/* <MenuItem onClick={props.togglePalette}>
+            {/* <MenuItem onClick={props.togglePalette}>
           <ListItemIcon>
             {palette.type === "light" ? (
               <Brightness4Icon fontSize="small" />
@@ -118,13 +130,15 @@ const AvatarMenu = props => {
             {palette.type === "light" ? "Light" : "Dark"} theme
           </Typography>
         </MenuItem> */}
-        <MenuItem onClick={signout}>
-          <ListItemIcon>
-            <PowerSettingsNewIcon fontSize="small" />
-          </ListItemIcon>
-          <Typography variant="inherit">Logout</Typography>
-        </MenuItem>
-      </Menu>
+            <MenuItem onClick={signout}>
+              <ListItemIcon>
+                <PowerSettingsNewIcon fontSize="small" />
+              </ListItemIcon>
+              <Typography variant="inherit">Logout</Typography>
+            </MenuItem>
+          </Menu>
+        </>
+      )}
     </>
   );
 };
