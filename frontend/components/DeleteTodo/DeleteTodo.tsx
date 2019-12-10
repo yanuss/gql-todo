@@ -9,6 +9,7 @@ import { red } from "@material-ui/core/colors";
 import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
 import { GET_TODOS } from "../Items/Items";
 import clsx from "clsx";
+import Tooltip from "@material-ui/core/Tooltip";
 
 const DELETE_TODO = gql`
   mutation DELETE_TODO($id: ID!) {
@@ -79,20 +80,22 @@ const DeleteTodo = ({ id }) => {
   });
 
   return (
-    <IconButton
-      aria-label="delete"
-      className={buttonClassname}
-      disabled={loading}
-      onClick={() => {
-        setSuccess(false);
-        deleteTodo();
-      }}
-    >
-      <DeleteForeverIcon fontSize="small" />
-      {loading && (
-        <CircularProgress size={34} className={classes.buttonProgress} />
-      )}
-    </IconButton>
+    <Tooltip title="Delete item" aria-label="menu">
+      <IconButton
+        aria-label="delete"
+        className={buttonClassname}
+        disabled={loading}
+        onClick={() => {
+          setSuccess(false);
+          deleteTodo();
+        }}
+      >
+        <DeleteForeverIcon fontSize="small" />
+        {loading && (
+          <CircularProgress size={34} className={classes.buttonProgress} />
+        )}
+      </IconButton>
+    </Tooltip>
   );
 };
 

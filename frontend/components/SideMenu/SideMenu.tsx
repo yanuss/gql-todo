@@ -12,13 +12,9 @@ import IconButton from "@material-ui/core/IconButton";
 import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
 import ChevronRightIcon from "@material-ui/icons/ChevronRight";
 import ListItem from "@material-ui/core/ListItem";
-import ListItemIcon from "@material-ui/core/ListItemIcon";
 import ListItemText from "@material-ui/core/ListItemText";
-import InboxIcon from "@material-ui/icons/MoveToInbox";
-import MailIcon from "@material-ui/icons/Mail";
 import { drawerWidth } from "../Page/Page";
 import Link from "next/link";
-import Switch from "@material-ui/core/Switch";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -73,40 +69,13 @@ const SideMenu = props => {
       </div>
       <Divider />
       <List>
-        {/* {["MyList"].map((text, index) => ( */}
-        <Link href="/mylist" passHref>
+        <Link href="/" passHref>
           <ListItem button component="a">
-            {/* <ListItemIcon> */}
-            {/* {index % 2 === 0 ? <InboxIcon /> : <MailIcon />} */}
-            {/* </ListItemIcon> */}
-            <ListItemText primary={"TODO"} />
+            <ListItemText primary={"Home"} />
           </ListItem>
         </Link>
-        <Link href="/signin" passHref>
-          <ListItem button component="a">
-            {/* <ListItemIcon> */}
-            {/* {index % 2 === 0 ? <InboxsIcon /> : <MailIcon />} */}
-            {/* </ListItemIcon> */}
-            <ListItemText primary={"signin"} />
-          </ListItem>
-        </Link>
-        <Link href="/signup" passHref>
-          <ListItem button component="a">
-            {/* <ListItemIcon> */}
-            {/* {index % 2 === 0 ? <InboxIcon /> : <MailIcon />} */}
-            {/* </ListItemIcon> */}
-            <ListItemText primary={"signup"} />
-          </ListItem>
-        </Link>
-        {/* ))} */}
       </List>
       <Divider />
-      <List>
-        <Switch
-          checked={props.palette === "dark"}
-          onChange={props.togglePalette}
-        />
-      </List>
     </Drawer>
   );
 };

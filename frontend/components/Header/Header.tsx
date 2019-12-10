@@ -1,9 +1,7 @@
 import React from "react";
-import Link from "next/link";
 import Nav from "../Nav/Nav";
 import Router from "next/router";
 import NProgress from "nprogress";
-import CircularProgress from "@material-ui/core/CircularProgress";
 
 Router.events.on("routeChangeStart", () => {
   console.log("routeChangeStart");

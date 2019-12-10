@@ -7,8 +7,13 @@ import Box from "@material-ui/core/Box";
 import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
 import { GET_TODOS } from "../Items/Items";
 import Edit from "@material-ui/icons/Edit";
-import IconButton from "@material-ui/core/IconButton";
 import DeleteTodo from "../DeleteTodo/DeleteTodo";
+import DoneIcon from "@material-ui/icons/Done";
+import RadioButtonUncheckedIcon from "@material-ui/icons/RadioButtonUnchecked";
+import IconButton from "@material-ui/core/IconButton";
+import Tooltip from "@material-ui/core/Tooltip";
+import clsx from "clsx";
+import ButtonBase from "@material-ui/core/ButtonBase";
 
 export const UPDATE_TODO = gql`
   mutation UPDATE_TODO(
@@ -53,6 +58,7 @@ const useStyles = makeStyles((theme: Theme) =>
     root: {
       display: "flex",
       alignItems: "center",
+      width: "100%",
       // justifyContent: "center",
       // flexDirection: "column",
       "&:after": {
@@ -60,23 +66,70 @@ const useStyles = makeStyles((theme: Theme) =>
         position: "absolute",
         borderBottom: `${theme.spacing(0.5)} solid ${theme.palette.text}`
       },
-      "& > *": {
+      "& > *s": {
         margin: theme.spacing(1)
       }
     },
     content: {
       flex: 1
+    },
+    done: {
+      textDecoration: props => (props.done ? "line-through" : "none")
+    },
+    image: {
+      position: "relative",
+      height: 44,
+      padding: "6px"
+      // borderRadius: "10%"
+      // border: `2px solid ${theme.palette.primary.light}`
+    },
+    imageSrc: {
+      backgroundSize: "cover",
+      backgroundPosition: "center 40%",
+      width: "38px",
+      height: "38px",
+
+      // border: `1px solid ${theme.palette.text.primary}`,
+      borderRadius: "10%"
     }
   })
 );
 
 const Item = ({ itemData, setModalData, handleShowModal }) => {
   const [updateTodo, { data, loading, error }] = useMutation(UPDATE_TODO);
-  const classes = useStyles();
+  // const [showLargeI];
+  const classes = useStyles(itemData);
 
-  const content = (
+  return (
     <div className={classes.root}>
-      <Checkbox
+      <IconButton
+        aria-label="check"
+        // className={classes.margin}
+        onClick={() => {
+          updateTodo({
+            //TODO: add optimistic update
+            variables: { id: itemData.id, done: !itemData.done },
+            refetchQueries: [
+              // {
+              //   query: GET_SINGLE_TODO,
+              //   variables:{
+              //     id: itemData.id,
+              //   }
+              // }
+              {
+                query: GET_TODOS
+              }
+            ]
+          });
+        }}
+      >
+        {itemData.done ? (
+          <DoneIcon fontSize="small" />
+        ) : (
+          <RadioButtonUncheckedIcon fontSize="small" />
+        )}
+      </IconButton>
+      {/* <Checkbox
         checked={itemData.done}
         onChange={() => {
           updateTodo({
@@ -100,27 +153,44 @@ const Item = ({ itemData, setModalData, handleShowModal }) => {
         // inputProps={{
         //   "aria-label": "primary checkbox"
         // }}
-      />
-      <div className={classes.content}>
+      /> */}
+      <div className={clsx(classes.content, classes.done)}>
         <Box fontWeight="fontWeightBold">{itemData.title}</Box>
         <Box>{itemData.description}</Box>
       </div>
-      <IconButton
-        aria-label="delete"
-        className={classes.margin}
-        onClick={() => {
-          setModalData({
-            ...itemData
-          });
-          handleShowModal(true);
-        }}
+      <ButtonBase
+        focusRipple
+        key={itemData.title}
+        className={classes.image}
+        // focusVisibleClassName={classes.focusVisible}
+        // style={{
+        //   width: 40
+        // }}
       >
-        <Edit fontSize="small" />
-      </IconButton>
+        <span
+          className={classes.imageSrc}
+          style={{
+            backgroundImage: `url(${itemData.image})`
+          }}
+        />
+      </ButtonBase>
+      <Tooltip title="Edit item" aria-label="menu">
+        <IconButton
+          aria-label="delete"
+          className={classes.margin}
+          onClick={() => {
+            setModalData({
+              ...itemData
+            });
+            handleShowModal(true);
+          }}
+        >
+          <Edit fontSize="small" />
+        </IconButton>
+      </Tooltip>
       <DeleteTodo id={itemData.id} />
     </div>
   );
-  return itemData.done ? <del>{content}</del> : <>{content}</>;
 };
 
 export default Item;

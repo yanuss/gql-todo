@@ -6,11 +6,13 @@ import { ThemeProvider } from "@material-ui/core/styles";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import { useDarkMode } from "../../lib/useDarkMode";
 
-export const drawerWidth = 240;
+export const drawerWidth = 150;
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     content: {
+      display: "flex",
+      justifyContent: "center",
       flexGrow: 1,
       padding: theme.spacing(3),
       transition: theme.transitions.create("margin", {

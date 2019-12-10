@@ -1,26 +1,17 @@
 import React from "react";
-import Button from "@material-ui/core/Button";
 import Menu from "@material-ui/core/Menu";
 import MenuItem from "@material-ui/core/MenuItem";
 import { useSignout } from "../Signout/Singout";
 import Avatar from "@material-ui/core/Avatar";
-import Brightness4Icon from "@material-ui/icons/Brightness4";
-import Brightness4OutlinedIcon from "@material-ui/icons/Brightness4Outlined";
 import PowerSettingsNewIcon from "@material-ui/icons/PowerSettingsNew";
 import ListItemIcon from "@material-ui/core/ListItemIcon";
 import Typography from "@material-ui/core/Typography";
-import PersonOutlineRoundedIcon from "@material-ui/icons/PersonOutlineRounded";
 import Tooltip from "@material-ui/core/Tooltip";
 import Fab from "@material-ui/core/Fab";
 import Fade from "@material-ui/core/Fade";
 import AccountCircleIcon from "@material-ui/icons/AccountCircle";
 import IconButton from "@material-ui/core/IconButton";
-import {
-  createStyles,
-  Theme,
-  makeStyles,
-  useTheme
-} from "@material-ui/core/styles";
+import { createStyles, Theme, makeStyles } from "@material-ui/core/styles";
 import Divider from "@material-ui/core/Divider";
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -39,10 +30,8 @@ const useStyles = makeStyles((theme: Theme) =>
 
 const AvatarMenu = props => {
   const classes = useStyles();
-  const { palette } = useTheme();
   const { signout } = useSignout();
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
-  // const { togglePalette } = useDarkMode();
 
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget);
@@ -66,8 +55,6 @@ const AvatarMenu = props => {
           <Tooltip title="Open menu" aria-label="menu">
             <Fab
               component={Avatar}
-              // className={classes.avatar}
-              // variant="circle"
               alt={props.data.me.name || ""}
               src={props.data.me.image || ""}
               aria-controls="menu"
@@ -76,7 +63,6 @@ const AvatarMenu = props => {
               size="medium"
             />
           </Tooltip>
-
           <Menu
             id="customized-menu"
             anchorEl={anchorEl}
