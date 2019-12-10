@@ -10,6 +10,8 @@ import PowerSettingsNewIcon from "@material-ui/icons/PowerSettingsNew";
 import ListItemIcon from "@material-ui/core/ListItemIcon";
 import Typography from "@material-ui/core/Typography";
 import PersonOutlineRoundedIcon from "@material-ui/icons/PersonOutlineRounded";
+import Tooltip from "@material-ui/core/Tooltip";
+import Fab from "@material-ui/core/Fab";
 import Fade from "@material-ui/core/Fade";
 import {
   createStyles,
@@ -28,7 +30,8 @@ const useStyles = makeStyles((theme: Theme) =>
     accountInfo: {
       fontSize: theme.typography.fontSize - 2,
       marginLeft: theme.spacing(1.5)
-    }
+    },
+    avatar: {}
   })
 );
 
@@ -49,13 +52,19 @@ const AvatarMenu = props => {
 
   return (
     <>
-      <Avatar
-        alt={props.data.me.name || ""}
-        src={props.data.me.image || ""}
-        aria-controls="simple-menu"
-        aria-haspopup="true"
-        onClick={handleClick}
-      />
+      <Tooltip title="Open menu" aria-label="menu">
+        <Fab
+          component={Avatar}
+          // className={classes.avatar}
+          // variant="circle"
+          alt={props.data.me.name || ""}
+          src={props.data.me.image || ""}
+          aria-controls="menu"
+          aria-haspopup="true"
+          onClick={handleClick}
+          size="medium"
+        />
+      </Tooltip>
       <Menu
         id="customized-menu"
         anchorEl={anchorEl}
@@ -91,13 +100,13 @@ const AvatarMenu = props => {
           </div>
         </MenuItem>
         <Divider />
-        <MenuItem onClick={handleClose}>
+        {/* <MenuItem onClick={handleClose}>
           <ListItemIcon>
             <PersonOutlineRoundedIcon fontSize="small" />
           </ListItemIcon>
           <Typography variant="inherit">Profile</Typography>
-        </MenuItem>
-        <MenuItem onClick={props.togglePalette}>
+        </MenuItem> */}
+        {/* <MenuItem onClick={props.togglePalette}>
           <ListItemIcon>
             {palette.type === "light" ? (
               <Brightness4Icon fontSize="small" />
@@ -108,7 +117,7 @@ const AvatarMenu = props => {
           <Typography variant="inherit">
             {palette.type === "light" ? "Light" : "Dark"} theme
           </Typography>
-        </MenuItem>
+        </MenuItem> */}
         <MenuItem onClick={signout}>
           <ListItemIcon>
             <PowerSettingsNewIcon fontSize="small" />

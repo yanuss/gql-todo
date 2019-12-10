@@ -16,6 +16,7 @@ import CircularProgress from "@material-ui/core/CircularProgress";
 import Signout from "../Signout/Singout";
 import Link from "next/link";
 import AvatarMenu from "../AvatarMenu/AvatarMenu";
+import ToggleDarkModeButton from "../ToggleDarkModeButton/ToggleDakrModeButton";
 
 const NavWrapper = styled.nav`
   flex-grow: 1;
@@ -43,6 +44,13 @@ const useStyles = makeStyles((theme: Theme) =>
         easing: theme.transitions.easing.easeOut,
         duration: theme.transitions.duration.enteringScreen
       })
+    },
+    sideContainer: {
+      display: "flex",
+      alignItems: "center",
+      "& > *": {
+        marginLeft: theme.spacing(2)
+      }
     }
   })
 );
@@ -71,22 +79,24 @@ const Nav = props => {
           <Typography variant="h6" className={classes.title}>
             ToDo list
           </Typography>
-          <User>
-            {(data, loading) => {
-              if (loading) return <CircularProgress size={34} />;
-              if (data && data.me) {
-                return (
-                  <AvatarMenu data={data} togglePalette={props.togglePalette} />
-                );
-              } else {
-                return (
-                  <Link href="/signin" passHref>
-                    <Button component="a">Login</Button>
-                  </Link>
-                );
-              }
-            }}
-          </User>
+          <div className={classes.sideContainer}>
+            <ToggleDarkModeButton togglePalette={props.togglePalette} />
+            <User>
+              {(data, loading) => {
+                if (loading) return <CircularProgress size={34} />;
+                if (data && data.me) {
+                  return (
+                    <AvatarMenu
+                      data={data}
+                      togglePalette={props.togglePalette}
+                    />
+                  );
+                } else {
+                  return null;
+                }
+              }}
+            </User>
+          </div>
         </Toolbar>
       </AppBar>
       <SideMenu {...props} />
