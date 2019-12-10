@@ -8,7 +8,6 @@ const {
   createPrismaUserFromFacebook,
   getFacebookUser
 } = require("../utils/facebook");
-// const { createPrismaFromGoogle, getGoogleUser } = require("../utils/google");
 
 const maxAge = 1000 * 60 * 60 * 24 * 10; // 10 days
 
@@ -40,9 +39,11 @@ const Mutation = {
   async signup(parent, args, ctx, info) {
     args.email = args.email.toLowerCase();
     const email = await ctx.db.query.user({ where: { email: args.email } });
-
     if (email) {
       throw new Error(`User already exist ${email}`);
+    }
+    if (!args.password) {
+      throw new Error(`Password not provided`);
     }
     const password = await bcrypt.hash(args.password, 10);
     const user = await ctx.db.mutation.createUser(
@@ -125,9 +126,12 @@ const Mutation = {
     try {
       const facebookUser = await getFacebookUser(idToken);
       user = await ctx.db.query.user(
-        { where: { facebookUserId: facebookUser.id } },
+        { where: { email: facebookUser.email } },
         info
       );
+      if (user && !user.facebookUserId) {
+        throw new Error(`User already exist ${user.email}`);
+      }
       if (!user) {
         user = await createPrismaUserFromFacebook(ctx, facebookUser);
       }
@@ -143,7 +147,6 @@ const Mutation = {
     }
   },
   async googleSignin(parent, args, ctx, info) {
-    console.log(args);
     args.email = args.email.toLowerCase();
     const userWithEmail = await ctx.db.query.user({
       where: { email: args.email }
@@ -179,28 +182,6 @@ const Mutation = {
       throw new Error(error);
     }
   },
-  // async googleSigninWithToken(parent, { idToken }, ctx, info) {
-  //   let user = null;
-  //   try {
-  //     const facebookUser = await getFacebookUser(idToken);
-  //     user = await ctx.db.query.user(
-  //       { where: { facebookUserId: facebookUser.id } },
-  //       info
-  //     );
-  //     if (!user) {
-  //       user = await createPrismaUserFromFacebook(ctx, facebookUser);
-  //     }
-  //     const token = jwt.sign({ userId: user.id }, process.env.APP_SECRET);
-  //     ctx.response.cookie("token", token, {
-  //       SameSite: "None",
-  //       httpOnly: true,
-  //       maxAge
-  //     });
-  //     return user;
-  //   } catch (error) {
-  //     throw new Error(error);
-  //   }
-  // },
   signout(parent, args, ctx, info) {
     ctx.response.clearCookie("token");
     return { message: "Goodbye!" };

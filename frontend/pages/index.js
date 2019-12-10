@@ -1,7 +1,8 @@
 import React from "react";
+import Home from "../components/Home/Home";
 
 // import Link from "next/link";
 
-const Home = props => <div></div>;
+const HomePage = props => <Home />;
 
-export default Home;
+export default HomePage;

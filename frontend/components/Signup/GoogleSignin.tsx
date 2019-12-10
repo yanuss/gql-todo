@@ -42,7 +42,7 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 );
 
-const GoogleSignin = () => {
+const GoogleSignin = props => {
   const classes = useStyles();
   const [googleSignin, { data, loading, error }] = useMutation(
     GOOGLE_SIGNIN_MUTATION,
@@ -56,20 +56,25 @@ const GoogleSignin = () => {
   );
   const responseGoogle = response => {
     if (response) {
-      googleSignin({
-        variables: {
-          email: response.profileObj.email,
-          name: response.profileObj.name,
-          googleUserId: response.profileObj.googleId,
-          image: response.profileObj.imageUrl
-        }
-      });
+      try {
+        googleSignin({
+          variables: {
+            email: response.profileObj.email,
+            name: response.profileObj.name,
+            googleUserId: response.profileObj.googleId,
+            image: response.profileObj.imageUrl
+          }
+        });
+      } catch (error) {
+        console.log(error);
+      }
     }
   };
   return (
     <GoogleLogin
       clientId={googleAppId}
       onSuccess={responseGoogle}
+      buttonText={props.label}
       // onFailure={responseGoogle}
       // cookiePolicy={"single_host_origin"}
       // render={renderProps => (

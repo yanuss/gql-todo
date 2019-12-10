@@ -35,8 +35,8 @@ const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     container: {
       display: "flex",
-      flexDirection: "column"
-      // flexWrap: "wrap"
+      flexDirection: "column",
+      alignItems: "center"
     },
     textField: {
       marginLeft: theme.spacing(1),

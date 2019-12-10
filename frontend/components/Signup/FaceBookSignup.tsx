@@ -52,7 +52,7 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 );
 
-const FacebookSignup = () => {
+const FacebookSignup = props => {
   const classes = useStyles();
   // const [facebookSignin, { data, loading, error }] = useMutation(
   //   FACEBOOK_SIGNUP_MUTATION,
@@ -75,21 +75,25 @@ const FacebookSignup = () => {
     }
   );
   const responseFacebook = response => {
-    console.log(response);
+    // console.log(response);
     if (response) {
-      // facebookSignin({
-      //   variables: {
-      //     email: response.email,
-      //     name: response.name,
-      //     facebookUserId: response.userID,
-      //     image: response.picture.data.url
-      //   }
-      // });
-      facebookSigninWithToken({
-        variables: {
-          idToken: response.accessToken
-        }
-      });
+      try {
+        // facebookSignin({
+        //   variables: {
+        //     email: response.email,
+        //     name: response.name,
+        //     facebookUserId: response.userID,
+        //     image: response.picture.data.url
+        //   }
+        // });
+        facebookSigninWithToken({
+          variables: {
+            idToken: response.accessToken
+          }
+        });
+      } catch (error) {
+        // console.log(error);
+      }
     }
   };
   return (
@@ -102,14 +106,15 @@ const FacebookSignup = () => {
         icon="fa-facebook"
         render={renderProps => (
           <Button
-            variant="contained"
+            // variant="contained"
+            variant="outlined"
             color="primary"
             type="submit"
             disabled={loading}
             onClick={renderProps.onClick}
             startIcon={<FacebookIcon />}
           >
-            Login with Facebook
+            {props.label ? props.label : "Login with Facebook"}
             {loading && (
               <CircularProgress size={34} className={classes.buttonProgress} />
             )}

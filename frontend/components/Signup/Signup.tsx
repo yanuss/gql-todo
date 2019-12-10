@@ -17,8 +17,14 @@ import { green } from "@material-ui/core/colors";
 import { red } from "@material-ui/core/colors";
 import clsx from "clsx";
 import { CURRENT_USER_QUERY } from "../User/User";
-import FacebookSignup from "./FaceBookSignup";
+import FacebookSignup from "./FacebookSignup";
 import GoogleSiginin from "./GoogleSignin";
+import MailOutlineIcon from "@material-ui/icons/MailOutline";
+import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
+import PersonOutlinedIcon from "@material-ui/icons/PersonOutlined";
+import Divider from "@material-ui/core/Divider";
+import Typography from "@material-ui/core/Typography";
+import { Grid } from "@material-ui/core";
 
 const SIGNNUP_MUTATION = gql`
   mutation SIGNNUP_MUTATION(
@@ -39,8 +45,8 @@ const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     container: {
       display: "flex",
-      flexDirection: "column"
-      // flexWrap: "wrap"
+      flexDirection: "column",
+      alignItems: "cennter"
     },
     textField: {
       marginLeft: theme.spacing(1),
@@ -61,6 +67,18 @@ const useStyles = makeStyles((theme: Theme) =>
       left: "50%",
       marginTop: -17,
       marginLeft: -17
+    },
+    dividerContainer: {
+      margin: theme.spacing(2),
+      position: "relative"
+    },
+    dividerText: {
+      position: "absolute",
+      top: "-10px",
+      left: "50%",
+      background: theme.palette.background.default,
+      paddingLeft: theme.spacing(2),
+      paddingRight: theme.spacing(2)
     }
   })
 );
@@ -139,97 +157,119 @@ const Singup = () => {
   };
 
   return (
-    <form
-      className={classes.container}
-      onSubmit={e => {
-        e.preventDefault();
-        signup();
-      }}
-    >
-      <TextField
-        // id="filled-password-input"
-        onChange={handleChange}
-        label="Name"
-        name="name"
-        className={classes.textField}
-        value={inputs.name}
-        autoComplete="current-name"
-        margin="normal"
-        variant="outlined"
-        required
-      />
-      <TextField
-        // id="filled-password-input"
-        onChange={handleChange}
-        label="Email"
-        name="email"
-        className={classes.textField}
-        value={inputs.email}
-        // type="eMail"
-        autoComplete="current-email"
-        margin="normal"
-        variant="outlined"
-        required
-      />
-      <FormControl
-        className={clsx(classes.margin, classes.textField)}
-        variant="outlined"
+    <div className={classes.container}>
+      <FacebookSignup label="Sign up with Facebook" />
+      <GoogleSiginin label="Sign up with Google" />
+      <div className={classes.dividerContainer}>
+        <Divider />
+        <Typography variant="inherit" className={classes.dividerText}>
+          OR
+        </Typography>
+      </div>
+      <form
+        className={classes.container}
+        onSubmit={e => {
+          e.preventDefault();
+          signup();
+        }}
       >
-        <InputLabel required htmlFor="outlined-adornment-password">
-          Password
-        </InputLabel>
-        <OutlinedInput
-          id="outlined-adornment-password"
-          type={inputs.showPassword ? "text" : "password"}
-          value={inputs.password}
+        <TextField
           onChange={handleChange}
-          name="password"
-          endAdornment={
-            <InputAdornment position="end">
-              <IconButton
-                aria-label="toggle password visibility"
-                onClick={handleClickShowPassword}
-                onMouseDown={handleMouseDownPassword}
-                edge="end"
-              >
-                {inputs.showPassword ? <Visibility /> : <VisibilityOff />}
-              </IconButton>
-            </InputAdornment>
-          }
-          labelWidth={70}
+          label="Name"
+          name="name"
+          className={classes.textField}
+          value={inputs.name}
+          autoComplete="current-name"
+          margin="normal"
+          variant="outlined"
+          required
+          InputProps={{
+            startAdornment: (
+              <InputAdornment position="start">
+                <PersonOutlinedIcon />
+              </InputAdornment>
+            )
+          }}
         />
-      </FormControl>
-      <TextField
-        // id="filled-password-input"
-        onChange={uploadFile}
-        label="Avatar Img"
-        className={classes.textField}
-        type="file"
-        autoComplete="current-password"
-        margin="normal"
-        variant="outlined"
-      />
-      {inputs.image && (
-        <Avatar
-          alt={inputs.name}
-          src={inputs.image}
-          className={classes.bigAvatar}
+        <TextField
+          onChange={handleChange}
+          label="Email"
+          name="email"
+          className={classes.textField}
+          value={inputs.email}
+          autoComplete="current-email"
+          margin="normal"
+          variant="outlined"
+          required
+          InputProps={{
+            startAdornment: (
+              <InputAdornment position="start">
+                <MailOutlineIcon />
+              </InputAdornment>
+            )
+          }}
         />
-      )}
-      <Button
-        variant="contained"
-        color="primary"
-        type="submit"
-        disabled={loading}
-      >
-        Signup
-        {loading && (
-          <CircularProgress size={34} className={classes.buttonProgress} />
+        <FormControl
+          className={clsx(classes.margin, classes.textField)}
+          variant="outlined"
+        >
+          <InputLabel required htmlFor="outlined-adornment-password">
+            Password
+          </InputLabel>
+          <OutlinedInput
+            type={inputs.showPassword ? "text" : "password"}
+            value={inputs.password}
+            onChange={handleChange}
+            name="password"
+            endAdornment={
+              <InputAdornment position="end">
+                <IconButton
+                  aria-label="toggle password visibility"
+                  onClick={handleClickShowPassword}
+                  onMouseDown={handleMouseDownPassword}
+                  edge="end"
+                >
+                  {inputs.showPassword ? <Visibility /> : <VisibilityOff />}
+                </IconButton>
+              </InputAdornment>
+            }
+            labelWidth={70}
+            startAdornment={
+              <InputAdornment position="start">
+                <LockOutlinedIcon />
+              </InputAdornment>
+            }
+          />
+        </FormControl>
+        <TextField
+          onChange={uploadFile}
+          label="Avatar Img"
+          className={classes.textField}
+          type="file"
+          autoComplete="current-password"
+          margin="normal"
+          variant="outlined"
+        />
+        {inputs.image && (
+          <Avatar
+            alt={inputs.name}
+            src={inputs.image}
+            className={classes.bigAvatar}
+          />
         )}
-      </Button>
-      <FacebookSignup />
-      <GoogleSiginin />
-    </form>
+        <Button
+          variant="contained"
+          color="primary"
+          type="submit"
+          disabled={loading}
+        >
+          Signup
+          {loading && (
+            <CircularProgress size={34} className={classes.buttonProgress} />
+          )}
+        </Button>
+      </form>
+    </div>
   );
 };
 

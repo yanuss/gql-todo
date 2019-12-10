@@ -10,15 +10,34 @@ import PowerSettingsNewIcon from "@material-ui/icons/PowerSettingsNew";
 import ListItemIcon from "@material-ui/core/ListItemIcon";
 import Typography from "@material-ui/core/Typography";
 import PersonOutlineRoundedIcon from "@material-ui/icons/PersonOutlineRounded";
-// import { useDarkMode } from "../../lib/useDarkMode";
 import Fade from "@material-ui/core/Fade";
-import { useTheme } from "@material-ui/core/styles";
+import {
+  createStyles,
+  Theme,
+  makeStyles,
+  useTheme
+} from "@material-ui/core/styles";
+import Divider from "@material-ui/core/Divider";
+
+const useStyles = makeStyles((theme: Theme) =>
+  createStyles({
+    accountInfoContainer: {
+      display: "flex",
+      flexDirection: "column"
+    },
+    accountInfo: {
+      fontSize: theme.typography.fontSize - 2,
+      marginLeft: theme.spacing(1.5)
+    }
+  })
+);
 
 const AvatarMenu = props => {
+  const classes = useStyles();
   const { palette } = useTheme();
-  // const { togglePalette } = useDarkMode();
   const { signout } = useSignout();
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+  // const { togglePalette } = useDarkMode();
 
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget);
@@ -55,6 +74,23 @@ const AvatarMenu = props => {
         }}
         TransitionComponent={Fade}
       >
+        <MenuItem>
+          <Avatar
+            alt={props.data.me.name || ""}
+            src={props.data.me.image || ""}
+            aria-controls="simple-menu"
+            aria-haspopup="true"
+          />
+          <div className={classes.accountInfoContainer}>
+            <Typography variant="inherit" className={classes.accountInfo}>
+              {props.data.me.name}
+            </Typography>
+            <Typography variant="inherit" className={classes.accountInfo}>
+              {props.data.me.email}
+            </Typography>
+          </div>
+        </MenuItem>
+        <Divider />
         <MenuItem onClick={handleClose}>
           <ListItemIcon>
             <PersonOutlineRoundedIcon fontSize="small" />
@@ -70,7 +106,7 @@ const AvatarMenu = props => {
             )}
           </ListItemIcon>
           <Typography variant="inherit">
-            Theme {palette.type === "light" ? "light" : "dark"}
+            {palette.type === "light" ? "Light" : "Dark"} theme
           </Typography>
         </MenuItem>
         <MenuItem onClick={signout}>
