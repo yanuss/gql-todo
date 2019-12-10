@@ -106,8 +106,8 @@ const FacebookSignup = props => {
         icon="fa-facebook"
         render={renderProps => (
           <Button
-            // variant="contained"
-            variant="outlined"
+            variant="contained"
+            // variant="outlined"
             color="primary"
             type="submit"
             disabled={loading}

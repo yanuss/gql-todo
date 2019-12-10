@@ -55,7 +55,7 @@ const useStyles = makeStyles((theme: Theme) =>
       flexGrow: 1
     },
     container: {
-      width: "350px"
+      width: "300px"
     }
   })
 );

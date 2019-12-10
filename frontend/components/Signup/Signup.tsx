@@ -43,18 +43,26 @@ const SIGNNUP_MUTATION = gql`
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
-    container: {
+    root: {
       display: "flex",
       flexDirection: "column",
-      alignItems: "cennter"
+      alignItems: "center",
+      "& > *": {
+        margin: theme.spacing(1),
+        width: "100%"
+      }
     },
-    textField: {
-      marginLeft: theme.spacing(1),
-      marginRight: theme.spacing(1),
-      width: 250
+    container: {
+      margin: 0,
+      "& > *": {
+        width: "100%"
+      }
     },
     margin: {
-      margin: theme.spacing(1)
+      "& > *": {
+        marginTop: theme.spacing(2),
+        marginBottom: theme.spacing(1)
+      }
     },
     bigAvatar: {
       width: 100,
@@ -74,11 +82,12 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     dividerText: {
       position: "absolute",
-      top: "-10px",
+      top: "-12px",
       left: "50%",
       background: theme.palette.background.default,
       paddingLeft: theme.spacing(2),
-      paddingRight: theme.spacing(2)
+      paddingRight: theme.spacing(2),
+      textAlign: "center"
     }
   })
 );
@@ -157,7 +166,7 @@ const Singup = () => {
   };
 
   return (
-    <div className={classes.container}>
+    <div className={classes.root}>
       <FacebookSignup label="Sign up with Facebook" />
       <GoogleSiginin label="Sign up with Google" />
       <div className={classes.dividerContainer}>
@@ -167,7 +176,7 @@ const Singup = () => {
         </Typography>
       </div>
       <form
-        className={classes.container}
+        className={clsx(classes.container, classes.margin)}
         onSubmit={e => {
           e.preventDefault();
           signup();
@@ -177,11 +186,11 @@ const Singup = () => {
           onChange={handleChange}
           label="Name"
           name="name"
-          className={classes.textField}
           value={inputs.name}
           autoComplete="current-name"
           margin="normal"
           variant="outlined"
+          size="small"
           required
           InputProps={{
             startAdornment: (
@@ -195,11 +204,11 @@ const Singup = () => {
           onChange={handleChange}
           label="Email"
           name="email"
-          className={classes.textField}
           value={inputs.email}
           autoComplete="current-email"
           margin="normal"
           variant="outlined"
+          size="small"
           required
           InputProps={{
             startAdornment: (
@@ -210,7 +219,8 @@ const Singup = () => {
           }}
         />
         <FormControl
-          className={clsx(classes.margin, classes.textField)}
+          //  className={classes.margin}
+          size="small"
           variant="outlined"
         >
           <InputLabel required htmlFor="outlined-adornment-password">
@@ -244,11 +254,11 @@ const Singup = () => {
         <TextField
           onChange={uploadFile}
           label="Avatar Img"
-          className={classes.textField}
           type="file"
           autoComplete="current-password"
           margin="normal"
           variant="outlined"
+          size="small"
         />
         {inputs.image && (
           <Avatar

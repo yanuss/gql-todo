@@ -14,12 +14,18 @@ import Avatar from "@material-ui/core/Avatar";
 import Button from "@material-ui/core/Button";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import { green } from "@material-ui/core/colors";
-import { red } from "@material-ui/core/colors";
 import clsx from "clsx";
+import { red } from "@material-ui/core/colors";
 import { CURRENT_USER_QUERY } from "../User/User";
 import { GET_TODOS } from "../Items/Items";
 import Link from "next/link";
 import Router from "next/router";
+import FacebookSignup from "../Signup/FacebookSignup";
+import GoogleSiginin from "../Signup/GoogleSignin";
+import Divider from "@material-ui/core/Divider";
+import Typography from "@material-ui/core/Typography";
+import MailOutlineIcon from "@material-ui/icons/MailOutline";
+import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
 
 const SIGNIN_MUTATION = gql`
   mutation SIGNIN_MUTATION($email: String!, $password: String!) {
@@ -33,18 +39,26 @@ const SIGNIN_MUTATION = gql`
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
-    container: {
+    root: {
       display: "flex",
       flexDirection: "column",
-      alignItems: "center"
+      alignItems: "center",
+      "& > *": {
+        margin: theme.spacing(1),
+        width: "100%"
+      }
     },
-    textField: {
-      marginLeft: theme.spacing(1),
-      marginRight: theme.spacing(1),
-      width: 250
+    container: {
+      margin: 0,
+      "& > *": {
+        width: "100%"
+      }
     },
     margin: {
-      margin: theme.spacing(1)
+      "& > *": {
+        marginTop: theme.spacing(2),
+        marginBottom: theme.spacing(1)
+      }
     },
     bigAvatar: {
       width: 100,
@@ -57,6 +71,19 @@ const useStyles = makeStyles((theme: Theme) =>
       left: "50%",
       marginTop: -17,
       marginLeft: -17
+    },
+    dividerContainer: {
+      margin: theme.spacing(2),
+      position: "relative"
+    },
+    dividerText: {
+      position: "absolute",
+      top: "-12px",
+      left: "50%",
+      background: theme.palette.background.default,
+      paddingLeft: theme.spacing(2),
+      paddingRight: theme.spacing(2),
+      textAlign: "center"
     }
   })
 );
@@ -117,71 +144,87 @@ const Singin = () => {
 
   const classes = useStyles();
   return (
-    <form
-      className={classes.container}
-      onSubmit={e => {
-        e.preventDefault();
-        signin();
-      }}
-    >
-      <TextField
-        // id="filled-password-input"
-        onChange={handleChange}
-        label="Email"
-        name="email"
-        className={classes.textField}
-        value={inputs.email}
-        // type="eMail"
-        autoComplete="current-email"
-        margin="normal"
-        variant="outlined"
-        required
-      />
-      <FormControl
-        className={clsx(classes.margin, classes.textField)}
-        variant="outlined"
+    <div className={classes.root}>
+      <FacebookSignup label="Login with Facebook" />
+      <GoogleSiginin label="Login with Google" />
+      <div className={classes.dividerContainer}>
+        <Divider />
+        <Typography variant="inherit" className={classes.dividerText}>
+          OR
+        </Typography>
+      </div>
+      <form
+        className={clsx(classes.container, classes.margin)}
+        onSubmit={e => {
+          e.preventDefault();
+          signin();
+        }}
       >
-        <InputLabel required htmlFor="outlined-adornment-password">
-          Password
-        </InputLabel>
-        <OutlinedInput
-          id="outlined-adornment-password"
-          type={inputs.showPassword ? "text" : "password"}
-          value={inputs.password}
+        <TextField
           onChange={handleChange}
-          name="password"
-          endAdornment={
-            <InputAdornment position="end">
-              <IconButton
-                aria-label="toggle password visibility"
-                onClick={handleClickShowPassword}
-                onMouseDown={handleMouseDownPassword}
-                edge="end"
-              >
-                {inputs.showPassword ? <Visibility /> : <VisibilityOff />}
-              </IconButton>
-            </InputAdornment>
-          }
-          labelWidth={70}
+          label="Email"
+          name="email"
+          value={inputs.email}
+          autoComplete="current-email"
+          margin="normal"
+          variant="outlined"
+          size="small"
+          required
+          InputProps={{
+            startAdornment: (
+              <InputAdornment position="start">
+                <MailOutlineIcon />
+              </InputAdornment>
+            )
+          }}
         />
-      </FormControl>
-      <Button
-        variant="contained"
-        color="primary"
-        type="submit"
-        disabled={loading}
-      >
-        Signin
-        {loading && (
-          <CircularProgress size={34} className={classes.buttonProgress} />
-        )}
-      </Button>
-      <Link href="/requestReset" passHref>
-        <Button variant="contained" color="primary" component="a">
-          Forgot Password?
+        <FormControl variant="outlined" size="small">
+          <InputLabel required htmlFor="outlined-adornment-password">
+            Password
+          </InputLabel>
+          <OutlinedInput
+            type={inputs.showPassword ? "text" : "password"}
+            value={inputs.password}
+            onChange={handleChange}
+            name="password"
+            endAdornment={
+              <InputAdornment position="end">
+                <IconButton
+                  aria-label="toggle password visibility"
+                  onClick={handleClickShowPassword}
+                  onMouseDown={handleMouseDownPassword}
+                  edge="end"
+                >
+                  {inputs.showPassword ? <Visibility /> : <VisibilityOff />}
+                </IconButton>
+              </InputAdornment>
+            }
+            labelWidth={70}
+            startAdornment={
+              <InputAdornment position="start">
+                <LockOutlinedIcon />
+              </InputAdornment>
+            }
+          />
+        </FormControl>
+        <Button
+          variant="contained"
+          color="primary"
+          type="submit"
+          disabled={loading}
+        >
+          Signin
+          {loading && (
+            <CircularProgress size={34} className={classes.buttonProgress} />
+          )}
         </Button>
-      </Link>
-    </form>
+        <Link href="/requestReset" passHref>
+          <Button variant="contained" color="primary" component="a">
+            Forgot Password?
+          </Button>
+        </Link>
+      </form>
+    </div>
   );
 };
 
