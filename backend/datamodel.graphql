@@ -14,7 +14,7 @@ type User {
   email: String! @unique
   password: String
   image: String
-  userImage: Image @relation(name: "UserImage")
+  # userImage: Image @relation(name: "UserImage")
   resetToken: String
   resetTokenExpiry: Float
   permissions: [Permission] @scalarList(strategy: RELATION)
@@ -28,20 +28,20 @@ type Item {
   title: String!
   description: String!
   image: String
-  # user: User!
-  itemImage: [Image]!
+  # itemImage: Image
   done: Boolean!
   createdAt: DateTime @createdAt
   updatedAt: DateTime @updatedAt
   user: User!
 }
 
-type Image {
-  id: ID! @id
-  image: String!
-  large_image: String
-  public_id: String @unique
-  user: User @relation(name: "UserImage", link: INLINE)
-  item: Item
-  type: ImageType!
-}
+# type Image {
+#   id: ID! @id
+#   name: String
+#   image: String!
+#   large_image: String
+#   public_id: String @unique
+#   user: User @relation(name: "UserImage", link: INLINE)
+#   item: Item
+#   type: ImageType!
+# }

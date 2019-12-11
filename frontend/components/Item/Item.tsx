@@ -110,12 +110,6 @@ const Item = ({ itemData, setModalData, handleShowModal }) => {
             //TODO: add optimistic update
             variables: { id: itemData.id, done: !itemData.done },
             refetchQueries: [
-              // {
-              //   query: GET_SINGLE_TODO,
-              //   variables:{
-              //     id: itemData.id,
-              //   }
-              // }
               {
                 query: GET_TODOS
               }
@@ -129,44 +123,11 @@ const Item = ({ itemData, setModalData, handleShowModal }) => {
           <RadioButtonUncheckedIcon fontSize="small" />
         )}
       </IconButton>
-      {/* <Checkbox
-        checked={itemData.done}
-        onChange={() => {
-          updateTodo({
-            //TODO: add optimistic update
-            variables: { id: itemData.id, done: !itemData.done },
-            refetchQueries: [
-              // {
-              //   query: GET_SINGLE_TODO,
-              //   variables:{
-              //     id: itemData.id,
-              //   }
-              // }
-              {
-                query: GET_TODOS
-              }
-            ]
-          });
-        }}
-        value="checkedA"
-        color="primary"
-        // inputProps={{
-        //   "aria-label": "primary checkbox"
-        // }}
-      /> */}
       <div className={clsx(classes.content, classes.done)}>
         <Box fontWeight="fontWeightBold">{itemData.title}</Box>
         <Box>{itemData.description}</Box>
       </div>
-      <ButtonBase
-        focusRipple
-        key={itemData.title}
-        className={classes.image}
-        // focusVisibleClassName={classes.focusVisible}
-        // style={{
-        //   width: 40
-        // }}
-      >
+      <ButtonBase focusRipple key={itemData.title} className={classes.image}>
         <span
           className={classes.imageSrc}
           style={{

@@ -8,7 +8,11 @@ const {
   createPrismaUserFromFacebook,
   getFacebookUser
 } = require("../utils/facebook");
-const { deleteCloudinaryImage, getPublicId } = require("../utils/cloudinary");
+const {
+  deleteCloudinaryImage,
+  getPublicId,
+  deleteCloudinaryImageHandler
+} = require("../utils/cloudinary");
 
 const maxAge = 1000 * 60 * 60 * 24 * 10; // 10 days
 
@@ -36,8 +40,20 @@ const Mutation = {
       info
     );
   },
-  createImage(),
-  deleteItem: forwardTo("db"),
+  async deleteItem(parent, args, ctx, info) {
+    const item = await ctx.db.query.item({ where: { id: args.id } });
+    if (item.image) {
+      deleteCloudinaryImageHandler(item.image);
+    }
+    return await ctx.db.mutation.deleteItem(
+      {
+        where: {
+          id: args.id
+        }
+      },
+      info
+    );
+  },
   async signup(parent, args, ctx, info) {
     args.email = args.email.toLowerCase();
     const email = await ctx.db.query.user({ where: { email: args.email } });
@@ -252,6 +268,7 @@ const Mutation = {
     return updatedUser;
   },
   async deleteCloudinaryImage(parent, args, ctx, info) {
+    console.log("removing image");
     if (args.image) {
       const imageId = getPublicId(args.image);
       const res = await deleteCloudinaryImage(imageId);
@@ -259,10 +276,35 @@ const Mutation = {
         throw new Error("Image not found");
       }
       if (res && res.result === "ok") {
+        console.log("image removed");
         return { message: "Image deleted" };
       }
+      // const itemId = args.id
+      // const item =
     }
   }
+  // async createItemImage(parent, args, ctx, info) {
+  //   if (!ctx.request.userId) {
+  //     throw new Error("You must be logged in");
+  //   }
+  //   return await ctx.db.mutation.createImage(
+  //     { data: { item: { connect: { id: args.itemId } }, ...args } },
+  //     info
+  //   );
+  // },
+  // async createImage(parent, args, ctx, info) {
+  //   if (!ctx.request.userId) {
+  //     throw new Error("You must be logged in");
+  //   }
+  //   return await ctx.db.mutation.createImage(
+  //     {
+  //       data: {
+  //         ...args
+  //       }
+  //     },
+  //     info
+  //   );
+  // }
 };
 
 module.exports = Mutation;

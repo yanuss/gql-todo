@@ -12,8 +12,8 @@ import clsx from "clsx";
 import Tooltip from "@material-ui/core/Tooltip";
 
 const DELETE_TODO = gql`
-  mutation DELETE_TODO($id: ID!) {
-    deleteItem(where: { id: $id }) {
+  mutation DELETE_TODO($id: String!) {
+    deleteItem(id: $id) {
       id
     }
   }
@@ -66,9 +66,7 @@ const DeleteTodo = ({ id }) => {
     variables: { id },
     update: (cache, { data: { deleteItem } }) => {
       const data = cache.readQuery({ query: GET_TODOS });
-      const updatedItems = [...data.items].filter(
-        item => item.id !== deleteItem.id
-      );
+      const updatedItems = [...data.items].filter(item => item.id !== id);
       cache.writeQuery({ query: GET_TODOS, data: { items: updatedItems } });
     },
     // refetchQueries: [{ query: GET_TODOS }],
@@ -78,7 +76,6 @@ const DeleteTodo = ({ id }) => {
     },
     onError: handleError
   });
-
   return (
     <Tooltip title="Delete item" aria-label="menu">
       <IconButton

@@ -54,6 +54,7 @@ const Items = () => {
         return (
           <React.Fragment key={item.id}>
             <Item
+              id={item.id}
               itemData={item}
               setModalData={setModalData}
               handleShowModal={handleShowModal}
@@ -75,6 +76,7 @@ const Items = () => {
       <CreateItem
         open={showModal}
         itemData={modalData}
+        setModalData={setModalData}
         handleClose={() => handleShowModal(false)}
       />
     </div>

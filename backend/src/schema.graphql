@@ -18,7 +18,7 @@ type Mutation {
     description: String
     image: String # date:
   ): Item!
-  deleteItem(where: ItemWhereUniqueInput!): Item
+  deleteItem(id: String!): Item
   signup(email: String!, password: String!, name: String!, image: String): User!
   signin(email: String!, password: String!): User!
   facebookSignin(
@@ -47,19 +47,31 @@ type Mutation {
     image: String
     imageId: String
   ): SuccessMessage
-  createImage(image: String!, large_image: String, public_id: String): Image!
-  deleteImage(
-    id: String
-    image: String
-    large_image: String
-    public_id: String
-  ): SuccessMessage
-  updateImage(
-    id: String
-    image: String
-    large_image: String
-    public_id: String
-  ): Image
+  # createItemImage(
+  #   itemId: String!
+  #   image: String!
+  #   name: String
+  #   large_image: String
+  #   public_id: String
+  # ): Image!
+  # createImage(
+  #   image: String!
+  #   name: String
+  #   large_image: String
+  #   public_id: String
+  # ): Image
+  # deleteImage(
+  #   id: String
+  #   image: String
+  #   large_image: String
+  #   public_id: String
+  # ): SuccessMessage
+  # updateImage(
+  #   id: String
+  #   image: String
+  #   large_image: String
+  #   public_id: String
+  # ): Image
 }
 
 type Query {

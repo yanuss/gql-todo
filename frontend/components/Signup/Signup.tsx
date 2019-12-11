@@ -25,7 +25,6 @@ import PersonOutlinedIcon from "@material-ui/icons/PersonOutlined";
 import Divider from "@material-ui/core/Divider";
 import Typography from "@material-ui/core/Typography";
 import { Grid } from "@material-ui/core";
-import useDeleteImage from "../DeleteImage/DeleteImage";
 import DeleteIcon from "@material-ui/icons/Delete";
 
 const SIGNNUP_MUTATION = gql`

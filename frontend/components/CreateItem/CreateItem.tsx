@@ -11,10 +11,10 @@ import DateFnsUtils from "@date-io/date-fns";
 import Dialog from "@material-ui/core/Dialog";
 import { GET_TODOS } from "../Items/Items";
 import CardMedia from "@material-ui/core/CardMedia";
-import useDeleteImage from "../DeleteImage/DeleteImage";
 import DeleteIcon from "@material-ui/icons/Delete";
 import IconButton from "@material-ui/core/IconButton";
 import Input from "@material-ui/core/Input";
+import ImageInput from "../ImageInput/ImageInput";
 
 import {
   MuiPickersUtilsProvider,
@@ -45,6 +45,18 @@ const ADD_TODO = gql`
   }
 `;
 
+const DELETE_CLOUDINARY_IMAGE = gql`
+  mutation DELETE_CLOUDINARY_IMAGE(
+    $id: String
+    $image: String
+    $imageId: String
+  ) {
+    deleteCloudinaryImage(id: $id, image: $image, imageId: $imageId) {
+      message
+    }
+  }
+`;
+
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
@@ -63,9 +75,6 @@ const useStyles = makeStyles((theme: Theme) =>
         display: "block"
       }
     }
-    // extendedIcon: {
-    //   marginRight: theme.spacing(1)
-    // }
   })
 );
 
@@ -77,22 +86,46 @@ const initialInputs = {
   done: false
 };
 
-const CreateItem = ({ open, itemData, handleClose }) => {
-  const { deleteImage } = useDeleteImage();
+// interface ImageState {
+//   image: string;
+//   name: string;
+//   large_image: string;
+//   public_id: string;
+// }
+
+// const blankImageData = {
+//   image: "",
+//   name: "",
+//   large_image: "",
+//   public_id: ""
+// };
+
+const CreateItem = ({ open, itemData, handleClose, setModalData }) => {
+  const [deleteImage] = useMutation(DELETE_CLOUDINARY_IMAGE);
   const classes = useStyles();
   const [inputs, setInputs] = useState({
     ...initialInputs
   });
+  // const [imageData, setImageData] = useState<ImageState>({
+  //   ...blankImageData
+  // });
 
   useEffect(() => {
     if (itemData.id) {
       setInputs({ ...itemData, done: false });
     }
+    // return () => {
+    //   if (itemData.image !== inputs.image) {
+    //     deleteImageHandler({ image: inputs.image });
+    //   }
+    // };
   }, [itemData]);
 
   useEffect(() => {
     if (!open) {
       setInputs({ ...initialInputs });
+      // setModalData({});
+      // setImageData({ ...blankImageData });
     }
   }, [open]);
 
@@ -108,6 +141,9 @@ const CreateItem = ({ open, itemData, handleClose }) => {
   };
 
   const uploadFile = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (inputs.image) {
+      deleteImageHandler({ image: inputs.image });
+    }
     const files = e.target.files;
     const data = new FormData();
     data.append("file", files[0]);
@@ -127,10 +163,7 @@ const CreateItem = ({ open, itemData, handleClose }) => {
     });
   };
 
-  const [
-    updateTodo
-    // { data, loading, error }
-  ] = useMutation(UPDATE_TODO, {
+  const [updateTodo] = useMutation(UPDATE_TODO, {
     variables: { ...inputs },
     refetchQueries: [
       {
@@ -139,13 +172,11 @@ const CreateItem = ({ open, itemData, handleClose }) => {
     ],
     onCompleted: () => {
       setInputs({ ...initialInputs });
+      // setModalData({});
       handleClose();
     }
   });
-  const [
-    createItem
-    //  { data, loading, error }
-  ] = useMutation(ADD_TODO, {
+  const [createItem] = useMutation(ADD_TODO, {
     variables: { ...inputs },
     refetchQueries: [
       {
@@ -154,6 +185,7 @@ const CreateItem = ({ open, itemData, handleClose }) => {
     ],
     onCompleted: () => {
       setInputs({ ...initialInputs });
+      // setModalData({});
       handleClose();
     }
   });
@@ -163,13 +195,14 @@ const CreateItem = ({ open, itemData, handleClose }) => {
     try {
       result = await deleteImage({
         variables: {
-          id: null,
-          image: inputs.image,
-          imageId: null
+          image: inputs.image
         }
       });
       if (result) {
         setInputs({ ...inputs, image: "", largeImage: "" });
+      }
+      if (itemData.id) {
+        updateTodo();
       }
     } catch (err) {
       console.log(err);
@@ -179,7 +212,12 @@ const CreateItem = ({ open, itemData, handleClose }) => {
   return (
     <Dialog
       open={open}
-      onClose={handleClose}
+      onClose={() => {
+        if (!itemData.id) {
+          deleteImageHandler();
+        }
+        handleClose();
+      }}
       aria-labelledby="form-dialog-title"
     >
       <form
@@ -209,20 +247,6 @@ const CreateItem = ({ open, itemData, handleClose }) => {
           value={inputs.description}
           onChange={handleChange}
         />
-        <Input
-          disabled={false}
-          error={false}
-          name="picture"
-          onChange={uploadFile}
-          type="file"
-          color="primary"
-          placeholder="Upload an image"
-          // value={inputs.image}
-        />
-        {inputs.image && <CardMedia component="img" image={inputs.image} />}
-        <IconButton onClick={deleteImageHandler}>
-          <DeleteIcon />
-        </IconButton>
         <MuiPickersUtilsProvider utils={DateFnsUtils}>
           <KeyboardDatePicker
             disableToolbar
@@ -239,6 +263,10 @@ const CreateItem = ({ open, itemData, handleClose }) => {
             }}
           />
         </MuiPickersUtilsProvider>
+        <ImageInput image={inputs.image} onClick={uploadFile} />
+        <IconButton onClick={deleteImageHandler}>
+          <DeleteIcon />
+        </IconButton>
         <Button
           variant="contained"
           color="primary"
@@ -253,3 +281,58 @@ const CreateItem = ({ open, itemData, handleClose }) => {
 };
 
 export default CreateItem;
+
+// const CREATE_IMAGE = gql`
+//   mutation CREATE_IMAGE(
+//     $image: String!
+//     $name: String
+//     $large_image: String
+//     $public_id: String
+//   ) {
+//     createImage(
+//       image: $image
+//       name: $name
+//       large_image: $large_image
+//       public_id: $public_id
+//     ) {
+//       image
+//       name
+//       large_image
+//       public_id
+//     }
+//   }
+// `;
+
+// const createImage = useMutation(CREATE_IMAGE, {
+//   variables: {
+//     ...imageData
+//   },
+//   onCompleted: () => {
+//     setImageData({ ...blankImageData });
+//   }
+// });
+
+// const uploadBetterImage = async (e: React.ChangeEvent<HTMLInputElement>) => {
+//   if (imageData.image) {
+//     deleteImageHandler({ image: imageData.image });
+//   }
+//   const files = e.target.files;
+//   const data = new FormData();
+//   data.append("file", files[0]);
+//   data.append("upload_preset", "gql-todo");
+//   const res = await fetch(
+//     "https://api.cloudinary.com/v1_1/yanus/image/upload",
+//     {
+//       method: "POST",
+//       body: data
+//     }
+//   );
+//   const file = await res.json();
+//   createImage({
+//     variables: {
+//       image: file.secure_url,
+//       large_image: file.eager[0].secure_url,
+//       public_id: file.public_id
+//     }
+//   });
+// };

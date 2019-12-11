@@ -25,5 +25,21 @@ const getPublicId = url => {
   return result;
 };
 
+const deleteCloudinaryImageHandler = async image => {
+  console.log("removing image");
+  if (image) {
+    const imageId = getPublicId(image);
+    const res = await deleteCloudinaryImage(imageId);
+    if (res && res.result === "not found") {
+      throw new Error("Image not found");
+    }
+    if (res && res.result === "ok") {
+      console.log("image removed");
+      return { message: "Image deleted" };
+    }
+  }
+};
+
+module.exports.deleteCloudinaryImageHandler = deleteCloudinaryImageHandler;
 module.exports.deleteCloudinaryImage = deleteCloudinaryImage;
 module.exports.getPublicId = getPublicId;
