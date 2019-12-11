@@ -84,6 +84,9 @@ const useStyles = makeStyles((theme: Theme) =>
       paddingLeft: theme.spacing(2),
       paddingRight: theme.spacing(2),
       textAlign: "center"
+    },
+    forgotBtn: {
+      margin: 0
     }
   })
 );
@@ -207,22 +210,22 @@ const Singin = () => {
             }
           />
         </FormControl>
+        <Link href="/requestReset" passHref>
+          <Button color="primary" component="a" className={classes.forgotBtn}>
+            Forgot Password?
+          </Button>
+        </Link>
         <Button
           variant="contained"
           color="primary"
           type="submit"
           disabled={loading}
         >
-          Signin
+          Log in
           {loading && (
             <CircularProgress size={34} className={classes.buttonProgress} />
           )}
         </Button>
-        <Link href="/requestReset" passHref>
-          <Button variant="contained" color="primary" component="a">
-            Forgot Password?
-          </Button>
-        </Link>
       </form>
     </div>
   );

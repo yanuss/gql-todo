@@ -3,12 +3,18 @@ enum Permission {
   ADMIN
 }
 
+enum ImageType {
+  AVATAR
+  ITEM_IMAGE
+}
+
 type User {
   id: ID! @id
   name: String!
   email: String! @unique
   password: String
   image: String
+  userImage: Image @relation(name: "UserImage")
   resetToken: String
   resetTokenExpiry: Float
   permissions: [Permission] @scalarList(strategy: RELATION)
@@ -23,8 +29,19 @@ type Item {
   description: String!
   image: String
   # user: User!
+  itemImage: [Image]!
   done: Boolean!
   createdAt: DateTime @createdAt
   updatedAt: DateTime @updatedAt
   user: User!
+}
+
+type Image {
+  id: ID! @id
+  image: String!
+  large_image: String
+  public_id: String @unique
+  user: User @relation(name: "UserImage", link: INLINE)
+  item: Item
+  type: ImageType!
 }

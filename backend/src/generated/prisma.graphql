@@ -1,5 +1,9 @@
 # source: https://eu1.prisma.sh/pawel-janus/gql-todo/dev
-# timestamp: Tue Dec 10 2019 00:07:39 GMT+0100 (Central European Standard Time)
+# timestamp: Wed Dec 11 2019 01:59:41 GMT+0100 (Central European Standard Time)
+
+type AggregateImage {
+  count: Int!
+}
 
 type AggregateItem {
   count: Int!
@@ -16,11 +20,592 @@ type BatchPayload {
 
 scalar DateTime
 
+type Image implements Node {
+  id: ID!
+  image: String!
+  large_image: String
+  public_id: String
+  user: User
+  item: Item
+  type: ImageType!
+}
+
+"""A connection to a list of items."""
+type ImageConnection {
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """A list of edges."""
+  edges: [ImageEdge]!
+  aggregate: AggregateImage!
+}
+
+input ImageCreateInput {
+  id: ID
+  image: String!
+  large_image: String
+  public_id: String
+  type: ImageType!
+  user: UserCreateOneWithoutUserImageInput
+  item: ItemCreateOneWithoutItemImageInput
+}
+
+input ImageCreateManyWithoutItemInput {
+  create: [ImageCreateWithoutItemInput!]
+  connect: [ImageWhereUniqueInput!]
+}
+
+input ImageCreateOneWithoutUserInput {
+  create: ImageCreateWithoutUserInput
+  connect: ImageWhereUniqueInput
+}
+
+input ImageCreateWithoutItemInput {
+  id: ID
+  image: String!
+  large_image: String
+  public_id: String
+  type: ImageType!
+  user: UserCreateOneWithoutUserImageInput
+}
+
+input ImageCreateWithoutUserInput {
+  id: ID
+  image: String!
+  large_image: String
+  public_id: String
+  type: ImageType!
+  item: ItemCreateOneWithoutItemImageInput
+}
+
+"""An edge in a connection."""
+type ImageEdge {
+  """The item at the end of the edge."""
+  node: Image!
+
+  """A cursor for use in pagination."""
+  cursor: String!
+}
+
+enum ImageOrderByInput {
+  id_ASC
+  id_DESC
+  image_ASC
+  image_DESC
+  large_image_ASC
+  large_image_DESC
+  public_id_ASC
+  public_id_DESC
+  type_ASC
+  type_DESC
+}
+
+type ImagePreviousValues {
+  id: ID!
+  image: String!
+  large_image: String
+  public_id: String
+  type: ImageType!
+}
+
+input ImageScalarWhereInput {
+  """Logical AND on all given filters."""
+  AND: [ImageScalarWhereInput!]
+
+  """Logical OR on all given filters."""
+  OR: [ImageScalarWhereInput!]
+
+  """Logical NOT on all given filters combined by AND."""
+  NOT: [ImageScalarWhereInput!]
+  id: ID
+
+  """All values that are not equal to given value."""
+  id_not: ID
+
+  """All values that are contained in given list."""
+  id_in: [ID!]
+
+  """All values that are not contained in given list."""
+  id_not_in: [ID!]
+
+  """All values less than the given value."""
+  id_lt: ID
+
+  """All values less than or equal the given value."""
+  id_lte: ID
+
+  """All values greater than the given value."""
+  id_gt: ID
+
+  """All values greater than or equal the given value."""
+  id_gte: ID
+
+  """All values containing the given string."""
+  id_contains: ID
+
+  """All values not containing the given string."""
+  id_not_contains: ID
+
+  """All values starting with the given string."""
+  id_starts_with: ID
+
+  """All values not starting with the given string."""
+  id_not_starts_with: ID
+
+  """All values ending with the given string."""
+  id_ends_with: ID
+
+  """All values not ending with the given string."""
+  id_not_ends_with: ID
+  image: String
+
+  """All values that are not equal to given value."""
+  image_not: String
+
+  """All values that are contained in given list."""
+  image_in: [String!]
+
+  """All values that are not contained in given list."""
+  image_not_in: [String!]
+
+  """All values less than the given value."""
+  image_lt: String
+
+  """All values less than or equal the given value."""
+  image_lte: String
+
+  """All values greater than the given value."""
+  image_gt: String
+
+  """All values greater than or equal the given value."""
+  image_gte: String
+
+  """All values containing the given string."""
+  image_contains: String
+
+  """All values not containing the given string."""
+  image_not_contains: String
+
+  """All values starting with the given string."""
+  image_starts_with: String
+
+  """All values not starting with the given string."""
+  image_not_starts_with: String
+
+  """All values ending with the given string."""
+  image_ends_with: String
+
+  """All values not ending with the given string."""
+  image_not_ends_with: String
+  large_image: String
+
+  """All values that are not equal to given value."""
+  large_image_not: String
+
+  """All values that are contained in given list."""
+  large_image_in: [String!]
+
+  """All values that are not contained in given list."""
+  large_image_not_in: [String!]
+
+  """All values less than the given value."""
+  large_image_lt: String
+
+  """All values less than or equal the given value."""
+  large_image_lte: String
+
+  """All values greater than the given value."""
+  large_image_gt: String
+
+  """All values greater than or equal the given value."""
+  large_image_gte: String
+
+  """All values containing the given string."""
+  large_image_contains: String
+
+  """All values not containing the given string."""
+  large_image_not_contains: String
+
+  """All values starting with the given string."""
+  large_image_starts_with: String
+
+  """All values not starting with the given string."""
+  large_image_not_starts_with: String
+
+  """All values ending with the given string."""
+  large_image_ends_with: String
+
+  """All values not ending with the given string."""
+  large_image_not_ends_with: String
+  public_id: String
+
+  """All values that are not equal to given value."""
+  public_id_not: String
+
+  """All values that are contained in given list."""
+  public_id_in: [String!]
+
+  """All values that are not contained in given list."""
+  public_id_not_in: [String!]
+
+  """All values less than the given value."""
+  public_id_lt: String
+
+  """All values less than or equal the given value."""
+  public_id_lte: String
+
+  """All values greater than the given value."""
+  public_id_gt: String
+
+  """All values greater than or equal the given value."""
+  public_id_gte: String
+
+  """All values containing the given string."""
+  public_id_contains: String
+
+  """All values not containing the given string."""
+  public_id_not_contains: String
+
+  """All values starting with the given string."""
+  public_id_starts_with: String
+
+  """All values not starting with the given string."""
+  public_id_not_starts_with: String
+
+  """All values ending with the given string."""
+  public_id_ends_with: String
+
+  """All values not ending with the given string."""
+  public_id_not_ends_with: String
+  type: ImageType
+
+  """All values that are not equal to given value."""
+  type_not: ImageType
+
+  """All values that are contained in given list."""
+  type_in: [ImageType!]
+
+  """All values that are not contained in given list."""
+  type_not_in: [ImageType!]
+}
+
+type ImageSubscriptionPayload {
+  mutation: MutationType!
+  node: Image
+  updatedFields: [String!]
+  previousValues: ImagePreviousValues
+}
+
+input ImageSubscriptionWhereInput {
+  """Logical AND on all given filters."""
+  AND: [ImageSubscriptionWhereInput!]
+
+  """Logical OR on all given filters."""
+  OR: [ImageSubscriptionWhereInput!]
+
+  """Logical NOT on all given filters combined by AND."""
+  NOT: [ImageSubscriptionWhereInput!]
+
+  """The subscription event gets dispatched when it's listed in mutation_in"""
+  mutation_in: [MutationType!]
+
+  """
+  The subscription event gets only dispatched when one of the updated fields names is included in this list
+  """
+  updatedFields_contains: String
+
+  """
+  The subscription event gets only dispatched when all of the field names included in this list have been updated
+  """
+  updatedFields_contains_every: [String!]
+
+  """
+  The subscription event gets only dispatched when some of the field names included in this list have been updated
+  """
+  updatedFields_contains_some: [String!]
+  node: ImageWhereInput
+}
+
+enum ImageType {
+  AVATAR
+  ITEM_IMAGE
+}
+
+input ImageUpdateInput {
+  image: String
+  large_image: String
+  public_id: String
+  type: ImageType
+  user: UserUpdateOneWithoutUserImageInput
+  item: ItemUpdateOneWithoutItemImageInput
+}
+
+input ImageUpdateManyDataInput {
+  image: String
+  large_image: String
+  public_id: String
+  type: ImageType
+}
+
+input ImageUpdateManyMutationInput {
+  image: String
+  large_image: String
+  public_id: String
+  type: ImageType
+}
+
+input ImageUpdateManyWithoutItemInput {
+  create: [ImageCreateWithoutItemInput!]
+  connect: [ImageWhereUniqueInput!]
+  set: [ImageWhereUniqueInput!]
+  disconnect: [ImageWhereUniqueInput!]
+  delete: [ImageWhereUniqueInput!]
+  update: [ImageUpdateWithWhereUniqueWithoutItemInput!]
+  updateMany: [ImageUpdateManyWithWhereNestedInput!]
+  deleteMany: [ImageScalarWhereInput!]
+  upsert: [ImageUpsertWithWhereUniqueWithoutItemInput!]
+}
+
+input ImageUpdateManyWithWhereNestedInput {
+  where: ImageScalarWhereInput!
+  data: ImageUpdateManyDataInput!
+}
+
+input ImageUpdateOneWithoutUserInput {
+  create: ImageCreateWithoutUserInput
+  connect: ImageWhereUniqueInput
+  disconnect: Boolean
+  delete: Boolean
+  update: ImageUpdateWithoutUserDataInput
+  upsert: ImageUpsertWithoutUserInput
+}
+
+input ImageUpdateWithoutItemDataInput {
+  image: String
+  large_image: String
+  public_id: String
+  type: ImageType
+  user: UserUpdateOneWithoutUserImageInput
+}
+
+input ImageUpdateWithoutUserDataInput {
+  image: String
+  large_image: String
+  public_id: String
+  type: ImageType
+  item: ItemUpdateOneWithoutItemImageInput
+}
+
+input ImageUpdateWithWhereUniqueWithoutItemInput {
+  where: ImageWhereUniqueInput!
+  data: ImageUpdateWithoutItemDataInput!
+}
+
+input ImageUpsertWithoutUserInput {
+  update: ImageUpdateWithoutUserDataInput!
+  create: ImageCreateWithoutUserInput!
+}
+
+input ImageUpsertWithWhereUniqueWithoutItemInput {
+  where: ImageWhereUniqueInput!
+  update: ImageUpdateWithoutItemDataInput!
+  create: ImageCreateWithoutItemInput!
+}
+
+input ImageWhereInput {
+  """Logical AND on all given filters."""
+  AND: [ImageWhereInput!]
+
+  """Logical OR on all given filters."""
+  OR: [ImageWhereInput!]
+
+  """Logical NOT on all given filters combined by AND."""
+  NOT: [ImageWhereInput!]
+  id: ID
+
+  """All values that are not equal to given value."""
+  id_not: ID
+
+  """All values that are contained in given list."""
+  id_in: [ID!]
+
+  """All values that are not contained in given list."""
+  id_not_in: [ID!]
+
+  """All values less than the given value."""
+  id_lt: ID
+
+  """All values less than or equal the given value."""
+  id_lte: ID
+
+  """All values greater than the given value."""
+  id_gt: ID
+
+  """All values greater than or equal the given value."""
+  id_gte: ID
+
+  """All values containing the given string."""
+  id_contains: ID
+
+  """All values not containing the given string."""
+  id_not_contains: ID
+
+  """All values starting with the given string."""
+  id_starts_with: ID
+
+  """All values not starting with the given string."""
+  id_not_starts_with: ID
+
+  """All values ending with the given string."""
+  id_ends_with: ID
+
+  """All values not ending with the given string."""
+  id_not_ends_with: ID
+  image: String
+
+  """All values that are not equal to given value."""
+  image_not: String
+
+  """All values that are contained in given list."""
+  image_in: [String!]
+
+  """All values that are not contained in given list."""
+  image_not_in: [String!]
+
+  """All values less than the given value."""
+  image_lt: String
+
+  """All values less than or equal the given value."""
+  image_lte: String
+
+  """All values greater than the given value."""
+  image_gt: String
+
+  """All values greater than or equal the given value."""
+  image_gte: String
+
+  """All values containing the given string."""
+  image_contains: String
+
+  """All values not containing the given string."""
+  image_not_contains: String
+
+  """All values starting with the given string."""
+  image_starts_with: String
+
+  """All values not starting with the given string."""
+  image_not_starts_with: String
+
+  """All values ending with the given string."""
+  image_ends_with: String
+
+  """All values not ending with the given string."""
+  image_not_ends_with: String
+  large_image: String
+
+  """All values that are not equal to given value."""
+  large_image_not: String
+
+  """All values that are contained in given list."""
+  large_image_in: [String!]
+
+  """All values that are not contained in given list."""
+  large_image_not_in: [String!]
+
+  """All values less than the given value."""
+  large_image_lt: String
+
+  """All values less than or equal the given value."""
+  large_image_lte: String
+
+  """All values greater than the given value."""
+  large_image_gt: String
+
+  """All values greater than or equal the given value."""
+  large_image_gte: String
+
+  """All values containing the given string."""
+  large_image_contains: String
+
+  """All values not containing the given string."""
+  large_image_not_contains: String
+
+  """All values starting with the given string."""
+  large_image_starts_with: String
+
+  """All values not starting with the given string."""
+  large_image_not_starts_with: String
+
+  """All values ending with the given string."""
+  large_image_ends_with: String
+
+  """All values not ending with the given string."""
+  large_image_not_ends_with: String
+  public_id: String
+
+  """All values that are not equal to given value."""
+  public_id_not: String
+
+  """All values that are contained in given list."""
+  public_id_in: [String!]
+
+  """All values that are not contained in given list."""
+  public_id_not_in: [String!]
+
+  """All values less than the given value."""
+  public_id_lt: String
+
+  """All values less than or equal the given value."""
+  public_id_lte: String
+
+  """All values greater than the given value."""
+  public_id_gt: String
+
+  """All values greater than or equal the given value."""
+  public_id_gte: String
+
+  """All values containing the given string."""
+  public_id_contains: String
+
+  """All values not containing the given string."""
+  public_id_not_contains: String
+
+  """All values starting with the given string."""
+  public_id_starts_with: String
+
+  """All values not starting with the given string."""
+  public_id_not_starts_with: String
+
+  """All values ending with the given string."""
+  public_id_ends_with: String
+
+  """All values not ending with the given string."""
+  public_id_not_ends_with: String
+  type: ImageType
+
+  """All values that are not equal to given value."""
+  type_not: ImageType
+
+  """All values that are contained in given list."""
+  type_in: [ImageType!]
+
+  """All values that are not contained in given list."""
+  type_not_in: [ImageType!]
+  user: UserWhereInput
+  item: ItemWhereInput
+}
+
+input ImageWhereUniqueInput {
+  id: ID
+  public_id: String
+}
+
 type Item implements Node {
   id: ID!
   title: String!
   description: String!
   image: String
+  itemImage(where: ImageWhereInput, orderBy: ImageOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Image!]
   done: Boolean!
   createdAt: DateTime
   updatedAt: DateTime
@@ -43,6 +628,7 @@ input ItemCreateInput {
   description: String!
   image: String
   done: Boolean!
+  itemImage: ImageCreateManyWithoutItemInput
   user: UserCreateOneWithoutItemsInput!
 }
 
@@ -51,12 +637,27 @@ input ItemCreateManyWithoutUserInput {
   connect: [ItemWhereUniqueInput!]
 }
 
+input ItemCreateOneWithoutItemImageInput {
+  create: ItemCreateWithoutItemImageInput
+  connect: ItemWhereUniqueInput
+}
+
+input ItemCreateWithoutItemImageInput {
+  id: ID
+  title: String!
+  description: String!
+  image: String
+  done: Boolean!
+  user: UserCreateOneWithoutItemsInput!
+}
+
 input ItemCreateWithoutUserInput {
   id: ID
   title: String!
   description: String!
   image: String
   done: Boolean!
+  itemImage: ImageCreateManyWithoutItemInput
 }
 
 """An edge in a connection."""
@@ -356,6 +957,7 @@ input ItemUpdateInput {
   description: String
   image: String
   done: Boolean
+  itemImage: ImageUpdateManyWithoutItemInput
   user: UserUpdateOneRequiredWithoutItemsInput
 }
 
@@ -390,16 +992,39 @@ input ItemUpdateManyWithWhereNestedInput {
   data: ItemUpdateManyDataInput!
 }
 
+input ItemUpdateOneWithoutItemImageInput {
+  create: ItemCreateWithoutItemImageInput
+  connect: ItemWhereUniqueInput
+  disconnect: Boolean
+  delete: Boolean
+  update: ItemUpdateWithoutItemImageDataInput
+  upsert: ItemUpsertWithoutItemImageInput
+}
+
+input ItemUpdateWithoutItemImageDataInput {
+  title: String
+  description: String
+  image: String
+  done: Boolean
+  user: UserUpdateOneRequiredWithoutItemsInput
+}
+
 input ItemUpdateWithoutUserDataInput {
   title: String
   description: String
   image: String
   done: Boolean
+  itemImage: ImageUpdateManyWithoutItemInput
 }
 
 input ItemUpdateWithWhereUniqueWithoutUserInput {
   where: ItemWhereUniqueInput!
   data: ItemUpdateWithoutUserDataInput!
+}
+
+input ItemUpsertWithoutItemImageInput {
+  update: ItemUpdateWithoutItemImageDataInput!
+  create: ItemCreateWithoutItemImageInput!
 }
 
 input ItemUpsertWithWhereUniqueWithoutUserInput {
@@ -625,6 +1250,9 @@ input ItemWhereInput {
 
   """All values greater than or equal the given value."""
   updatedAt_gte: DateTime
+  itemImage_every: ImageWhereInput
+  itemImage_some: ImageWhereInput
+  itemImage_none: ImageWhereInput
   user: UserWhereInput
 }
 
@@ -641,16 +1269,22 @@ scalar Long
 type Mutation {
   createUser(data: UserCreateInput!): User!
   createItem(data: ItemCreateInput!): Item!
+  createImage(data: ImageCreateInput!): Image!
   updateUser(data: UserUpdateInput!, where: UserWhereUniqueInput!): User
   updateItem(data: ItemUpdateInput!, where: ItemWhereUniqueInput!): Item
+  updateImage(data: ImageUpdateInput!, where: ImageWhereUniqueInput!): Image
   deleteUser(where: UserWhereUniqueInput!): User
   deleteItem(where: ItemWhereUniqueInput!): Item
+  deleteImage(where: ImageWhereUniqueInput!): Image
   upsertUser(where: UserWhereUniqueInput!, create: UserCreateInput!, update: UserUpdateInput!): User!
   upsertItem(where: ItemWhereUniqueInput!, create: ItemCreateInput!, update: ItemUpdateInput!): Item!
+  upsertImage(where: ImageWhereUniqueInput!, create: ImageCreateInput!, update: ImageUpdateInput!): Image!
   updateManyUsers(data: UserUpdateManyMutationInput!, where: UserWhereInput): BatchPayload!
   updateManyItems(data: ItemUpdateManyMutationInput!, where: ItemWhereInput): BatchPayload!
+  updateManyImages(data: ImageUpdateManyMutationInput!, where: ImageWhereInput): BatchPayload!
   deleteManyUsers(where: UserWhereInput): BatchPayload!
   deleteManyItems(where: ItemWhereInput): BatchPayload!
+  deleteManyImages(where: ImageWhereInput): BatchPayload!
 }
 
 enum MutationType {
@@ -688,10 +1322,13 @@ enum Permission {
 type Query {
   users(where: UserWhereInput, orderBy: UserOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [User]!
   items(where: ItemWhereInput, orderBy: ItemOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Item]!
+  images(where: ImageWhereInput, orderBy: ImageOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Image]!
   user(where: UserWhereUniqueInput!): User
   item(where: ItemWhereUniqueInput!): Item
+  image(where: ImageWhereUniqueInput!): Image
   usersConnection(where: UserWhereInput, orderBy: UserOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): UserConnection!
   itemsConnection(where: ItemWhereInput, orderBy: ItemOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): ItemConnection!
+  imagesConnection(where: ImageWhereInput, orderBy: ImageOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): ImageConnection!
 
   """Fetches an object given its ID"""
   node(
@@ -703,6 +1340,7 @@ type Query {
 type Subscription {
   user(where: UserSubscriptionWhereInput): UserSubscriptionPayload
   item(where: ItemSubscriptionWhereInput): ItemSubscriptionPayload
+  image(where: ImageSubscriptionWhereInput): ImageSubscriptionPayload
 }
 
 type User implements Node {
@@ -711,6 +1349,7 @@ type User implements Node {
   email: String!
   password: String
   image: String
+  userImage: Image
   resetToken: String
   resetTokenExpiry: Float
   permissions: [Permission!]!
@@ -740,11 +1379,17 @@ input UserCreateInput {
   facebookUserId: String
   googleUserId: String
   permissions: UserCreatepermissionsInput
+  userImage: ImageCreateOneWithoutUserInput
   items: ItemCreateManyWithoutUserInput
 }
 
 input UserCreateOneWithoutItemsInput {
   create: UserCreateWithoutItemsInput
+  connect: UserWhereUniqueInput
+}
+
+input UserCreateOneWithoutUserImageInput {
+  create: UserCreateWithoutUserImageInput
   connect: UserWhereUniqueInput
 }
 
@@ -763,6 +1408,21 @@ input UserCreateWithoutItemsInput {
   facebookUserId: String
   googleUserId: String
   permissions: UserCreatepermissionsInput
+  userImage: ImageCreateOneWithoutUserInput
+}
+
+input UserCreateWithoutUserImageInput {
+  id: ID
+  name: String!
+  email: String!
+  password: String
+  image: String
+  resetToken: String
+  resetTokenExpiry: Float
+  facebookUserId: String
+  googleUserId: String
+  permissions: UserCreatepermissionsInput
+  items: ItemCreateManyWithoutUserInput
 }
 
 """An edge in a connection."""
@@ -855,6 +1515,7 @@ input UserUpdateInput {
   facebookUserId: String
   googleUserId: String
   permissions: UserUpdatepermissionsInput
+  userImage: ImageUpdateOneWithoutUserInput
   items: ItemUpdateManyWithoutUserInput
 }
 
@@ -877,6 +1538,15 @@ input UserUpdateOneRequiredWithoutItemsInput {
   upsert: UserUpsertWithoutItemsInput
 }
 
+input UserUpdateOneWithoutUserImageInput {
+  create: UserCreateWithoutUserImageInput
+  connect: UserWhereUniqueInput
+  disconnect: Boolean
+  delete: Boolean
+  update: UserUpdateWithoutUserImageDataInput
+  upsert: UserUpsertWithoutUserImageInput
+}
+
 input UserUpdatepermissionsInput {
   set: [Permission!]
 }
@@ -891,11 +1561,30 @@ input UserUpdateWithoutItemsDataInput {
   facebookUserId: String
   googleUserId: String
   permissions: UserUpdatepermissionsInput
+  userImage: ImageUpdateOneWithoutUserInput
+}
+
+input UserUpdateWithoutUserImageDataInput {
+  name: String
+  email: String
+  password: String
+  image: String
+  resetToken: String
+  resetTokenExpiry: Float
+  facebookUserId: String
+  googleUserId: String
+  permissions: UserUpdatepermissionsInput
+  items: ItemUpdateManyWithoutUserInput
 }
 
 input UserUpsertWithoutItemsInput {
   update: UserUpdateWithoutItemsDataInput!
   create: UserCreateWithoutItemsInput!
+}
+
+input UserUpsertWithoutUserImageInput {
+  update: UserUpdateWithoutUserImageDataInput!
+  create: UserCreateWithoutUserImageInput!
 }
 
 input UserWhereInput {
@@ -1249,6 +1938,7 @@ input UserWhereInput {
 
   """All values not ending with the given string."""
   googleUserId_not_ends_with: String
+  userImage: ImageWhereInput
   items_every: ItemWhereInput
   items_some: ItemWhereInput
   items_none: ItemWhereInput

@@ -11,7 +11,9 @@ import DateFnsUtils from "@date-io/date-fns";
 import Dialog from "@material-ui/core/Dialog";
 import { GET_TODOS } from "../Items/Items";
 import CardMedia from "@material-ui/core/CardMedia";
-
+import useDeleteImage from "../DeleteImage/DeleteImage";
+import DeleteIcon from "@material-ui/icons/Delete";
+import IconButton from "@material-ui/core/IconButton";
 import Input from "@material-ui/core/Input";
 
 import {
@@ -76,6 +78,7 @@ const initialInputs = {
 };
 
 const CreateItem = ({ open, itemData, handleClose }) => {
+  const { deleteImage } = useDeleteImage();
   const classes = useStyles();
   const [inputs, setInputs] = useState({
     ...initialInputs
@@ -155,6 +158,24 @@ const CreateItem = ({ open, itemData, handleClose }) => {
     }
   });
 
+  const deleteImageHandler = async () => {
+    let result;
+    try {
+      result = await deleteImage({
+        variables: {
+          id: null,
+          image: inputs.image,
+          imageId: null
+        }
+      });
+      if (result) {
+        setInputs({ ...inputs, image: "", largeImage: "" });
+      }
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
   return (
     <Dialog
       open={open}
@@ -199,6 +220,9 @@ const CreateItem = ({ open, itemData, handleClose }) => {
           // value={inputs.image}
         />
         {inputs.image && <CardMedia component="img" image={inputs.image} />}
+        <IconButton onClick={deleteImageHandler}>
+          <DeleteIcon />
+        </IconButton>
         <MuiPickersUtilsProvider utils={DateFnsUtils}>
           <KeyboardDatePicker
             disableToolbar

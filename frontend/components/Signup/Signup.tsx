@@ -25,6 +25,8 @@ import PersonOutlinedIcon from "@material-ui/icons/PersonOutlined";
 import Divider from "@material-ui/core/Divider";
 import Typography from "@material-ui/core/Typography";
 import { Grid } from "@material-ui/core";
+import useDeleteImage from "../DeleteImage/DeleteImage";
+import DeleteIcon from "@material-ui/icons/Delete";
 
 const SIGNNUP_MUTATION = gql`
   mutation SIGNNUP_MUTATION(
@@ -109,6 +111,7 @@ const initialInputs = {
 
 const Singup = () => {
   const classes = useStyles();
+  const { deleteImage } = useDeleteImage();
   const [inputs, setInputs] = useState<State>({
     ...initialInputs
   });
@@ -163,6 +166,24 @@ const Singup = () => {
     event: React.MouseEvent<HTMLButtonElement>
   ) => {
     event.preventDefault();
+  };
+
+  const deleteImageHandler = async () => {
+    let result;
+    try {
+      result = await deleteImage({
+        variables: {
+          id: null,
+          image: inputs.image,
+          imageId: null
+        }
+      });
+      if (result) {
+        setInputs({ ...inputs, image: "" });
+      }
+    } catch (err) {
+      console.log(err);
+    }
   };
 
   return (
@@ -251,7 +272,7 @@ const Singup = () => {
             }
           />
         </FormControl>
-        <TextField
+        {/* <TextField
           onChange={uploadFile}
           label="Avatar Img"
           type="file"
@@ -267,6 +288,9 @@ const Singup = () => {
             className={classes.bigAvatar}
           />
         )}
+        <IconButton onClick={deleteImageHandler}>
+          <DeleteIcon />
+        </IconButton> */}
         <Button
           variant="contained"
           color="primary"

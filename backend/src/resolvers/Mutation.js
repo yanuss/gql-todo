@@ -8,6 +8,7 @@ const {
   createPrismaUserFromFacebook,
   getFacebookUser
 } = require("../utils/facebook");
+const { deleteCloudinaryImage, getPublicId } = require("../utils/cloudinary");
 
 const maxAge = 1000 * 60 * 60 * 24 * 10; // 10 days
 
@@ -35,6 +36,7 @@ const Mutation = {
       info
     );
   },
+  createImage(),
   deleteItem: forwardTo("db"),
   async signup(parent, args, ctx, info) {
     args.email = args.email.toLowerCase();
@@ -219,7 +221,7 @@ const Mutation = {
     }
     // 2. check if its a legit reset token
     // 3. Check if its expired
-    const [user] = await ctx.db.query.users({
+    const user = await ctx.db.query.users({
       where: {
         resetToken: args.resetToken,
         resetTokenExpiry_gte: Date.now() - 3600000
@@ -248,6 +250,18 @@ const Mutation = {
     });
     // 8. return the new user
     return updatedUser;
+  },
+  async deleteCloudinaryImage(parent, args, ctx, info) {
+    if (args.image) {
+      const imageId = getPublicId(args.image);
+      const res = await deleteCloudinaryImage(imageId);
+      if (res && res.result === "not found") {
+        throw new Error("Image not found");
+      }
+      if (res && res.result === "ok") {
+        return { message: "Image deleted" };
+      }
+    }
   }
 };
 

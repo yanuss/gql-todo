@@ -42,6 +42,24 @@ type Mutation {
     password: String!
     confirmPassword: String!
   ): User!
+  deleteCloudinaryImage(
+    id: String
+    image: String
+    imageId: String
+  ): SuccessMessage
+  createImage(image: String!, large_image: String, public_id: String): Image!
+  deleteImage(
+    id: String
+    image: String
+    large_image: String
+    public_id: String
+  ): SuccessMessage
+  updateImage(
+    id: String
+    image: String
+    large_image: String
+    public_id: String
+  ): Image
 }
 
 type Query {
