@@ -110,7 +110,6 @@ const initialInputs = {
 
 const Singup = () => {
   const classes = useStyles();
-  const { deleteImage } = useDeleteImage();
   const [inputs, setInputs] = useState<State>({
     ...initialInputs
   });
@@ -165,24 +164,6 @@ const Singup = () => {
     event: React.MouseEvent<HTMLButtonElement>
   ) => {
     event.preventDefault();
-  };
-
-  const deleteImageHandler = async () => {
-    let result;
-    try {
-      result = await deleteImage({
-        variables: {
-          id: null,
-          image: inputs.image,
-          imageId: null
-        }
-      });
-      if (result) {
-        setInputs({ ...inputs, image: "" });
-      }
-    } catch (err) {
-      console.log(err);
-    }
   };
 
   return (
@@ -271,25 +252,6 @@ const Singup = () => {
             }
           />
         </FormControl>
-        {/* <TextField
-          onChange={uploadFile}
-          label="Avatar Img"
-          type="file"
-          autoComplete="current-password"
-          margin="normal"
-          variant="outlined"
-          size="small"
-        />
-        {inputs.image && (
-          <Avatar
-            alt={inputs.name}
-            src={inputs.image}
-            className={classes.bigAvatar}
-          />
-        )}
-        <IconButton onClick={deleteImageHandler}>
-          <DeleteIcon />
-        </IconButton> */}
         <Button
           variant="contained"
           color="primary"

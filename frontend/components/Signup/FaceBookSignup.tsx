@@ -100,7 +100,6 @@ const FacebookSignup = props => {
     <>
       <FacebookLogin
         appId={fbAppId}
-        autoLoad
         fields="name,email,picture"
         callback={responseFacebook}
         icon="fa-facebook"

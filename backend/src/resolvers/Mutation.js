@@ -268,19 +268,8 @@ const Mutation = {
     return updatedUser;
   },
   async deleteCloudinaryImage(parent, args, ctx, info) {
-    console.log("removing image");
     if (args.image) {
-      const imageId = getPublicId(args.image);
-      const res = await deleteCloudinaryImage(imageId);
-      if (res && res.result === "not found") {
-        throw new Error("Image not found");
-      }
-      if (res && res.result === "ok") {
-        console.log("image removed");
-        return { message: "Image deleted" };
-      }
-      // const itemId = args.id
-      // const item =
+      return await deleteCloudinaryImageHandler(args.image);
     }
   }
   // async createItemImage(parent, args, ctx, info) {

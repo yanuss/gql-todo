@@ -14,6 +14,8 @@ import IconButton from "@material-ui/core/IconButton";
 import Tooltip from "@material-ui/core/Tooltip";
 import clsx from "clsx";
 import ButtonBase from "@material-ui/core/ButtonBase";
+import Paper from "@material-ui/core/Paper";
+import Typography from "@material-ui/core/Typography";
 
 export const UPDATE_TODO = gql`
   mutation UPDATE_TODO(
@@ -70,6 +72,11 @@ const useStyles = makeStyles((theme: Theme) =>
         margin: theme.spacing(1)
       }
     },
+    paper: {
+      width: "100%",
+      padding: theme.spacing(1),
+      marginBottom: theme.spacing(1)
+    },
     content: {
       flex: 1
     },
@@ -101,56 +108,62 @@ const Item = ({ itemData, setModalData, handleShowModal }) => {
   const classes = useStyles(itemData);
 
   return (
-    <div className={classes.root}>
-      <IconButton
-        aria-label="check"
-        // className={classes.margin}
-        onClick={() => {
-          updateTodo({
-            //TODO: add optimistic update
-            variables: { id: itemData.id, done: !itemData.done },
-            refetchQueries: [
-              {
-                query: GET_TODOS
-              }
-            ]
-          });
-        }}
-      >
-        {itemData.done ? (
-          <DoneIcon fontSize="small" />
-        ) : (
-          <RadioButtonUncheckedIcon fontSize="small" />
-        )}
-      </IconButton>
-      <div className={clsx(classes.content, classes.done)}>
-        <Box fontWeight="fontWeightBold">{itemData.title}</Box>
-        <Box>{itemData.description}</Box>
-      </div>
-      <ButtonBase focusRipple key={itemData.title} className={classes.image}>
-        <span
-          className={classes.imageSrc}
-          style={{
-            backgroundImage: `url(${itemData.image})`
-          }}
-        />
-      </ButtonBase>
-      <Tooltip title="Edit item" aria-label="menu">
+    <Paper className={classes.paper}>
+      <div className={classes.root}>
         <IconButton
-          aria-label="delete"
-          className={classes.margin}
+          aria-label="check"
+          // className={classes.margin}
           onClick={() => {
-            setModalData({
-              ...itemData
+            updateTodo({
+              //TODO: add optimistic update
+              variables: { id: itemData.id, done: !itemData.done },
+              refetchQueries: [
+                {
+                  query: GET_TODOS
+                }
+              ]
             });
-            handleShowModal(true);
           }}
         >
-          <Edit fontSize="small" />
+          {itemData.done ? (
+            <DoneIcon fontSize="small" />
+          ) : (
+            <RadioButtonUncheckedIcon fontSize="small" />
+          )}
         </IconButton>
-      </Tooltip>
-      <DeleteTodo id={itemData.id} />
-    </div>
+        <div className={clsx(classes.content, classes.done)}>
+          <Typography variant="h6" variantMapping="h4">
+            {itemData.title}
+          </Typography>
+          <Typography variant="body1">{itemData.description}</Typography>
+          {/* <Box fontWeight="fontWeightBold">{itemData.title}</Box>
+          <Box>{itemData.description}</Box> */}
+        </div>
+        <ButtonBase focusRipple key={itemData.title} className={classes.image}>
+          <span
+            className={classes.imageSrc}
+            style={{
+              backgroundImage: `url(${itemData.image})`
+            }}
+          />
+        </ButtonBase>
+        <Tooltip title="Edit item" aria-label="menu">
+          <IconButton
+            aria-label="delete"
+            className={classes.margin}
+            onClick={() => {
+              setModalData({
+                ...itemData
+              });
+              handleShowModal(true);
+            }}
+          >
+            <Edit fontSize="small" />
+          </IconButton>
+        </Tooltip>
+        <DeleteTodo id={itemData.id} />
+      </div>
+    </Paper>
   );
 };
 

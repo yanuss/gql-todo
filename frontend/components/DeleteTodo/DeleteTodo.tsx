@@ -54,6 +54,12 @@ const DeleteTodo = ({ id }) => {
     [classes.buttonError]: error
   });
 
+  // useEffect(()=>{
+  //   return ()=> {
+  //     if(setSuccess)
+  //   }
+  // })
+
   const handleError = () => {
     setError(true);
     setSuccess(false);
@@ -66,12 +72,14 @@ const DeleteTodo = ({ id }) => {
     variables: { id },
     update: (cache, { data: { deleteItem } }) => {
       const data = cache.readQuery({ query: GET_TODOS });
-      const updatedItems = [...data.items].filter(item => item.id !== id);
+      const updatedItems = [...data.items].filter(
+        item => item.id !== deleteItem.id
+      );
       cache.writeQuery({ query: GET_TODOS, data: { items: updatedItems } });
     },
     // refetchQueries: [{ query: GET_TODOS }],
     onCompleted: () => {
-      setSuccess(true);
+      // setSuccess(true);
       //start updating cache at this point?
     },
     onError: handleError
