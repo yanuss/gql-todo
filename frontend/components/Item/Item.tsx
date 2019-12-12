@@ -132,9 +132,7 @@ const Item = ({ itemData, setModalData, handleShowModal }) => {
           )}
         </IconButton>
         <div className={clsx(classes.content, classes.done)}>
-          <Typography variant="h6" variantMapping="h4">
-            {itemData.title}
-          </Typography>
+          <Typography variant="h6">{itemData.title}</Typography>
           <Typography variant="body1">{itemData.description}</Typography>
           {/* <Box fontWeight="fontWeightBold">{itemData.title}</Box>
           <Box>{itemData.description}</Box> */}

@@ -10,7 +10,6 @@ import VisibilityOff from "@material-ui/icons/VisibilityOff";
 import OutlinedInput from "@material-ui/core/OutlinedInput";
 import FormControl from "@material-ui/core/FormControl";
 import InputLabel from "@material-ui/core/InputLabel";
-import Avatar from "@material-ui/core/Avatar";
 import Button from "@material-ui/core/Button";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import { green } from "@material-ui/core/colors";
@@ -19,7 +18,6 @@ import { red } from "@material-ui/core/colors";
 import { CURRENT_USER_QUERY } from "../User/User";
 import { GET_TODOS } from "../Items/Items";
 import Link from "next/link";
-import Router from "next/router";
 import FacebookSignup from "../Signup/FacebookSignup";
 import GoogleSiginin from "../Signup/GoogleSignin";
 import Divider from "@material-ui/core/Divider";
@@ -122,9 +120,6 @@ const Singin = () => {
     ],
     onCompleted: () => {
       setInputs({ ...initialInputs });
-      Router.push({
-        pathname: "/mylist"
-      });
     }
   });
 

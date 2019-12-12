@@ -9,6 +9,7 @@ import Button from "@material-ui/core/Button";
 import { green } from "@material-ui/core/colors";
 import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
 import FacebookIcon from "@material-ui/icons/Facebook";
+import { GET_TODOS } from "../Items/Items";
 
 const FACEBOOK_SIGNUP_MUTATION = gql`
   mutation FACEBOOK_SIGNUP_MUTATION(
@@ -70,6 +71,9 @@ const FacebookSignup = props => {
       refetchQueries: [
         {
           query: CURRENT_USER_QUERY
+        },
+        {
+          query: GET_TODOS
         }
       ]
     }

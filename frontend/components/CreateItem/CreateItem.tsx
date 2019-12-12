@@ -15,6 +15,8 @@ import DeleteIcon from "@material-ui/icons/Delete";
 import IconButton from "@material-ui/core/IconButton";
 import Input from "@material-ui/core/Input";
 import ImageInput from "../ImageInput/ImageInput";
+import DialogActions from "@material-ui/core/DialogActions";
+import DialogContent from "@material-ui/core/DialogContent";
 
 import {
   MuiPickersUtilsProvider,
@@ -69,11 +71,14 @@ const useStyles = makeStyles((theme: Theme) =>
       }
     },
     form: {
-      margin: theme.spacing(1),
+      // margin: theme.spacing(2),s
       width: 400,
       "& > *": {
         display: "block"
       }
+    },
+    textField: {
+      display: "flex"
     }
   })
 );
@@ -114,18 +119,11 @@ const CreateItem = ({ open, itemData, handleClose, setModalData }) => {
     if (itemData.id) {
       setInputs({ ...itemData, done: false });
     }
-    // return () => {
-    //   if (itemData.image !== inputs.image) {
-    //     deleteImageHandler({ image: inputs.image });
-    //   }
-    // };
   }, [itemData]);
 
   useEffect(() => {
     if (!open) {
       setInputs({ ...initialInputs });
-      // setModalData({});
-      // setImageData({ ...blankImageData });
     }
   }, [open]);
 
@@ -191,6 +189,7 @@ const CreateItem = ({ open, itemData, handleClose, setModalData }) => {
   });
 
   const deleteImageHandler = async () => {
+    // debugger;
     let result;
     try {
       result = await deleteImage({
@@ -201,14 +200,14 @@ const CreateItem = ({ open, itemData, handleClose, setModalData }) => {
       if (result) {
         setInputs({ ...inputs, image: "", largeImage: "" });
       }
-      if (itemData.id) {
+
+      if (itemData.id && itemData.image === inputs.image) {
         updateTodo();
       }
     } catch (err) {
       console.log(err);
     }
   };
-
   return (
     <Dialog
       open={open}
@@ -220,62 +219,84 @@ const CreateItem = ({ open, itemData, handleClose, setModalData }) => {
       }}
       aria-labelledby="form-dialog-title"
     >
-      <form
-        className={classes.form}
-        noValidate
-        autoComplete="off"
-        onSubmit={e => {
-          e.preventDefault();
-          if (itemData.id) {
-            updateTodo();
-          } else {
-            createItem();
-          }
-        }}
-      >
-        <TextField
-          id="standard-basic"
-          label="Title"
-          name="title"
-          value={inputs.title}
-          onChange={handleChange}
-        />
-        <TextField
-          id="standard-basic"
-          label="Description"
-          name="description"
-          value={inputs.description}
-          onChange={handleChange}
-        />
-        <MuiPickersUtilsProvider utils={DateFnsUtils}>
-          <KeyboardDatePicker
-            disableToolbar
-            variant="inline"
-            format="MM/dd/yyyy"
-            margin="normal"
-            id="date-picker-inline"
-            label="Date"
-            value={inputs.date}
-            onChange={handleDateChange}
-            name="date"
-            KeyboardButtonProps={{
-              "aria-label": "change date"
-            }}
-          />
-        </MuiPickersUtilsProvider>
-        <ImageInput image={inputs.image} onClick={uploadFile} />
-        <IconButton onClick={deleteImageHandler}>
-          <DeleteIcon />
-        </IconButton>
-        <Button
-          variant="contained"
-          color="primary"
-          type="submit"
-          disabled={!inputs.title}
+      <DialogContent>
+        <form
+          className={classes.form}
+          noValidate
+          autoComplete="off"
+          // onSubmit={e => {
+          //   e.preventDefault();
+          //   if (itemData.id) {
+          //     updateTodo();
+          //   } else {
+          //     createItem();
+          //   }
+          // }}
         >
-          Save
-        </Button>
-      </form>
+          <TextField
+            id="standard-basic"
+            label="Title"
+            name="title"
+            value={inputs.title}
+            onChange={handleChange}
+            className={classes.textField}
+          />
+          <TextField
+            id="standard-basic"
+            label="Description"
+            name="description"
+            value={inputs.description}
+            onChange={handleChange}
+            className={classes.textField}
+          />
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "flex-end"
+            }}
+          >
+            <MuiPickersUtilsProvider utils={DateFnsUtils}>
+              <KeyboardDatePicker
+                disableToolbar
+                variant="inline"
+                format="MM/dd/yyyy"
+                margin="normal"
+                id="date-picker-inline"
+                label="Date"
+                value={inputs.date}
+                onChange={handleDateChange}
+                name="date"
+                KeyboardButtonProps={{
+                  "aria-label": "change date"
+                }}
+              />
+            </MuiPickersUtilsProvider>
+            <ImageInput
+              image={inputs.image}
+              onClick={uploadFile}
+              onDelete={deleteImageHandler}
+            />
+          </div>
+        </form>
+        <DialogActions>
+          <Button
+            variant="contained"
+            color="primary"
+            type="submit"
+            disabled={!inputs.title}
+            onClick={() => {
+              if (itemData.id) {
+                updateTodo();
+              } else {
+                createItem();
+              }
+            }}
+          >
+            Save
+          </Button>
+        </DialogActions>
+      </DialogContent>
     </Dialog>
   );
 };

@@ -9,6 +9,7 @@ import Button from "@material-ui/core/Button";
 import { green } from "@material-ui/core/colors";
 import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
 import { googleAppId } from "../../config";
+import { GET_TODOS } from "../Items/Items";
 
 const GOOGLE_SIGNIN_MUTATION = gql`
   mutation GOOGLE_SIGNIN_MUTATION(
@@ -50,6 +51,9 @@ const GoogleSignin = props => {
       refetchQueries: [
         {
           query: CURRENT_USER_QUERY
+        },
+        {
+          query: GET_TODOS
         }
       ]
     }
