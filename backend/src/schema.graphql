@@ -9,14 +9,18 @@ type Mutation {
     title: String
     description: String
     image: String
-    done: Boolean
+    large_image: String
+    date: DateTime
+    done: Boolean!
   ): Item!
   updateToDo(
     id: String!
-    done: Boolean!
     title: String
     description: String
-    image: String # date:
+    image: String
+    large_image: String
+    date: DateTime
+    done: Boolean!
   ): Item!
   deleteItem(id: String!): Item
   signup(email: String!, password: String!, name: String!, image: String): User!

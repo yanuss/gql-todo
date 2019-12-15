@@ -27,10 +27,18 @@ const Mutation = {
     );
     return item;
   },
-  updateToDo(parent, args, ctx, info) {
+  async updateToDo(parent, args, ctx, info) {
+    const item = await ctx.db.query.item({ where: { id: args.id } });
+    if (
+      (item.image && !args.image) ||
+      (item.image && args.image && item.image !== args.image)
+    ) {
+      deleteCloudinaryImageHandler(item.image);
+    }
+
     const updates = { ...args };
     delete updates.id;
-    return ctx.db.mutation.updateItem(
+    return await ctx.db.mutation.updateItem(
       {
         data: updates,
         where: {
@@ -268,6 +276,7 @@ const Mutation = {
     return updatedUser;
   },
   async deleteCloudinaryImage(parent, args, ctx, info) {
+    console.log(args);
     if (args.image) {
       return await deleteCloudinaryImageHandler(args.image);
     }

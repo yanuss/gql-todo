@@ -16,6 +16,7 @@ export const GET_TODOS = gql`
       id
       title
       image
+      large_image
       done
       description
     }
@@ -77,7 +78,10 @@ const Items = () => {
         open={showModal}
         itemData={modalData}
         setModalData={setModalData}
-        handleClose={() => handleShowModal(false)}
+        handleClose={() => {
+          handleShowModal(false);
+          setModalData({});
+        }}
       />
     </div>
   );

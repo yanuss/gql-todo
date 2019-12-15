@@ -1,9 +1,6 @@
 import React from "react";
-import Checkbox from "@material-ui/core/Checkbox";
 import gql from "graphql-tag";
 import { useMutation } from "@apollo/react-hooks";
-import Grow from "@material-ui/core/Grow"; //annimate show hide
-import Box from "@material-ui/core/Box";
 import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
 import { GET_TODOS } from "../Items/Items";
 import Edit from "@material-ui/icons/Edit";
@@ -20,24 +17,29 @@ import Typography from "@material-ui/core/Typography";
 export const UPDATE_TODO = gql`
   mutation UPDATE_TODO(
     $id: String!
-    $title: String
+    $title: String!
     $image: String
     $done: Boolean!
-    $description: String # $date: DateTime
+    $description: String
+    $large_image: String
+    $date: DateTime
   ) {
     updateToDo(
       id: $id
       title: $title
       image: $image
       done: $done
-      description: $description # date: $date
+      description: $description
+      large_image: $large_image
+      date: $date
     ) {
       id
       title
       image
+      large_image
       done
       description
-      # date
+      date
     }
   }
 `;
@@ -48,9 +50,10 @@ const GET_SINGLE_TODO = gql`
       id
       title
       image
+      large_image
       done
       description
-      # date
+      date
     }
   }
 `;

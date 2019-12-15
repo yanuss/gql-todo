@@ -26,10 +26,12 @@ type User {
 type Item {
   id: ID! @id
   title: String!
-  description: String!
+  description: String
   image: String
+  large_image: String
+  date: DateTime
   # itemImage: Image
-  done: Boolean!
+  done: Boolean! @default(value: false)
   createdAt: DateTime @createdAt
   updatedAt: DateTime @updatedAt
   user: User!

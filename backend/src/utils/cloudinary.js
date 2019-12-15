@@ -29,6 +29,7 @@ const deleteCloudinaryImageHandler = async image => {
   console.log("removing image");
   if (image) {
     const imageId = getPublicId(image);
+    console.log(imageId);
     const res = await deleteCloudinaryImage(imageId);
     if (res && res.result === "not found") {
       throw new Error("Image not found");

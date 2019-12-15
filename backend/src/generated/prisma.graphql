@@ -1,5 +1,5 @@
 # source: https://eu1.prisma.sh/pawel-janus/gql-todo/dev
-# timestamp: Wed Dec 11 2019 17:33:41 GMT+0100 (Central European Standard Time)
+# timestamp: Thu Dec 12 2019 16:56:14 GMT+0100 (Central European Standard Time)
 
 type AggregateItem {
   count: Int!
@@ -19,8 +19,10 @@ scalar DateTime
 type Item implements Node {
   id: ID!
   title: String!
-  description: String!
+  description: String
   image: String
+  large_image: String
+  date: DateTime
   done: Boolean!
   createdAt: DateTime
   updatedAt: DateTime
@@ -40,9 +42,11 @@ type ItemConnection {
 input ItemCreateInput {
   id: ID
   title: String!
-  description: String!
+  description: String
   image: String
-  done: Boolean!
+  large_image: String
+  date: DateTime
+  done: Boolean
   user: UserCreateOneWithoutItemsInput!
 }
 
@@ -54,9 +58,11 @@ input ItemCreateManyWithoutUserInput {
 input ItemCreateWithoutUserInput {
   id: ID
   title: String!
-  description: String!
+  description: String
   image: String
-  done: Boolean!
+  large_image: String
+  date: DateTime
+  done: Boolean
 }
 
 """An edge in a connection."""
@@ -77,6 +83,10 @@ enum ItemOrderByInput {
   description_DESC
   image_ASC
   image_DESC
+  large_image_ASC
+  large_image_DESC
+  date_ASC
+  date_DESC
   done_ASC
   done_DESC
   createdAt_ASC
@@ -88,8 +98,10 @@ enum ItemOrderByInput {
 type ItemPreviousValues {
   id: ID!
   title: String!
-  description: String!
+  description: String
   image: String
+  large_image: String
+  date: DateTime
   done: Boolean!
   createdAt: DateTime
   updatedAt: DateTime
@@ -264,6 +276,68 @@ input ItemScalarWhereInput {
 
   """All values not ending with the given string."""
   image_not_ends_with: String
+  large_image: String
+
+  """All values that are not equal to given value."""
+  large_image_not: String
+
+  """All values that are contained in given list."""
+  large_image_in: [String!]
+
+  """All values that are not contained in given list."""
+  large_image_not_in: [String!]
+
+  """All values less than the given value."""
+  large_image_lt: String
+
+  """All values less than or equal the given value."""
+  large_image_lte: String
+
+  """All values greater than the given value."""
+  large_image_gt: String
+
+  """All values greater than or equal the given value."""
+  large_image_gte: String
+
+  """All values containing the given string."""
+  large_image_contains: String
+
+  """All values not containing the given string."""
+  large_image_not_contains: String
+
+  """All values starting with the given string."""
+  large_image_starts_with: String
+
+  """All values not starting with the given string."""
+  large_image_not_starts_with: String
+
+  """All values ending with the given string."""
+  large_image_ends_with: String
+
+  """All values not ending with the given string."""
+  large_image_not_ends_with: String
+  date: DateTime
+
+  """All values that are not equal to given value."""
+  date_not: DateTime
+
+  """All values that are contained in given list."""
+  date_in: [DateTime!]
+
+  """All values that are not contained in given list."""
+  date_not_in: [DateTime!]
+
+  """All values less than the given value."""
+  date_lt: DateTime
+
+  """All values less than or equal the given value."""
+  date_lte: DateTime
+
+  """All values greater than the given value."""
+  date_gt: DateTime
+
+  """All values greater than or equal the given value."""
+  date_gte: DateTime
   done: Boolean
 
   """All values that are not equal to given value."""
@@ -355,6 +429,8 @@ input ItemUpdateInput {
   title: String
   description: String
   image: String
+  large_image: String
+  date: DateTime
   done: Boolean
   user: UserUpdateOneRequiredWithoutItemsInput
 }
@@ -363,6 +439,8 @@ input ItemUpdateManyDataInput {
   title: String
   description: String
   image: String
+  large_image: String
+  date: DateTime
   done: Boolean
 }
 
@@ -370,6 +448,8 @@ input ItemUpdateManyMutationInput {
   title: String
   description: String
   image: String
+  large_image: String
+  date: DateTime
   done: Boolean
 }
 
@@ -394,6 +474,8 @@ input ItemUpdateWithoutUserDataInput {
   title: String
   description: String
   image: String
+  large_image: String
+  date: DateTime
   done: Boolean
 }
 
@@ -577,6 +659,68 @@ input ItemWhereInput {
 
   """All values not ending with the given string."""
   image_not_ends_with: String
+  large_image: String
+
+  """All values that are not equal to given value."""
+  large_image_not: String
+
+  """All values that are contained in given list."""
+  large_image_in: [String!]
+
+  """All values that are not contained in given list."""
+  large_image_not_in: [String!]
+
+  """All values less than the given value."""
+  large_image_lt: String
+
+  """All values less than or equal the given value."""
+  large_image_lte: String
+
+  """All values greater than the given value."""
+  large_image_gt: String
+
+  """All values greater than or equal the given value."""
+  large_image_gte: String
+
+  """All values containing the given string."""
+  large_image_contains: String
+
+  """All values not containing the given string."""
+  large_image_not_contains: String
+
+  """All values starting with the given string."""
+  large_image_starts_with: String
+
+  """All values not starting with the given string."""
+  large_image_not_starts_with: String
+
+  """All values ending with the given string."""
+  large_image_ends_with: String
+
+  """All values not ending with the given string."""
+  large_image_not_ends_with: String
+  date: DateTime
+
+  """All values that are not equal to given value."""
+  date_not: DateTime
+
+  """All values that are contained in given list."""
+  date_in: [DateTime!]
+
+  """All values that are not contained in given list."""
+  date_not_in: [DateTime!]
+
+  """All values less than the given value."""
+  date_lt: DateTime
+
+  """All values less than or equal the given value."""
+  date_lte: DateTime
+
+  """All values greater than the given value."""
+  date_gt: DateTime
+
+  """All values greater than or equal the given value."""
+  date_gte: DateTime
   done: Boolean
 
   """All values that are not equal to given value."""

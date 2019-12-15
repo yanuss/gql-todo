@@ -1,19 +1,12 @@
 import React, { useState, useEffect } from "react";
 import gql from "graphql-tag";
 import { useMutation } from "@apollo/react-hooks";
-import Fab from "@material-ui/core/Fab";
-import AddIcon from "@material-ui/icons/Add";
 import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
 import TextField from "@material-ui/core/TextField";
-import Divider from "@material-ui/core/Divider";
 import Button from "@material-ui/core/Button";
 import DateFnsUtils from "@date-io/date-fns";
 import Dialog from "@material-ui/core/Dialog";
 import { GET_TODOS } from "../Items/Items";
-import CardMedia from "@material-ui/core/CardMedia";
-import DeleteIcon from "@material-ui/icons/Delete";
-import IconButton from "@material-ui/core/IconButton";
-import Input from "@material-ui/core/Input";
 import ImageInput from "../ImageInput/ImageInput";
 import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
@@ -29,20 +22,26 @@ const ADD_TODO = gql`
   mutation ADD_TODO(
     $title: String!
     $image: String
-    $done: Boolean
+    $done: Boolean!
     $description: String
+    $large_image: String
+    $date: DateTime
   ) {
     createItem(
       title: $title
       image: $image
       done: $done
       description: $description
+      large_image: $large_image
+      date: $date
     ) {
       id
       title
       image
+      large_image
       done
       description
+      date
     }
   }
 `;
@@ -83,49 +82,47 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 );
 
+interface State {
+  title: string;
+  description?: string;
+  image?: string;
+  large_image?: string;
+  date?: object;
+  done: boolean;
+}
+
 const initialInputs = {
   title: "",
   description: "",
   image: "",
+  large_image: "",
   date: null,
   done: false
 };
 
-// interface ImageState {
-//   image: string;
-//   name: string;
-//   large_image: string;
-//   public_id: string;
-// }
-
-// const blankImageData = {
-//   image: "",
-//   name: "",
-//   large_image: "",
-//   public_id: ""
-// };
-
-const CreateItem = ({ open, itemData, handleClose, setModalData }) => {
-  const [deleteImage] = useMutation(DELETE_CLOUDINARY_IMAGE);
+const CreateItem = ({
+  open,
+  itemData,
+  handleClose,
+  setModalData,
+  editItem
+}) => {
   const classes = useStyles();
-  const [inputs, setInputs] = useState({
+  const [inputs, setInputs] = useState<State>({
     ...initialInputs
   });
-  // const [imageData, setImageData] = useState<ImageState>({
-  //   ...blankImageData
-  // });
+  const [imgLoad, setImageLoad] = useState(false);
+  const [deleteImage] = useMutation(DELETE_CLOUDINARY_IMAGE);
+  const [tempImages, setTempImages] = useState([]);
 
   useEffect(() => {
+    setTempImages([]);
     if (itemData.id) {
-      setInputs({ ...itemData, done: false });
-    }
-  }, [itemData]);
-
-  useEffect(() => {
-    if (!open) {
+      setInputs({ ...itemData });
+    } else {
       setInputs({ ...initialInputs });
     }
-  }, [open]);
+  }, [itemData, open]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setInputs({
@@ -139,8 +136,11 @@ const CreateItem = ({ open, itemData, handleClose, setModalData }) => {
   };
 
   const uploadFile = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    setImageLoad(true);
     if (inputs.image) {
-      deleteImageHandler({ image: inputs.image });
+      const imagesArr = [...tempImages];
+      imagesArr.push({ image: inputs.image, large_image: inputs.large_image });
+      setTempImages(imagesArr);
     }
     const files = e.target.files;
     const data = new FormData();
@@ -157,8 +157,9 @@ const CreateItem = ({ open, itemData, handleClose, setModalData }) => {
     setInputs({
       ...inputs,
       image: file.secure_url,
-      largeImage: file.eager[0].secure_url
+      large_image: file.eager[0].secure_url
     });
+    setImageLoad(false);
   };
 
   const [updateTodo] = useMutation(UPDATE_TODO, {
@@ -168,9 +169,8 @@ const CreateItem = ({ open, itemData, handleClose, setModalData }) => {
         query: GET_TODOS
       }
     ],
-    onCompleted: () => {
+    onCompleted: data => {
       setInputs({ ...initialInputs });
-      // setModalData({});
       handleClose();
     }
   });
@@ -181,60 +181,53 @@ const CreateItem = ({ open, itemData, handleClose, setModalData }) => {
         query: GET_TODOS
       }
     ],
-    onCompleted: () => {
+    onCompleted: data => {
       setInputs({ ...initialInputs });
-      // setModalData({});
       handleClose();
     }
   });
 
-  const deleteImageHandler = async () => {
-    // debugger;
-    let result;
-    try {
-      result = await deleteImage({
-        variables: {
-          image: inputs.image
-        }
-      });
-      if (result) {
-        setInputs({ ...inputs, image: "", largeImage: "" });
+  const deleteTempImages = () => {
+    tempImages.forEach(el => {
+      if (el && el.image) {
+        deleteImage({ variables: { image: el.image } });
+        const imagesArr = [...tempImages];
+        imagesArr.shift();
+        setTempImages(imagesArr);
       }
-
-      if (itemData.id && itemData.image === inputs.image) {
-        updateTodo();
-      }
-    } catch (err) {
-      console.log(err);
-    }
+    });
   };
+
+  const deleteCurrentImage = () => {
+    if (inputs.image) {
+      deleteImage({ variables: { image: inputs.image } });
+    }
+    setInputs({
+      ...inputs,
+      image: "",
+      large_image: ""
+    });
+  };
+
   return (
     <Dialog
       open={open}
       onClose={() => {
         if (!itemData.id) {
-          deleteImageHandler();
+          deleteCurrentImage();
+        } else if (itemData.id) {
+          const imagesArr = [...tempImages];
+          imagesArr.shift();
+          setTempImages(imagesArr);
         }
+        deleteTempImages();
         handleClose();
       }}
       aria-labelledby="form-dialog-title"
     >
       <DialogContent>
-        <form
-          className={classes.form}
-          noValidate
-          autoComplete="off"
-          // onSubmit={e => {
-          //   e.preventDefault();
-          //   if (itemData.id) {
-          //     updateTodo();
-          //   } else {
-          //     createItem();
-          //   }
-          // }}
-        >
+        <form className={classes.form} noValidate autoComplete="off">
           <TextField
-            id="standard-basic"
             label="Title"
             name="title"
             value={inputs.title}
@@ -242,7 +235,6 @@ const CreateItem = ({ open, itemData, handleClose, setModalData }) => {
             className={classes.textField}
           />
           <TextField
-            id="standard-basic"
             label="Description"
             name="description"
             value={inputs.description}
@@ -275,7 +267,15 @@ const CreateItem = ({ open, itemData, handleClose, setModalData }) => {
             <ImageInput
               image={inputs.image}
               onClick={uploadFile}
-              onDelete={deleteImageHandler}
+              onDelete={() => {
+                const imagesArr = [...tempImages];
+                imagesArr.push({
+                  image: inputs.image,
+                  large_image: inputs.large_image
+                });
+                setTempImages(imagesArr);
+              }}
+              loading={imgLoad}
             />
           </div>
         </form>
@@ -291,6 +291,7 @@ const CreateItem = ({ open, itemData, handleClose, setModalData }) => {
               } else {
                 createItem();
               }
+              deleteTempImages();
             }}
           >
             Save
@@ -302,58 +303,3 @@ const CreateItem = ({ open, itemData, handleClose, setModalData }) => {
 };
 
 export default CreateItem;
-
-// const CREATE_IMAGE = gql`
-//   mutation CREATE_IMAGE(
-//     $image: String!
-//     $name: String
-//     $large_image: String
-//     $public_id: String
-//   ) {
-//     createImage(
-//       image: $image
-//       name: $name
-//       large_image: $large_image
-//       public_id: $public_id
-//     ) {
-//       image
-//       name
-//       large_image
-//       public_id
-//     }
-//   }
-// `;
-
-// const createImage = useMutation(CREATE_IMAGE, {
-//   variables: {
-//     ...imageData
-//   },
-//   onCompleted: () => {
-//     setImageData({ ...blankImageData });
-//   }
-// });
-
-// const uploadBetterImage = async (e: React.ChangeEvent<HTMLInputElement>) => {
-//   if (imageData.image) {
-//     deleteImageHandler({ image: imageData.image });
-//   }
-//   const files = e.target.files;
-//   const data = new FormData();
-//   data.append("file", files[0]);
-//   data.append("upload_preset", "gql-todo");
-//   const res = await fetch(
-//     "https://api.cloudinary.com/v1_1/yanus/image/upload",
-//     {
-//       method: "POST",
-//       body: data
-//     }
-//   );
-//   const file = await res.json();
-//   createImage({
-//     variables: {
-//       image: file.secure_url,
-//       large_image: file.eager[0].secure_url,
-//       public_id: file.public_id
-//     }
-//   });
-// };

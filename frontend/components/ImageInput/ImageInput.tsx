@@ -5,6 +5,8 @@ import ButtonBase from "@material-ui/core/ButtonBase";
 import Tooltip from "@material-ui/core/Tooltip";
 import CancelIcon from "@material-ui/icons/Cancel";
 import IconButton from "@material-ui/core/IconButton";
+import CircularProgress from "@material-ui/core/CircularProgress";
+import { green } from "@material-ui/core/colors";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -14,6 +16,9 @@ const useStyles = makeStyles((theme: Theme) =>
       borderRadius: theme.shape.borderRadius,
       position: "relative",
       margin: theme.spacing(1),
+      border: props =>
+        !props.image && `1px solid ${theme.palette.action.active}`,
+      // boxShadow: theme.shadows[5],
       "&:hover": {
         backgroundColor: theme.palette.action.hover
       }
@@ -57,27 +62,32 @@ const ImageInput = props => {
         title={props.image ? "Change image" : "Add image"}
         aria-label="add image"
       >
-        <ButtonBase
-          className={classes.button}
-          onClick={() => {
-            handleClick();
-          }}
-        >
-          <div className={classes.buttonContent}>
-            <input
-              type="file"
-              name="picture"
-              ref={inputRef}
-              style={{ display: "none" }}
-              onChange={props.onClick}
-            />
-            {props.image ? (
-              <span className={classes.imageSrc} />
-            ) : (
-              <InsertPhotoIcon fontSize="large" />
-            )}
-          </div>
-        </ButtonBase>
+        <span>
+          <ButtonBase
+            className={classes.button}
+            onClick={() => {
+              handleClick();
+            }}
+            disabled={props.loading}
+          >
+            <div className={classes.buttonContent}>
+              <input
+                type="file"
+                name="picture"
+                ref={inputRef}
+                style={{ display: "none" }}
+                onChange={props.onClick}
+              />
+              {props.loading && <CircularProgress size={34} />}
+              {props.image && !props.loading && (
+                <span className={classes.imageSrc} />
+              )}
+              {!props.loading && !props.image && (
+                <InsertPhotoIcon fontSize="large" />
+              )}
+            </div>
+          </ButtonBase>
+        </span>
       </Tooltip>
       {props.image && (
         <Tooltip title="Delete image" aria-label="delete image">
