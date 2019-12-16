@@ -7,16 +7,16 @@ import InputAdornment from "@material-ui/core/InputAdornment";
 import IconButton from "@material-ui/core/IconButton";
 import Visibility from "@material-ui/icons/Visibility";
 import VisibilityOff from "@material-ui/icons/VisibilityOff";
-import OutlinedInput from "@material-ui/core/OutlinedInput";
-import FormControl from "@material-ui/core/FormControl";
-import InputLabel from "@material-ui/core/InputLabel";
 import Button from "@material-ui/core/Button";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import { green } from "@material-ui/core/colors";
 import { red } from "@material-ui/core/colors";
-import clsx from "clsx";
 import { CURRENT_USER_QUERY } from "../User/User";
-import Link from "next/link";
+import Typography from "@material-ui/core/Typography";
+import FormHelperText from "@material-ui/core/FormHelperText";
+import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
+import useForm from "react-hook-form";
+import * as yup from "yup";
 
 const RESET_MUTATION = gql`
   mutation RESET_MUTATION(
@@ -40,13 +40,21 @@ const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     container: {
       display: "flex",
-      flexDirection: "column"
+      flexDirection: "column",
+      textAlign: "center",
+      width: "300px",
+      "& > *": {
+        marginBottom: theme.spacing(2)
+      },
+      "& > :last-child": {
+        marginTop: theme.spacing(3)
+      }
       // flexWrap: "wrap"
     },
     textField: {
       marginLeft: theme.spacing(1),
       marginRight: theme.spacing(1),
-      width: 250
+      width: "auto"
     },
     margin: {
       margin: theme.spacing(1)
@@ -63,8 +71,15 @@ const useStyles = makeStyles((theme: Theme) =>
       marginTop: -17,
       marginLeft: -17
     }
+
+    // '& MuiFormControl-root'
   })
 );
+
+const schema = yup.object().shape({
+  password: yup.string().required(),
+  confirmPassword: yup.string().required()
+});
 
 interface State {
   password: string;
@@ -81,6 +96,9 @@ const initialInputs = {
 
 const Singin = props => {
   const classes = useStyles();
+  const { register, handleSubmit, errors } = useForm({
+    validationSchema: schema
+  });
   const [inputs, setInputs] = useState<State>({
     ...initialInputs
   });
@@ -117,29 +135,35 @@ const Singin = props => {
   ) => {
     event.preventDefault();
   };
+  console.log(error && error);
+
+  const onSubmit = (data, e) => {
+    e.preventDefault();
+    signin();
+  };
 
   return (
-    <form
-      className={classes.container}
-      onSubmit={e => {
-        e.preventDefault();
-        signin();
-      }}
-    >
-      <FormControl
-        className={clsx(classes.margin, classes.textField)}
+    <form className={classes.container} onSubmit={handleSubmit(onSubmit)}>
+      <Typography variant="h5">Change your password</Typography>
+      <Typography variant="inherit">
+        Please enter your new password twice.
+      </Typography>
+      <TextField
+        onChange={handleChange}
+        label="Password"
+        name="password"
+        type={inputs.showPassword ? "text" : "password"}
+        value={inputs.password}
+        autoComplete="current-name"
+        margin="normal"
         variant="outlined"
-      >
-        <InputLabel required htmlFor="outlined-adornment-password">
-          Password
-        </InputLabel>
-        <OutlinedInput
-          id="outlined-adornment-password"
-          type={inputs.showPassword ? "text" : "password"}
-          value={inputs.password}
-          onChange={handleChange}
-          name="password"
-          endAdornment={
+        size="small"
+        error={!!errors.password}
+        helperText={errors.password && errors.password.message}
+        // required
+        inputRef={register}
+        InputProps={{
+          endAdornment: (
             <InputAdornment position="end">
               <IconButton
                 aria-label="toggle password visibility"
@@ -151,24 +175,24 @@ const Singin = props => {
                 {inputs.showPassword ? <Visibility /> : <VisibilityOff />}
               </IconButton>
             </InputAdornment>
-          }
-          labelWidth={70}
-        />
-      </FormControl>
-      <FormControl
-        className={clsx(classes.margin, classes.textField)}
+          )
+        }}
+      />
+      <TextField
+        onChange={handleChange}
+        label="Confirm Password"
+        name="confirmPassword"
+        type={inputs.showConfirmPassword ? "text" : "password"}
+        value={inputs.confirmPassword}
+        margin="normal"
         variant="outlined"
-      >
-        <InputLabel required htmlFor="outlined-adornment-password">
-          Connfirm Password
-        </InputLabel>
-        <OutlinedInput
-          id="outlined-adornment-password"
-          type={inputs.showConfirmPassword ? "text" : "password"}
-          value={inputs.confirmPassword}
-          onChange={handleChange}
-          name="confirmPassword"
-          endAdornment={
+        size="small"
+        error={!!errors.confirmPassword}
+        helperText={errors.confirmPassword && errors.confirmPassword.message}
+        // required
+        inputRef={register}
+        InputProps={{
+          endAdornment: (
             <InputAdornment position="end">
               <IconButton
                 aria-label="toggle password visibility"
@@ -184,10 +208,14 @@ const Singin = props => {
                 )}
               </IconButton>
             </InputAdornment>
-          }
-          labelWidth={70}
-        />
-      </FormControl>
+          )
+        }}
+      />
+      {/* {error && (
+        <Typography color="error" variant="inherit">
+          {error}
+        </Typography>
+      )} */}
       <Button
         variant="contained"
         color="primary"

@@ -66,7 +66,8 @@ const Mutation = {
     args.email = args.email.toLowerCase();
     const email = await ctx.db.query.user({ where: { email: args.email } });
     if (email) {
-      throw new Error(`User already exist ${email}`);
+      console.log(email);
+      throw new Error(`User already exist ${email.email}`);
     }
     if (!args.password) {
       throw new Error(`Password not provided`);

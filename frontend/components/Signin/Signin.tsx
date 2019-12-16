@@ -24,6 +24,8 @@ import Divider from "@material-ui/core/Divider";
 import Typography from "@material-ui/core/Typography";
 import MailOutlineIcon from "@material-ui/icons/MailOutline";
 import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
+import useForm from "react-hook-form";
+import * as yup from "yup";
 
 const SIGNIN_MUTATION = gql`
   mutation SIGNIN_MUTATION($email: String!, $password: String!) {
@@ -90,26 +92,38 @@ const useStyles = makeStyles((theme: Theme) =>
 );
 
 interface State {
-  email: string;
-  password: string;
+  // email: string;
+  // password: string;
   showPassword: boolean;
 }
 const initialInputs = {
-  email: "",
-  password: "",
+  // email: "",
+  // password: "",
   showPassword: false
 };
 
+const schema = yup.object().shape({
+  email: yup
+    .string()
+    .required("This field is required")
+    .email("Please provide correct email"),
+  password: yup.string().required("This field is required")
+});
+
 const Singin = () => {
+  const classes = useStyles();
+  const { register, handleSubmit, reset, errors } = useForm({
+    validationSchema: schema
+  });
   const [inputs, setInputs] = useState<State>({
     ...initialInputs
   });
 
   const [signin, { data, loading, error }] = useMutation(SIGNIN_MUTATION, {
-    variables: {
-      email: inputs.email,
-      password: inputs.password
-    },
+    // variables: {
+    //   email: inputs.email,
+    //   password: inputs.password
+    // },
     refetchQueries: [
       {
         query: CURRENT_USER_QUERY
@@ -119,16 +133,17 @@ const Singin = () => {
       }
     ],
     onCompleted: () => {
-      setInputs({ ...initialInputs });
+      // setInputs({ ...initialInputs });
+      reset();
     }
   });
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setInputs({
-      ...inputs,
-      [e.target.name]: e.target.value
-    });
-  };
+  // const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  //   setInputs({
+  //     ...inputs,
+  //     [e.target.name]: e.target.value
+  //   });
+  // };
 
   const handleClickShowPassword = () => {
     setInputs({ ...inputs, showPassword: !inputs.showPassword });
@@ -140,7 +155,16 @@ const Singin = () => {
     event.preventDefault();
   };
 
-  const classes = useStyles();
+  const onSubmit = (data: object, e: React.ChangeEvent<HTMLInputElement>) => {
+    e.preventDefault();
+    signin({
+      variables: {
+        email: data.email,
+        password: data.password
+      }
+    });
+  };
+
   return (
     <div className={classes.root}>
       <FacebookSignup label="Login with Facebook" />
@@ -153,21 +177,22 @@ const Singin = () => {
       </div>
       <form
         className={clsx(classes.container, classes.margin)}
-        onSubmit={e => {
-          e.preventDefault();
-          signin();
-        }}
+        onSubmit={handleSubmit(onSubmit)}
+        noValidate
       >
         <TextField
-          onChange={handleChange}
           label="Email"
           name="email"
-          value={inputs.email}
+          type="email"
+          // onChange={handleChange}
+          // value={inputs.email}
           autoComplete="current-email"
           margin="normal"
           variant="outlined"
           size="small"
-          required
+          error={!!errors.email}
+          helperText={errors.email && errors.email.message}
+          inputRef={register}
           InputProps={{
             startAdornment: (
               <InputAdornment position="start">
@@ -176,35 +201,46 @@ const Singin = () => {
             )
           }}
         />
-        <FormControl variant="outlined" size="small">
-          <InputLabel required htmlFor="outlined-adornment-password">
-            Password
-          </InputLabel>
-          <OutlinedInput
-            type={inputs.showPassword ? "text" : "password"}
-            value={inputs.password}
-            onChange={handleChange}
-            name="password"
-            endAdornment={
+        <TextField
+          label="Password"
+          name="password"
+          type={inputs.showPassword ? "text" : "password"}
+          // onChange={handleChange}
+          // value={inputs.password}
+          autoComplete="current-name"
+          margin="normal"
+          variant="outlined"
+          size="small"
+          error={!!errors.password}
+          helperText={errors.password && errors.password.message}
+          // required
+          inputRef={register}
+          InputProps={{
+            startAdornment: (
+              <InputAdornment position="start">
+                <LockOutlinedIcon />
+              </InputAdornment>
+            ),
+            endAdornment: (
               <InputAdornment position="end">
                 <IconButton
                   aria-label="toggle password visibility"
                   onClick={handleClickShowPassword}
                   onMouseDown={handleMouseDownPassword}
                   edge="end"
+                  name="showPassword"
                 >
                   {inputs.showPassword ? <Visibility /> : <VisibilityOff />}
                 </IconButton>
               </InputAdornment>
-            }
-            labelWidth={70}
-            startAdornment={
-              <InputAdornment position="start">
-                <LockOutlinedIcon />
-              </InputAdornment>
-            }
-          />
-        </FormControl>
+            )
+          }}
+        />
+        {error && (
+          <Typography color="error" variant="inherit">
+            Server error
+          </Typography>
+        )}
         <Link href="/requestReset" passHref>
           <Button color="primary" component="a" className={classes.forgotBtn}>
             Forgot Password?

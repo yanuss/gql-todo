@@ -6,6 +6,8 @@ import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
 import Button from "@material-ui/core/Button";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import { green } from "@material-ui/core/colors";
+import Typography from "@material-ui/core/Typography";
+import Paper from "@material-ui/core/Paper";
 import { red } from "@material-ui/core/colors";
 import clsx from "clsx";
 
@@ -21,13 +23,20 @@ const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     container: {
       display: "flex",
-      flexDirection: "column"
-      // flexWrap: "wrap"
+      flexDirection: "column",
+      textAlign: "center",
+      width: "300px",
+      "& > *": {
+        marginBottom: theme.spacing(2)
+      },
+      "& > :last-child": {
+        marginTop: theme.spacing(3)
+      }
     },
     textField: {
       marginLeft: theme.spacing(1),
       marginRight: theme.spacing(1),
-      width: 250
+      width: "auto"
     },
     margin: {
       margin: theme.spacing(1)
@@ -87,6 +96,12 @@ const RequestReset = () => {
         reset();
       }}
     >
+      <Typography variant="h5">Reset your password</Typography>
+      <Typography variant="inherit">
+        Please enter your email address. We will send you an email to reset your
+        password.
+      </Typography>
+
       <TextField
         onChange={handleChange}
         label="Email"
@@ -96,6 +111,7 @@ const RequestReset = () => {
         autoComplete="current-email"
         margin="normal"
         variant="outlined"
+        size="small"
         required
       />
       <Button
@@ -104,7 +120,7 @@ const RequestReset = () => {
         type="submit"
         disabled={loading}
       >
-        Reset Password
+        Request Reset Password
         {loading && (
           <CircularProgress size={34} className={classes.buttonProgress} />
         )}

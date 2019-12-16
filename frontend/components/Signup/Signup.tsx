@@ -7,10 +7,6 @@ import InputAdornment from "@material-ui/core/InputAdornment";
 import IconButton from "@material-ui/core/IconButton";
 import Visibility from "@material-ui/icons/Visibility";
 import VisibilityOff from "@material-ui/icons/VisibilityOff";
-import OutlinedInput from "@material-ui/core/OutlinedInput";
-import FormControl from "@material-ui/core/FormControl";
-import InputLabel from "@material-ui/core/InputLabel";
-import Avatar from "@material-ui/core/Avatar";
 import Button from "@material-ui/core/Button";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import { green } from "@material-ui/core/colors";
@@ -24,17 +20,16 @@ import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
 import PersonOutlinedIcon from "@material-ui/icons/PersonOutlined";
 import Divider from "@material-ui/core/Divider";
 import Typography from "@material-ui/core/Typography";
-import { Grid } from "@material-ui/core";
-import DeleteIcon from "@material-ui/icons/Delete";
+import useForm from "react-hook-form";
+import * as yup from "yup";
 
 const SIGNNUP_MUTATION = gql`
   mutation SIGNNUP_MUTATION(
     $name: String!
     $email: String!
     $password: String!
-    $image: String
   ) {
-    signup(name: $name, email: $email, password: $password, image: $image) {
+    signup(name: $name, email: $email, password: $password) {
       id
       email
       name
@@ -93,68 +88,54 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 );
 
+const schema = yup.object().shape({
+  name: yup.string().required("This field is required"),
+  email: yup
+    .string()
+    .required("This field is required")
+    .email("Incorrect Email"),
+  password: yup.string().required("This field is required")
+});
+
 interface State {
-  name: string;
-  email: string;
-  password: string;
-  image: string;
+  // name: string;
+  // email: string;
+  // password: string;
   showPassword: boolean;
 }
 const initialInputs = {
-  name: "",
-  email: "",
-  password: "",
-  image: "",
+  // name: "",
+  // email: "",
+  // password: "",
   showPassword: false
 };
 
 const Singup = () => {
   const classes = useStyles();
+  const { register, handleSubmit, reset, errors } = useForm({
+    // defaultValues: { ...initialInputs },
+    validationSchema: schema
+  });
   const [inputs, setInputs] = useState<State>({
     ...initialInputs
   });
-  const [signup, { data, loading, error }] = useMutation(SIGNNUP_MUTATION, {
-    variables: {
-      name: inputs.name,
-      email: inputs.email,
-      password: inputs.password,
-      image: inputs.image
-    },
+  const [signup, { loading, error }] = useMutation(SIGNNUP_MUTATION, {
+    // variables: {
+    //   name: inputs.name,
+    //   email: inputs.email,
+    //   password: inputs.password
+    // },
     refetchQueries: [
       {
         query: CURRENT_USER_QUERY
       }
     ],
     onCompleted: () => {
-      setInputs({ ...initialInputs });
-    }
+      reset();
+      // setInputs({ ...initialInputs });
+    },
+    onError: err => console.log(err)
   });
-
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setInputs({
-      ...inputs,
-      [e.target.name]: e.target.value
-    });
-  };
-
-  const uploadFile = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const files = e.target.files;
-    const data = new FormData();
-    data.append("file", files[0]);
-    data.append("upload_preset", "gql-todo");
-    const res = await fetch(
-      "https://api.cloudinary.com/v1_1/yanus/image/upload",
-      {
-        method: "POST",
-        body: data
-      }
-    );
-    const file = await res.json();
-    setInputs({
-      ...inputs,
-      image: file.secure_url
-    });
-  };
 
   const handleClickShowPassword = () => {
     setInputs({ ...inputs, showPassword: !inputs.showPassword });
@@ -166,6 +147,18 @@ const Singup = () => {
     event.preventDefault();
   };
 
+  const onSubmit = (data: object, e: React.ChangeEvent<HTMLInputElement>) => {
+    e.preventDefault();
+    signup({
+      variables: {
+        name: data.name,
+        email: data.email,
+        password: data.password
+      }
+    });
+  };
+
+  // console.log(errors, error && { error });
   return (
     <div className={classes.root}>
       <FacebookSignup label="Sign up with Facebook" />
@@ -178,21 +171,22 @@ const Singup = () => {
       </div>
       <form
         className={clsx(classes.container, classes.margin)}
-        onSubmit={e => {
-          e.preventDefault();
-          signup();
-        }}
+        onSubmit={handleSubmit(onSubmit)}
+        noValidate
       >
         <TextField
-          onChange={handleChange}
           label="Name"
           name="name"
-          value={inputs.name}
+          // onChange={handleChange}
+          // value={inputs.name}
           autoComplete="current-name"
           margin="normal"
           variant="outlined"
           size="small"
-          required
+          error={!!errors.name}
+          helperText={errors.name && errors.name.message}
+          inputRef={register}
+          // required
           InputProps={{
             startAdornment: (
               <InputAdornment position="start">
@@ -202,15 +196,18 @@ const Singup = () => {
           }}
         />
         <TextField
-          onChange={handleChange}
           label="Email"
           name="email"
-          value={inputs.email}
+          type="email"
+          // onChange={handleChange}
+          // value={inputs.email}
           autoComplete="current-email"
           margin="normal"
           variant="outlined"
           size="small"
-          required
+          error={!!errors.email}
+          helperText={errors.email && errors.email.message}
+          inputRef={register}
           InputProps={{
             startAdornment: (
               <InputAdornment position="start">
@@ -219,39 +216,46 @@ const Singup = () => {
             )
           }}
         />
-        <FormControl
-          //  className={classes.margin}
-          size="small"
+        <TextField
+          label="Password"
+          name="password"
+          type={inputs.showPassword ? "text" : "password"}
+          // onChange={handleChange}
+          // value={inputs.password}
+          autoComplete="current-name"
+          margin="normal"
           variant="outlined"
-        >
-          <InputLabel required htmlFor="outlined-adornment-password">
-            Password
-          </InputLabel>
-          <OutlinedInput
-            type={inputs.showPassword ? "text" : "password"}
-            value={inputs.password}
-            onChange={handleChange}
-            name="password"
-            endAdornment={
+          size="small"
+          error={!!errors.password}
+          helperText={errors.password && errors.password.message}
+          // required
+          inputRef={register}
+          InputProps={{
+            startAdornment: (
+              <InputAdornment position="start">
+                <LockOutlinedIcon />
+              </InputAdornment>
+            ),
+            endAdornment: (
               <InputAdornment position="end">
                 <IconButton
                   aria-label="toggle password visibility"
                   onClick={handleClickShowPassword}
                   onMouseDown={handleMouseDownPassword}
                   edge="end"
+                  name="showPassword"
                 >
                   {inputs.showPassword ? <Visibility /> : <VisibilityOff />}
                 </IconButton>
               </InputAdornment>
-            }
-            labelWidth={70}
-            startAdornment={
-              <InputAdornment position="start">
-                <LockOutlinedIcon />
-              </InputAdornment>
-            }
-          />
-        </FormControl>
+            )
+          }}
+        />
+        {error && (
+          <Typography color="error" variant="inherit">
+            Server error
+          </Typography>
+        )}
         <Button
           variant="contained"
           color="primary"
