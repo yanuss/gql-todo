@@ -10,7 +10,6 @@ import VisibilityOff from "@material-ui/icons/VisibilityOff";
 import Button from "@material-ui/core/Button";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import { green } from "@material-ui/core/colors";
-import { red } from "@material-ui/core/colors";
 import clsx from "clsx";
 import { CURRENT_USER_QUERY } from "../User/User";
 import FacebookSignup from "./FacebookSignup";
@@ -113,18 +112,12 @@ const initialInputs = {
 const Singup = () => {
   const classes = useStyles();
   const { register, handleSubmit, reset, errors } = useForm({
-    // defaultValues: { ...initialInputs },
     validationSchema: schema
   });
   const [inputs, setInputs] = useState<State>({
     ...initialInputs
   });
   const [signup, { loading, error }] = useMutation(SIGNNUP_MUTATION, {
-    // variables: {
-    //   name: inputs.name,
-    //   email: inputs.email,
-    //   password: inputs.password
-    // },
     refetchQueries: [
       {
         query: CURRENT_USER_QUERY
@@ -132,9 +125,7 @@ const Singup = () => {
     ],
     onCompleted: () => {
       reset();
-      // setInputs({ ...initialInputs });
-    },
-    onError: err => console.log(err)
+    }
   });
 
   const handleClickShowPassword = () => {
@@ -205,7 +196,7 @@ const Singup = () => {
           margin="normal"
           variant="outlined"
           size="small"
-          error={!!errors.email}
+          error={!!errors.email || (error && error.email)}
           helperText={errors.email && errors.email.message}
           inputRef={register}
           InputProps={{
@@ -253,7 +244,7 @@ const Singup = () => {
         />
         {error && (
           <Typography color="error" variant="inherit">
-            Server error
+            {error.message.replace("GraphQL error: ", "")}
           </Typography>
         )}
         <Button

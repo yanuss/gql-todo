@@ -13,6 +13,7 @@ const {
   getPublicId,
   deleteCloudinaryImageHandler
 } = require("../utils/cloudinary");
+const RError = require("../utils/errors");
 
 const maxAge = 1000 * 60 * 60 * 24 * 10; // 10 days
 
@@ -66,7 +67,10 @@ const Mutation = {
     args.email = args.email.toLowerCase();
     const email = await ctx.db.query.user({ where: { email: args.email } });
     if (email) {
-      console.log(email);
+      // throw new RError({
+      //   name: "email",
+      //   message: `User already exist ${email.email}`
+      // });
       throw new Error(`User already exist ${email.email}`);
     }
     if (!args.password) {
@@ -97,7 +101,10 @@ const Mutation = {
     if (!user) {
       throw new Error(`No such user found for email ${email}`);
     }
-    // 2. Check if their password is correct
+    if (user.facebookUserId || user.googleUserId) {
+      throw new Error("Incorrect username or password.");
+    }
+    // // 2. Check if their password is correct
     const valid = await bcrypt.compare(password, user.password);
     if (!valid) {
       throw new Error("Invalid Password!");
