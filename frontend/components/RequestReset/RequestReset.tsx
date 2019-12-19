@@ -7,9 +7,9 @@ import Button from "@material-ui/core/Button";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import { green } from "@material-ui/core/colors";
 import Typography from "@material-ui/core/Typography";
-import Paper from "@material-ui/core/Paper";
-import { red } from "@material-ui/core/colors";
-import clsx from "clsx";
+// import Paper from "@material-ui/core/Paper";
+// import { red } from "@material-ui/core/colors";
+// import clsx from "clsx";
 
 const REQUEST_RESET_MUTATION = gql`
   mutation REQUEST_RESET_MUTATION($email: String!) {

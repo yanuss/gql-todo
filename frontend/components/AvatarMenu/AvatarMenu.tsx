@@ -1,7 +1,6 @@
 import React from "react";
 import Avatar from "@material-ui/core/Avatar";
 import Menu from "@material-ui/core/Menu";
-import Fab from "@material-ui/core/Fab";
 import Fade from "@material-ui/core/Fade";
 import Divider from "@material-ui/core/Divider";
 import Tooltip from "@material-ui/core/Tooltip";
@@ -11,10 +10,11 @@ import ListItemIcon from "@material-ui/core/ListItemIcon";
 import AccountCircleIcon from "@material-ui/icons/AccountCircle";
 import PowerSettingsNewIcon from "@material-ui/icons/PowerSettingsNew";
 import { createStyles, Theme, makeStyles } from "@material-ui/core/styles";
-import { useSignout } from "../Signout/Singout";
 import ButtonBase from "@material-ui/core/ButtonBase";
-import Icon from "@material-ui/core/Icon";
 import Router from "next/router";
+import { useSignout } from "../Signout/Singout";
+// import Icon from "@material-ui/core/Icon";
+// import Fab from "@material-ui/core/Fab";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -31,7 +31,7 @@ const useStyles = makeStyles((theme: Theme) =>
 );
 
 const AvatarMenu = props => {
-  const classes = useStyles();
+  const classes = useStyles(props);
   const { signout } = useSignout();
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
 

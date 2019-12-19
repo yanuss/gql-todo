@@ -54,12 +54,6 @@ const DeleteTodo = ({ id }) => {
     [classes.buttonError]: error
   });
 
-  // useEffect(()=>{
-  //   return ()=> {
-  //     if(setSuccess)
-  //   }
-  // })
-
   const handleError = () => {
     setError(true);
     setSuccess(false);
@@ -81,8 +75,8 @@ const DeleteTodo = ({ id }) => {
     onCompleted: () => {
       // setSuccess(true);
       //start updating cache at this point?
-    },
-    onError: handleError
+    }
+    // onError: handleError
   });
   return (
     <Tooltip title="Delete item" aria-label="menu">

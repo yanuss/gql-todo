@@ -8,8 +8,6 @@ import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
 import { googleAppId } from "../../config";
 import { GET_TODOS } from "../Items/Items";
 import { green } from "@material-ui/core/colors";
-// import { fbAppId } from "../../config";
-// import Button from "@material-ui/core/Button";
 
 const GOOGLE_SIGNIN_MUTATION = gql`
   mutation GOOGLE_SIGNIN_MUTATION(
@@ -53,20 +51,17 @@ const useStyles = makeStyles((theme: Theme) =>
 
 const GoogleSignin = props => {
   const classes = useStyles();
-  // const loading = true;
-  const [googleSignin, { loading, data, error }] = useMutation(
-    GOOGLE_SIGNIN_MUTATION,
-    {
-      refetchQueries: [
-        {
-          query: CURRENT_USER_QUERY
-        },
-        {
-          query: GET_TODOS
-        }
-      ]
-    }
-  );
+
+  const [googleSignin, { loading }] = useMutation(GOOGLE_SIGNIN_MUTATION, {
+    refetchQueries: [
+      {
+        query: CURRENT_USER_QUERY
+      },
+      {
+        query: GET_TODOS
+      }
+    ]
+  });
   const responseGoogle = response => {
     if (response) {
       try {

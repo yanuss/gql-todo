@@ -4,7 +4,7 @@ import { useUser } from "../User/User";
 import Items from "../Items/Items";
 
 const Home = props => {
-  const { data, loading, error } = useUser();
+  const { data } = useUser();
   return (
     <>
       {data && data.me && <Items />}

@@ -13,7 +13,6 @@ import DialogContent from "@material-ui/core/DialogContent";
 
 import {
   MuiPickersUtilsProvider,
-  // KeyboardTimePicker,
   KeyboardDatePicker
 } from "@material-ui/pickers";
 import { UPDATE_TODO } from "../Item/Item";
