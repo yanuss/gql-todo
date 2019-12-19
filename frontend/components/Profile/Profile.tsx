@@ -17,6 +17,7 @@ import Divider from "@material-ui/core/Divider";
 import { useUser } from "../User/User";
 import ChangePassword from "./ChangePassword";
 import { green } from "@material-ui/core/colors";
+import { red } from "@material-ui/core/colors";
 import clsx from "clsx";
 import { DELETE_CLOUDINARY_IMAGE } from "../CreateItem/CreateItem";
 
@@ -78,6 +79,12 @@ const useStyles = makeStyles((theme: Theme) =>
       "&:hover": {
         backgroundColor: green[700]
       }
+    },
+    buttonFailed: {
+      backgroundColor: red[500],
+      "&:hover": {
+        backgroundColor: red[700]
+      }
     }
   })
 );
@@ -94,6 +101,7 @@ const Profile = () => {
   const classes = useStyles();
   const { data: user } = useUser();
   const [success, setSuccess] = useState(false);
+  const [failed, setFailed] = useState(false);
   const [image, setImage] = useState("");
   const [changePassword, setChangePassword] = useState(false);
   const [imgLoad, setImageLoad] = useState(false);
@@ -109,7 +117,9 @@ const Profile = () => {
 
   useEffect(() => {
     setImage(user.me.image);
-  }, [user.me.image]);
+    setSuccess(false);
+    setFailed(false);
+  }, [user.me]);
 
   const [updateProfile, { loading: loadingMutation, error }] = useMutation(
     UPDATE_USER_DETAILS,
@@ -122,7 +132,8 @@ const Profile = () => {
       onCompleted: () => {
         setSuccess(true);
         deleteTempImages();
-      }
+      },
+      onError: () => setFailed(true)
     }
   );
 
@@ -173,7 +184,8 @@ const Profile = () => {
 
   const watchAllFields = watch();
   const saveButtonnClassName = clsx({
-    [classes.buttonSuccess]: success
+    [classes.buttonSuccess]: success,
+    [classes.buttonFailed]: failed
   });
 
   return (

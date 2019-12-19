@@ -88,7 +88,7 @@ const ChangePassword = props => {
   const { register, handleSubmit, reset, errors, watch } = useForm({
     validationSchema: schema
   });
-  const [changePassword, { loading, error }] = useMutation(
+  const [changePassword, { data, loading, error }] = useMutation(
     CHANGE_PASSWORD_MUTATION,
     {
       // refetchQueries: [
@@ -98,6 +98,7 @@ const ChangePassword = props => {
       // ],
       onCompleted: () => {
         setSuccess(true);
+        reset();
       }
     }
   );
@@ -210,6 +211,11 @@ const ChangePassword = props => {
             {error.message.replace("GraphQL error: ", "")}
           </Typography>
         )}
+        {data && (
+          <Typography color="green" variant="inherit">
+            {data.changeUserPassword.message}
+          </Typography>
+        )}
         <div className={classes.btnRow}>
           <Button
             variant="contained"
@@ -217,9 +223,8 @@ const ChangePassword = props => {
               props.showPasswordChange(false);
               reset();
             }}
-            // disabled={buttonsDisabled}
           >
-            Cancel
+            {success ? "Close" : "Cancel"}
           </Button>
           <Button
             variant="contained"
@@ -228,7 +233,7 @@ const ChangePassword = props => {
             type="submit"
             disabled={buttonsDisabled}
           >
-            Change
+            {`Change${success ? "d" : ""}`}
             {loading && (
               <CircularProgress size={34} className={classes.buttonProgress} />
             )}
