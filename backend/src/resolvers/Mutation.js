@@ -71,7 +71,7 @@ const Mutation = {
       //   name: "email",
       //   message: `User already exist ${email.email}`
       // });
-      throw new Error(`User already exist ${email.email}`);
+      throw new Error(`User already exists ${email.email}`);
     }
     if (!args.password) {
       throw new Error(`Password not provided`);
@@ -101,7 +101,7 @@ const Mutation = {
     if (!user) {
       throw new Error(`No such user found for email ${email}`);
     }
-    if (user.facebookUserId || user.googleUserId) {
+    if (!user.password && (user.facebookUserId || user.googleUserId)) {
       throw new Error("Incorrect username or password.");
     }
     // // 2. Check if their password is correct
@@ -124,15 +124,20 @@ const Mutation = {
     const userWithEmail = await ctx.db.query.user({
       where: { email: args.email }
     });
-    if (userWithEmail && !userWithEmail.facebookUserId) {
-      throw new Error(`User already exist ${userWithEmail.email}`);
+    // do not overwrite image if already exist
+    if (userWithEmail && userWithEmail.image && args.image) {
+      delete args.image;
     }
     let user;
     try {
-      user = await ctx.db.query.user(
-        { where: { facebookUserId: args.facebookUserId } },
-        info
-      );
+      if (userWithEmail) {
+        user = userWithEmail;
+      } else {
+        user = await ctx.db.query.user(
+          { where: { facebookUserId: args.facebookUserId } },
+          info
+        );
+      }
       if (!user) {
         user = await ctx.db.mutation.createUser(
           {
@@ -185,15 +190,20 @@ const Mutation = {
     const userWithEmail = await ctx.db.query.user({
       where: { email: args.email }
     });
-    if (userWithEmail && !userWithEmail.googleUserId) {
-      throw new Error(`User already exist ${userWithEmail.email}`);
+    // do not overwrite image if already exist
+    if (userWithEmail && userWithEmail.image && args.image) {
+      delete args.image;
     }
     let user;
     try {
-      user = await ctx.db.query.user(
-        { where: { googleUserId: args.googleUserId } },
-        info
-      );
+      if (userWithEmail) {
+        user = userWithEmail;
+      } else {
+        user = await ctx.db.query.user(
+          { where: { googleUserId: args.googleUserId } },
+          info
+        );
+      }
       if (!user) {
         user = await ctx.db.mutation.createUser(
           {
@@ -284,33 +294,56 @@ const Mutation = {
     return updatedUser;
   },
   async deleteCloudinaryImage(parent, args, ctx, info) {
-    console.log(args);
     if (args.image) {
       return await deleteCloudinaryImageHandler(args.image);
     }
+  },
+  async updateUserDetails(parent, args, ctx, info) {
+    const { userId } = ctx.request;
+    if (!userId) {
+      throw new Error("You must be signedin");
+    }
+    if (!args.email) {
+      throw new Error("Email is required");
+    }
+    if (!args.name) {
+      throw new Error("Name is required");
+    }
+    args.email = args.email.toLowerCase();
+    const user = await ctx.db.mutation.updateUser({
+      where: { email: args.email },
+      data: {
+        ...args
+      }
+    });
+    const token = jwt.sign({ userId: user.id }, process.env.APP_SECRET);
+    ctx.response.cookie("token", token, {
+      SameSite: "None",
+      httpOnly: true,
+      maxAge
+    });
+    return user;
+  },
+  async changeUserPassword(parent, args, ctx, info) {
+    const { userId } = ctx.request;
+    if (!userId) {
+      throw new Error("You must be signedin");
+    }
+    if (!args.password) {
+      throw new Error(`Password not provided`);
+    }
+    if (args.password !== args.confirmPassword) {
+      throw new Error(`Passwords don't match`);
+    }
+    const password = await bcrypt.hash(args.password, 10);
+    await ctx.db.mutation.updateUser({
+      where: { id: userId },
+      data: {
+        password
+      }
+    });
+    return { message: "password changed!" };
   }
-  // async createItemImage(parent, args, ctx, info) {
-  //   if (!ctx.request.userId) {
-  //     throw new Error("You must be logged in");
-  //   }
-  //   return await ctx.db.mutation.createImage(
-  //     { data: { item: { connect: { id: args.itemId } }, ...args } },
-  //     info
-  //   );
-  // },
-  // async createImage(parent, args, ctx, info) {
-  //   if (!ctx.request.userId) {
-  //     throw new Error("You must be logged in");
-  //   }
-  //   return await ctx.db.mutation.createImage(
-  //     {
-  //       data: {
-  //         ...args
-  //       }
-  //     },
-  //     info
-  //   );
-  // }
 };
 
 module.exports = Mutation;

@@ -12,6 +12,9 @@ import AccountCircleIcon from "@material-ui/icons/AccountCircle";
 import PowerSettingsNewIcon from "@material-ui/icons/PowerSettingsNew";
 import { createStyles, Theme, makeStyles } from "@material-ui/core/styles";
 import { useSignout } from "../Signout/Singout";
+import ButtonBase from "@material-ui/core/ButtonBase";
+import Icon from "@material-ui/core/Icon";
+import Router from "next/router";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -46,7 +49,7 @@ const AvatarMenu = props => {
         title={me ? "Open menu" : "You are not logged in"}
         aria-label="menu"
       >
-        <Fab
+        <ButtonBase
           component={Avatar}
           alt={(me && me.name) || ""}
           src={(me && me.image) || ""}
@@ -60,7 +63,7 @@ const AvatarMenu = props => {
           size="medium"
         >
           {!me && <AccountCircleIcon />}
-        </Fab>
+        </ButtonBase>
       </Tooltip>
       {me && (
         <Menu
@@ -80,7 +83,11 @@ const AvatarMenu = props => {
           }}
           TransitionComponent={Fade}
         >
-          <MenuItem>
+          <MenuItem
+            onClick={() => {
+              Router.push("/profile");
+            }}
+          >
             <Avatar
               alt={me.name || ""}
               src={me.image || ""}

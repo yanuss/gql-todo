@@ -55,18 +55,8 @@ const useStyles = makeStyles((theme: Theme) =>
 
 const FacebookSignup = props => {
   const classes = useStyles();
-  // const [facebookSignin, { data, loading, error }] = useMutation(
-  //   FACEBOOK_SIGNUP_MUTATION,
-  //   {
-  //     refetchQueries: [
-  //       {
-  //         query: CURRENT_USER_QUERY
-  //       }
-  //     ]
-  //   }
-  // );
-  const [facebookSigninWithToken, { data, loading, error }] = useMutation(
-    FACEBOOK_SIGNIN_WITH_TOKEN_MUTATION,
+  const [facebookSignin, { data, loading, error }] = useMutation(
+    FACEBOOK_SIGNUP_MUTATION,
     {
       refetchQueries: [
         {
@@ -78,23 +68,36 @@ const FacebookSignup = props => {
       ]
     }
   );
+  // const [facebookSigninWithToken, { data, loading, error }] = useMutation(
+  //   FACEBOOK_SIGNIN_WITH_TOKEN_MUTATION,
+  //   {
+  //     refetchQueries: [
+  //       {
+  //         query: CURRENT_USER_QUERY
+  //       },
+  //       {
+  //         query: GET_TODOS
+  //       }
+  //     ]
+  //   }
+  // );
   const responseFacebook = response => {
     // console.log(response);
     if (response) {
       try {
-        // facebookSignin({
-        //   variables: {
-        //     email: response.email,
-        //     name: response.name,
-        //     facebookUserId: response.userID,
-        //     image: response.picture.data.url
-        //   }
-        // });
-        facebookSigninWithToken({
+        facebookSignin({
           variables: {
-            idToken: response.accessToken
+            email: response.email,
+            name: response.name,
+            facebookUserId: response.userID,
+            image: response.picture.data.url
           }
         });
+        // facebookSigninWithToken({
+        //   variables: {
+        //     idToken: response.accessToken
+        //   }
+        // });
       } catch (error) {
         // console.log(error);
       }

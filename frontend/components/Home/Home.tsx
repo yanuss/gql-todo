@@ -1,6 +1,6 @@
 import React from "react";
 import AuthTabs from "../AuthTabs/AuthTabs";
-import User, { useUser } from "../User/User";
+import { useUser } from "../User/User";
 import Items from "../Items/Items";
 
 const Home = props => {

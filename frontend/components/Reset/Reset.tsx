@@ -10,13 +10,13 @@ import VisibilityOff from "@material-ui/icons/VisibilityOff";
 import Button from "@material-ui/core/Button";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import { green } from "@material-ui/core/colors";
-import { red } from "@material-ui/core/colors";
-import { CURRENT_USER_QUERY } from "../User/User";
 import Typography from "@material-ui/core/Typography";
 import FormHelperText from "@material-ui/core/FormHelperText";
-import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
 import useForm from "react-hook-form";
 import * as yup from "yup";
+import { CURRENT_USER_QUERY } from "../User/User";
+// import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
+// import { red } from "@material-ui/core/colors";
 
 const RESET_MUTATION = gql`
   mutation RESET_MUTATION(

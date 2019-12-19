@@ -10,10 +10,14 @@ import { green } from "@material-ui/core/colors";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
+    root: {
+      position: "relative",
+      width: props => (props.size ? props.size : 128) + 16 + "px"
+    },
     button: {
       height: props => (props.size ? props.size : "128px"),
       width: props => (props.size ? props.size : "128px"),
-      borderRadius: theme.shape.borderRadius,
+      borderRadius: props => (props.circle ? "50%" : theme.shape.borderRadius),
       position: "relative",
       margin: theme.spacing(1),
       border: props =>
@@ -39,7 +43,7 @@ const useStyles = makeStyles((theme: Theme) =>
       height: props => (props.size ? props.size : 128) - 8 + "px",
       width: props => (props.size ? props.size : 128) - 8 + "px",
       padding: "4px",
-      borderRadius: "10%"
+      borderRadius: props => (props.circle ? "50%" : theme.shape.borderRadius)
     },
     remove: {
       position: "absolute",
@@ -57,10 +61,11 @@ const ImageInput = props => {
     inputRef.current.click();
   };
   return (
-    <div style={{ position: "relative" }}>
+    <div className={classes.root}>
       <Tooltip
         title={props.image ? "Change image" : "Add image"}
-        aria-label="add image"
+        aria-label="image options"
+        disableHoverListener={props.disabled}
       >
         <span>
           <ButtonBase
@@ -68,7 +73,7 @@ const ImageInput = props => {
             onClick={() => {
               handleClick();
             }}
-            disabled={props.loading}
+            disabled={props.loading || props.disabled}
           >
             <div className={classes.buttonContent}>
               <input
@@ -89,7 +94,7 @@ const ImageInput = props => {
           </ButtonBase>
         </span>
       </Tooltip>
-      {props.image && (
+      {props.image && !props.disabled && (
         <Tooltip title="Delete image" aria-label="delete image">
           <IconButton
             aria-label="delete"

@@ -1,15 +1,15 @@
-import React, { useState } from "react";
+import React from "react";
 import gql from "graphql-tag";
 import { useMutation } from "@apollo/react-hooks";
 import GoogleLogin from "react-google-login";
-import { fbAppId } from "../../config";
 import { CURRENT_USER_QUERY } from "../User/User";
 import CircularProgress from "@material-ui/core/CircularProgress";
-import Button from "@material-ui/core/Button";
-import { green } from "@material-ui/core/colors";
 import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
 import { googleAppId } from "../../config";
 import { GET_TODOS } from "../Items/Items";
+import { green } from "@material-ui/core/colors";
+// import { fbAppId } from "../../config";
+// import Button from "@material-ui/core/Button";
 
 const GOOGLE_SIGNIN_MUTATION = gql`
   mutation GOOGLE_SIGNIN_MUTATION(
@@ -32,6 +32,14 @@ const GOOGLE_SIGNIN_MUTATION = gql`
 `;
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
+    button: {
+      padding: "6px",
+      justifyContent: "center",
+      position: "relative",
+      "& > *": {
+        padding: 0
+      }
+    },
     buttonProgress: {
       color: green[500],
       position: "absolute",
@@ -45,7 +53,8 @@ const useStyles = makeStyles((theme: Theme) =>
 
 const GoogleSignin = props => {
   const classes = useStyles();
-  const [googleSignin, { data, loading, error }] = useMutation(
+  // const loading = true;
+  const [googleSignin, { loading, data, error }] = useMutation(
     GOOGLE_SIGNIN_MUTATION,
     {
       refetchQueries: [
@@ -79,24 +88,33 @@ const GoogleSignin = props => {
       clientId={googleAppId}
       onSuccess={responseGoogle}
       buttonText={props.label}
-      // onFailure={responseGoogle}
-      // cookiePolicy={"single_host_origin"}
-      // render={renderProps => (
-      //   <Button
-      //     variant="contained"
-      //     color="primary"
-      //     type="submit"
-      //     // disabled={loading}
-      //     onClick={renderProps.onClick}
-      //     // startIcon={<FacebookIcon />}
-      //   >
-      //     Login with Google
-      //     {/* {loading && (
-      //       <CircularProgress size={34} className={classes.buttonProgress} />
-      //     )} */}
-      //   </Button>
-      // )}
-    />
+      onFailure={responseGoogle}
+      cookiePolicy={"single_host_origin"}
+      className={classes.button}
+      disabled={loading}
+      // style={{}}
+      // theme={"dark"}
+      //   render={renderProps => (
+      //     <Button
+      //       variant="contained"
+      //       color="primary"
+      //       type="submit"
+      //       // disabled={loading}
+      //       onClick={renderProps.onClick}
+      //       startIcon={<GoogleIcon />}
+      //     >
+      //       Login with Google
+      //       {loading && (
+      //         <CircularProgress size={34} className={classes.buttonProgress} />
+      //       )}
+      //     </Button>
+      //   )}
+      // />
+    >
+      {loading && (
+        <CircularProgress size={34} className={classes.buttonProgress} />
+      )}
+    </GoogleLogin>
   );
 };
 

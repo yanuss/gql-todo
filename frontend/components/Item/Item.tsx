@@ -119,7 +119,12 @@ const Item = ({ itemData, setModalData, handleShowModal }) => {
           onClick={() => {
             updateTodo({
               //TODO: add optimistic update
-              variables: { id: itemData.id, done: !itemData.done },
+              variables: {
+                id: itemData.id,
+                done: !itemData.done,
+                title: itemData.title,
+                image: itemData.image
+              },
               refetchQueries: [
                 {
                   query: GET_TODOS

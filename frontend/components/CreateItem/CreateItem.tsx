@@ -46,7 +46,7 @@ const ADD_TODO = gql`
   }
 `;
 
-const DELETE_CLOUDINARY_IMAGE = gql`
+export const DELETE_CLOUDINARY_IMAGE = gql`
   mutation DELETE_CLOUDINARY_IMAGE(
     $id: String
     $image: String

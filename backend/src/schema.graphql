@@ -51,31 +51,11 @@ type Mutation {
     image: String
     imageId: String
   ): SuccessMessage
-  # createItemImage(
-  #   itemId: String!
-  #   image: String!
-  #   name: String
-  #   large_image: String
-  #   public_id: String
-  # ): Image!
-  # createImage(
-  #   image: String!
-  #   name: String
-  #   large_image: String
-  #   public_id: String
-  # ): Image
-  # deleteImage(
-  #   id: String
-  #   image: String
-  #   large_image: String
-  #   public_id: String
-  # ): SuccessMessage
-  # updateImage(
-  #   id: String
-  #   image: String
-  #   large_image: String
-  #   public_id: String
-  # ): Image
+  updateUserDetails(email: String!, name: String!, image: String): User!
+  changeUserPassword(
+    password: String!
+    confirmPassword: String!
+  ): SuccessMessage
 }
 
 type Query {

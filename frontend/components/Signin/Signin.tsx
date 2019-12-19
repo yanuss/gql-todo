@@ -7,7 +7,6 @@ import InputAdornment from "@material-ui/core/InputAdornment";
 import IconButton from "@material-ui/core/IconButton";
 import Visibility from "@material-ui/icons/Visibility";
 import VisibilityOff from "@material-ui/icons/VisibilityOff";
-
 import Button from "@material-ui/core/Button";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import { green } from "@material-ui/core/colors";
@@ -89,17 +88,6 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 );
 
-interface State {
-  // email: string;
-  // password: string;
-  showPassword: boolean;
-}
-const initialInputs = {
-  // email: "",
-  // password: "",
-  showPassword: false
-};
-
 const schema = yup.object().shape({
   email: yup
     .string()
@@ -113,15 +101,9 @@ const Singin = () => {
   const { register, handleSubmit, reset, errors } = useForm({
     validationSchema: schema
   });
-  const [inputs, setInputs] = useState<State>({
-    ...initialInputs
-  });
+  const [showPassword, setShowPassword] = useState(false);
 
-  const [signin, { data, loading, error }] = useMutation(SIGNIN_MUTATION, {
-    // variables: {
-    //   email: inputs.email,
-    //   password: inputs.password
-    // },
+  const [signin, { loading, error }] = useMutation(SIGNIN_MUTATION, {
     refetchQueries: [
       {
         query: CURRENT_USER_QUERY
@@ -131,20 +113,12 @@ const Singin = () => {
       }
     ],
     onCompleted: () => {
-      // setInputs({ ...initialInputs });
       reset();
     }
   });
 
-  // const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-  //   setInputs({
-  //     ...inputs,
-  //     [e.target.name]: e.target.value
-  //   });
-  // };
-
   const handleClickShowPassword = () => {
-    setInputs({ ...inputs, showPassword: !inputs.showPassword });
+    setShowPassword(!showPassword);
   };
 
   const handleMouseDownPassword = (
@@ -182,8 +156,6 @@ const Singin = () => {
           label="Email"
           name="email"
           type="email"
-          // onChange={handleChange}
-          // value={inputs.email}
           autoComplete="current-email"
           margin="normal"
           variant="outlined"
@@ -202,16 +174,13 @@ const Singin = () => {
         <TextField
           label="Password"
           name="password"
-          type={inputs.showPassword ? "text" : "password"}
-          // onChange={handleChange}
-          // value={inputs.password}
+          type={showPassword ? "text" : "password"}
           autoComplete="current-name"
           margin="normal"
           variant="outlined"
           size="small"
           error={!!errors.password}
           helperText={errors.password && errors.password.message}
-          // required
           inputRef={register}
           InputProps={{
             startAdornment: (
@@ -228,7 +197,7 @@ const Singin = () => {
                   edge="end"
                   name="showPassword"
                 >
-                  {inputs.showPassword ? <Visibility /> : <VisibilityOff />}
+                  {showPassword ? <Visibility /> : <VisibilityOff />}
                 </IconButton>
               </InputAdornment>
             )

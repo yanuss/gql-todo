@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { makeStyles, Theme, createStyles } from "@material-ui/core/styles";
 import styled from "styled-components";
 import AppBar from "@material-ui/core/AppBar";
@@ -9,10 +9,11 @@ import MenuIcon from "@material-ui/icons/Menu";
 import SideMenu from "../SideMenu/SideMenu";
 import clsx from "clsx";
 import { drawerWidth } from "../Page/Page";
-import User from "../User/User";
+import User, { useUser } from "../User/User";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import AvatarMenu from "../AvatarMenu/AvatarMenu";
 import ToggleDarkModeButton from "../ToggleDarkModeButton/ToggleDakrModeButton";
+import { green } from "@material-ui/core/colors";
 
 const NavWrapper = styled.nav`
   flex-grow: 1;
@@ -47,12 +48,16 @@ const useStyles = makeStyles((theme: Theme) =>
       "& > *": {
         marginLeft: theme.spacing(2)
       }
+    },
+    loader: {
+      color: green[500]
     }
   })
 );
 
 const Nav = props => {
   const classes = useStyles();
+  const { data } = useUser();
 
   return (
     <NavWrapper>

@@ -96,27 +96,12 @@ const schema = yup.object().shape({
   password: yup.string().required("This field is required")
 });
 
-interface State {
-  // name: string;
-  // email: string;
-  // password: string;
-  showPassword: boolean;
-}
-const initialInputs = {
-  // name: "",
-  // email: "",
-  // password: "",
-  showPassword: false
-};
-
 const Singup = () => {
   const classes = useStyles();
   const { register, handleSubmit, reset, errors } = useForm({
     validationSchema: schema
   });
-  const [inputs, setInputs] = useState<State>({
-    ...initialInputs
-  });
+  const [showPassword, setShowPassword] = useState(false);
   const [signup, { loading, error }] = useMutation(SIGNNUP_MUTATION, {
     refetchQueries: [
       {
@@ -129,7 +114,7 @@ const Singup = () => {
   });
 
   const handleClickShowPassword = () => {
-    setInputs({ ...inputs, showPassword: !inputs.showPassword });
+    setShowPassword(!showPassword);
   };
 
   const handleMouseDownPassword = (
@@ -149,7 +134,6 @@ const Singup = () => {
     });
   };
 
-  // console.log(errors, error && { error });
   return (
     <div className={classes.root}>
       <FacebookSignup label="Sign up with Facebook" />
@@ -168,8 +152,6 @@ const Singup = () => {
         <TextField
           label="Name"
           name="name"
-          // onChange={handleChange}
-          // value={inputs.name}
           autoComplete="current-name"
           margin="normal"
           variant="outlined"
@@ -177,7 +159,6 @@ const Singup = () => {
           error={!!errors.name}
           helperText={errors.name && errors.name.message}
           inputRef={register}
-          // required
           InputProps={{
             startAdornment: (
               <InputAdornment position="start">
@@ -190,8 +171,6 @@ const Singup = () => {
           label="Email"
           name="email"
           type="email"
-          // onChange={handleChange}
-          // value={inputs.email}
           autoComplete="current-email"
           margin="normal"
           variant="outlined"
@@ -210,16 +189,13 @@ const Singup = () => {
         <TextField
           label="Password"
           name="password"
-          type={inputs.showPassword ? "text" : "password"}
-          // onChange={handleChange}
-          // value={inputs.password}
+          type={showPassword ? "text" : "password"}
           autoComplete="current-name"
           margin="normal"
           variant="outlined"
           size="small"
           error={!!errors.password}
           helperText={errors.password && errors.password.message}
-          // required
           inputRef={register}
           InputProps={{
             startAdornment: (
@@ -236,7 +212,7 @@ const Singup = () => {
                   edge="end"
                   name="showPassword"
                 >
-                  {inputs.showPassword ? <Visibility /> : <VisibilityOff />}
+                  {showPassword ? <Visibility /> : <VisibilityOff />}
                 </IconButton>
               </InputAdornment>
             )
