@@ -89,6 +89,16 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 );
 
+interface FormData {
+  name?: string;
+  email?: string;
+  image?: string;
+}
+
+interface Image {
+  image: string;
+}
+
 const schema = yup.object().shape({
   name: yup.string().required("This field is required"),
   email: yup
@@ -105,7 +115,7 @@ const Profile = () => {
   const [image, setImage] = useState("");
   const [changePassword, setChangePassword] = useState(false);
   const [imgLoad, setImageLoad] = useState(false);
-  const [tempImages, setTempImages] = useState([]);
+  const [tempImages, setTempImages] = useState<Image[]>([]);
   const [deleteImage] = useMutation(DELETE_CLOUDINARY_IMAGE);
   const { register, handleSubmit, errors, watch, reset } = useForm({
     validationSchema: schema,
@@ -140,28 +150,33 @@ const Profile = () => {
   const uploadFile = async (e: React.ChangeEvent<HTMLInputElement>) => {
     setImageLoad(true);
     if (image) {
-      const imagesArr = [...tempImages];
+      const imagesArr: Array<any> = [...tempImages];
       imagesArr.push({ image });
       setTempImages(imagesArr);
     }
-    const files = e.target.files;
+    const files: any = e.target.files;
     const data = new FormData();
     data.append("file", files[0]);
     data.append("upload_preset", "gql-todo");
-    const res = await fetch(
-      "https://api.cloudinary.com/v1_1/yanus/image/upload",
-      {
-        method: "POST",
-        body: data
+    try {
+      const res = await fetch(
+        "https://api.cloudinary.com/v1_1/yanus/image/upload",
+        {
+          method: "POST",
+          body: data
+        }
+      );
+      if (res) {
+        const file: any = res.json();
+        setImage(file.secure_url);
+        setImageLoad(false);
       }
-    );
-    const file = await res.json();
-    setImage(file.secure_url);
-    setImageLoad(false);
+    } catch (err) {
+      console.log(err);
+    }
   };
 
-  const onSubmit = (data: object, e: React.ChangeEvent<HTMLInputElement>) => {
-    e.preventDefault();
+  const onSubmit = (data: FormData) => {
     updateProfile({
       variables: {
         name: data.name,
@@ -201,7 +216,7 @@ const Profile = () => {
           onDelete={() => setImage("")}
           onClick={uploadFile}
           circle
-          avatar
+          // avatar
         />
         <TextField
           label="Name"

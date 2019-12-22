@@ -63,6 +63,9 @@ const useStyles = makeStyles((theme: Theme) =>
       "&:hover": {
         backgroundColor: green[700]
       }
+    },
+    success: {
+      color: green[500]
     }
   })
 );
@@ -78,10 +81,28 @@ const schema = yup.object().shape({
     .required("This field is required")
 });
 
-const ChangePassword = props => {
+interface Props {
+  showPasswordChange: (val: boolean) => void;
+}
+
+type ShowPassword2 = {
+  [key: string]: boolean;
+};
+
+// interface ShowPassword {
+//   password: keyof typeof ShowPassword2;
+//   confirmPassword: boolean;
+// }
+
+interface FormValues {
+  password?: string;
+  confirmPassword?: string;
+}
+
+const ChangePassword: React.FC<Props> = props => {
   const classes = useStyles();
   const [success, setSuccess] = useState(false);
-  const [showPassword, setShowPassword] = useState({
+  const [showPassword, setShowPassword] = useState<ShowPassword2>({
     password: false,
     confirmPassword: false
   });
@@ -113,8 +134,11 @@ const ChangePassword = props => {
     event.preventDefault();
   };
 
-  const onSubmit = (data: object, e: React.ChangeEvent<HTMLInputElement>) => {
-    e.preventDefault();
+  const onSubmit = (
+    data: FormValues
+    // e: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    // e.preventDefault();
     changePassword({
       variables: {
         password: data.password,
@@ -212,7 +236,7 @@ const ChangePassword = props => {
           </Typography>
         )}
         {data && (
-          <Typography color="green" variant="inherit">
+          <Typography className={classes.success} variant="inherit">
             {data.changeUserPassword.message}
           </Typography>
         )}

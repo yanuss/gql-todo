@@ -11,7 +11,7 @@ const ProfilePage = () => {
           return <ProfileLoading />;
         }
         if (data && data.me) {
-          return <Profile user={data.me} />;
+          return <Profile />;
         } else {
           return <p>not logged in</p>;
         }

@@ -1,17 +1,18 @@
-import React, { useState } from "react";
-import gql from "graphql-tag";
 import { useMutation } from "@apollo/react-hooks";
-import TextField from "@material-ui/core/TextField";
-import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
-import InputAdornment from "@material-ui/core/InputAdornment";
-import IconButton from "@material-ui/core/IconButton";
-import Visibility from "@material-ui/icons/Visibility";
-import VisibilityOff from "@material-ui/icons/VisibilityOff";
 import Button from "@material-ui/core/Button";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import { green } from "@material-ui/core/colors";
+import IconButton from "@material-ui/core/IconButton";
+import InputAdornment from "@material-ui/core/InputAdornment";
+import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
+import TextField from "@material-ui/core/TextField";
 import Typography from "@material-ui/core/Typography";
-import FormHelperText from "@material-ui/core/FormHelperText";
+import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
+import Visibility from "@material-ui/icons/Visibility";
+import VisibilityOff from "@material-ui/icons/VisibilityOff";
+import clsx from "clsx";
+import gql from "graphql-tag";
+import React, { useState } from "react";
 import useForm from "react-hook-form";
 import * as yup from "yup";
 import { CURRENT_USER_QUERY } from "../User/User";
@@ -70,9 +71,16 @@ const useStyles = makeStyles((theme: Theme) =>
       left: "50%",
       marginTop: -17,
       marginLeft: -17
+    },
+    buttonSuccess: {
+      backgroundColor: green[500],
+      "&:hover": {
+        backgroundColor: green[700]
+      }
+    },
+    success: {
+      color: green[500]
     }
-
-    // '& MuiFormControl-root'
   })
 );
 
@@ -94,40 +102,43 @@ const initialInputs = {
   showConfirmPassword: false
 };
 
-const Singin = props => {
+interface Props {
+  resetToken: string;
+}
+
+interface FormValues {
+  password?: string;
+  confirmPassword?: string;
+}
+type ShowPassword = {
+  [key: string]: boolean;
+};
+
+const Reset: React.FC<Props> = props => {
   const classes = useStyles();
-  const { register, handleSubmit, errors } = useForm({
+  const [success, setSuccess] = useState(false);
+  const { register, handleSubmit, errors, reset } = useForm({
     validationSchema: schema
   });
-  const [inputs, setInputs] = useState<State>({
-    ...initialInputs
+  const [showPassword, setShowPassword] = useState<ShowPassword>({
+    password: false,
+    confirmPassword: false
   });
 
   const [signin, { data, loading, error }] = useMutation(RESET_MUTATION, {
-    variables: {
-      resetToken: props.resetToken,
-      password: inputs.password,
-      confirmPassword: inputs.confirmPassword
-    },
     refetchQueries: [
       {
         query: CURRENT_USER_QUERY
       }
     ],
     onCompleted: () => {
-      setInputs({ ...initialInputs });
+      setSuccess(true);
+      reset();
     }
   });
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setInputs({
-      ...inputs,
-      [e.target.name]: e.target.value
-    });
-  };
-
-  const handleClickShowPassword = field => {
-    setInputs({ ...inputs, [field]: !inputs[field] });
+  const handleClickShowPassword = (field: string) => {
+    setShowPassword({ ...showPassword, [field]: !showPassword[field] });
   };
 
   const handleMouseDownPassword = (
@@ -135,12 +146,20 @@ const Singin = props => {
   ) => {
     event.preventDefault();
   };
-  console.log(error && error);
 
-  const onSubmit = (data, e) => {
-    e.preventDefault();
-    signin();
+  const onSubmit = (data: FormValues) => {
+    signin({
+      variables: {
+        resetToken: props.resetToken,
+        password: data.password,
+        confirmPassword: data.confirmPassword
+      }
+    });
   };
+
+  const saveButtonnClassName = clsx({
+    [classes.buttonSuccess]: success
+  });
 
   return (
     <form className={classes.container} onSubmit={handleSubmit(onSubmit)}>
@@ -149,59 +168,63 @@ const Singin = props => {
         Please enter your new password twice.
       </Typography>
       <TextField
-        onChange={handleChange}
-        label="Password"
+        label="New password"
         name="password"
-        type={inputs.showPassword ? "text" : "password"}
-        value={inputs.password}
+        type={showPassword.password ? "text" : "password"}
         autoComplete="current-name"
         margin="normal"
         variant="outlined"
         size="small"
         error={!!errors.password}
         helperText={errors.password && errors.password.message}
-        // required
         inputRef={register}
         InputProps={{
+          startAdornment: (
+            <InputAdornment position="start">
+              <LockOutlinedIcon />
+            </InputAdornment>
+          ),
           endAdornment: (
             <InputAdornment position="end">
               <IconButton
                 aria-label="toggle password visibility"
-                onClick={() => handleClickShowPassword("showPassword")}
+                onClick={() => handleClickShowPassword("password")}
                 onMouseDown={handleMouseDownPassword}
                 edge="end"
                 name="showPassword"
               >
-                {inputs.showPassword ? <Visibility /> : <VisibilityOff />}
+                {showPassword.password ? <Visibility /> : <VisibilityOff />}
               </IconButton>
             </InputAdornment>
           )
         }}
       />
       <TextField
-        onChange={handleChange}
-        label="Confirm Password"
+        label="Confirm new password"
         name="confirmPassword"
-        type={inputs.showConfirmPassword ? "text" : "password"}
-        value={inputs.confirmPassword}
+        type={showPassword.confirmPassword ? "text" : "password"}
+        autoComplete="current-name"
         margin="normal"
         variant="outlined"
         size="small"
         error={!!errors.confirmPassword}
         helperText={errors.confirmPassword && errors.confirmPassword.message}
-        // required
         inputRef={register}
         InputProps={{
+          startAdornment: (
+            <InputAdornment position="start">
+              <LockOutlinedIcon />
+            </InputAdornment>
+          ),
           endAdornment: (
             <InputAdornment position="end">
               <IconButton
                 aria-label="toggle password visibility"
-                onClick={() => handleClickShowPassword("showConfirmPassword")}
+                onClick={() => handleClickShowPassword("confirmPassword")}
                 onMouseDown={handleMouseDownPassword}
                 edge="end"
-                name="showConfirmPassword"
               >
-                {inputs.showConfirmPassword ? (
+                {showPassword.confirmPassword ? (
                   <Visibility />
                 ) : (
                   <VisibilityOff />
@@ -211,14 +234,10 @@ const Singin = props => {
           )
         }}
       />
-      {/* {error && (
-        <Typography color="error" variant="inherit">
-          {error}
-        </Typography>
-      )} */}
       <Button
         variant="contained"
         color="primary"
+        className={saveButtonnClassName}
         type="submit"
         disabled={loading}
       >
@@ -231,4 +250,4 @@ const Singin = props => {
   );
 };
 
-export default Singin;
+export default Reset;

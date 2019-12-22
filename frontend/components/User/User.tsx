@@ -16,10 +16,16 @@ const CURRENT_USER_QUERY = gql`
 
 interface Props {
   children: (
-    data: object,
+    data: { me: Me },
     loading?: boolean,
     error?: object
   ) => JSX.Element | null;
+}
+
+interface Me {
+  name: string;
+  email: string;
+  image?: string;
 }
 
 const useUser = () => {
