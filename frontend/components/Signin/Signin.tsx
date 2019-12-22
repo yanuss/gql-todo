@@ -1,28 +1,27 @@
-import React, { useState } from "react";
-import gql from "graphql-tag";
 import { useMutation } from "@apollo/react-hooks";
-import TextField from "@material-ui/core/TextField";
-import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
-import InputAdornment from "@material-ui/core/InputAdornment";
-import IconButton from "@material-ui/core/IconButton";
-import Visibility from "@material-ui/icons/Visibility";
-import VisibilityOff from "@material-ui/icons/VisibilityOff";
 import Button from "@material-ui/core/Button";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import { green } from "@material-ui/core/colors";
-import clsx from "clsx";
-import { red } from "@material-ui/core/colors";
-import { CURRENT_USER_QUERY } from "../User/User";
-import { GET_TODOS } from "../Items/Items";
-import Link from "next/link";
-import FacebookSignup from "../Signup/FacebookSignup";
-import GoogleSiginin from "../Signup/GoogleSignin";
 import Divider from "@material-ui/core/Divider";
+import IconButton from "@material-ui/core/IconButton";
+import InputAdornment from "@material-ui/core/InputAdornment";
+import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
+import TextField from "@material-ui/core/TextField";
 import Typography from "@material-ui/core/Typography";
-import MailOutlineIcon from "@material-ui/icons/MailOutline";
 import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
+import MailOutlineIcon from "@material-ui/icons/MailOutline";
+import Visibility from "@material-ui/icons/Visibility";
+import VisibilityOff from "@material-ui/icons/VisibilityOff";
+import clsx from "clsx";
+import gql from "graphql-tag";
+import Link from "next/link";
+import React, { useState } from "react";
 import useForm from "react-hook-form";
 import * as yup from "yup";
+import { GET_TODOS } from "../Items/Items";
+import FacebookSignup from "../Signup/FacebookSignup";
+import GoogleSiginin from "../Signup/GoogleSignin";
+import { CURRENT_USER_QUERY } from "../User/User";
 
 const SIGNIN_MUTATION = gql`
   mutation SIGNIN_MUTATION($email: String!, $password: String!) {
@@ -96,6 +95,11 @@ const schema = yup.object().shape({
   password: yup.string().required("This field is required")
 });
 
+interface Data {
+  email?: string;
+  password?: string;
+}
+
 const Singin = () => {
   const classes = useStyles();
   const { register, handleSubmit, reset, errors } = useForm({
@@ -127,8 +131,8 @@ const Singin = () => {
     event.preventDefault();
   };
 
-  const onSubmit = (data: object, e: React.ChangeEvent<HTMLInputElement>) => {
-    e.preventDefault();
+  const onSubmit = (data: Data) => {
+    // e.preventDefault();
     signin({
       variables: {
         email: data.email,

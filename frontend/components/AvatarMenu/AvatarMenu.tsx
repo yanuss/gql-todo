@@ -1,18 +1,20 @@
-import React from "react";
+// @ts-nocheck
 import Avatar from "@material-ui/core/Avatar";
-import Menu from "@material-ui/core/Menu";
-import Fade from "@material-ui/core/Fade";
+import ButtonBase from "@material-ui/core/ButtonBase";
 import Divider from "@material-ui/core/Divider";
-import Tooltip from "@material-ui/core/Tooltip";
-import MenuItem from "@material-ui/core/MenuItem";
-import Typography from "@material-ui/core/Typography";
+import Fade from "@material-ui/core/Fade";
 import ListItemIcon from "@material-ui/core/ListItemIcon";
+import Menu from "@material-ui/core/Menu";
+import MenuItem from "@material-ui/core/MenuItem";
+import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
+import Tooltip from "@material-ui/core/Tooltip";
+import Typography from "@material-ui/core/Typography";
 import AccountCircleIcon from "@material-ui/icons/AccountCircle";
 import PowerSettingsNewIcon from "@material-ui/icons/PowerSettingsNew";
-import { createStyles, Theme, makeStyles } from "@material-ui/core/styles";
-import ButtonBase from "@material-ui/core/ButtonBase";
 import Router from "next/router";
+import React from "react";
 import { useSignout } from "../Signout/Singout";
+// import { ButtonBaseProps } from "@material-ui/core/ButtonBase";
 // import Icon from "@material-ui/core/Icon";
 // import Fab from "@material-ui/core/Fab";
 
@@ -30,13 +32,17 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 );
 
-const AvatarMenu = props => {
+const AvatarMenu = (props: any) => {
   const classes = useStyles(props);
   const { signout } = useSignout();
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
 
-  const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
-    setAnchorEl(event.currentTarget);
+  const handleClick = (event: React.MouseEvent<HTMLElement>) => {
+    if (me) {
+      setAnchorEl(event.currentTarget);
+    } else {
+      Router.push("/");
+    }
   };
 
   const handleClose = () => {

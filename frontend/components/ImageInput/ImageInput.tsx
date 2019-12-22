@@ -1,3 +1,4 @@
+// @ts-nocheck
 import React, { useRef } from "react";
 import InsertPhotoIcon from "@material-ui/icons/InsertPhoto";
 import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
@@ -51,8 +52,26 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 );
 
-const ImageInput = props => {
-  const inputRef = useRef(null);
+interface Classes {
+  button: object;
+  root: object;
+  buttonContent: object;
+  imageSrc: object;
+  remove: object;
+}
+
+interface Props {
+  image?: string;
+  disabled?: boolean;
+  loading: boolean;
+  onClick: (e: React.ChangeEvent<HTMLInputElement>) => Promise<void>;
+  onDelete: () => void;
+  circle?: boolean;
+  size?: number;
+}
+
+const ImageInput: React.FC<Props> = props => {
+  const inputRef = useRef<HTMLInputElement>(null);
   const classes = useStyles(props);
 
   const handleClick = () => {

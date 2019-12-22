@@ -44,7 +44,7 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 );
 
-const SideMenu = props => {
+const SideMenu = (props: any) => {
   const classes = useStyles();
   const theme = useTheme();
 

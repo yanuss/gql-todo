@@ -1,15 +1,16 @@
-import React, { useState } from "react";
-import gql from "graphql-tag";
+// @ts-nocheck
 import { useMutation } from "@apollo/react-hooks";
-import FacebookLogin from "react-facebook-login/dist/facebook-login-render-props";
-import { fbAppId } from "../../config";
-import { CURRENT_USER_QUERY } from "../User/User";
-import CircularProgress from "@material-ui/core/CircularProgress";
 import Button from "@material-ui/core/Button";
+import CircularProgress from "@material-ui/core/CircularProgress";
 import { green } from "@material-ui/core/colors";
 import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
 import FacebookIcon from "@material-ui/icons/Facebook";
+import gql from "graphql-tag";
+import React from "react";
+import FacebookLogin from "react-facebook-login/dist/facebook-login-render-props";
+import { fbAppId } from "../../config";
 import { GET_TODOS } from "../Items/Items";
+import { CURRENT_USER_QUERY } from "../User/User";
 
 const FACEBOOK_SIGNUP_MUTATION = gql`
   mutation FACEBOOK_SIGNUP_MUTATION(
@@ -53,7 +54,24 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 );
 
-const FacebookSignup = props => {
+interface Props {
+  label?: string;
+}
+
+interface Response {
+  email: string;
+  name: string;
+  userID: string;
+  picture: Image;
+}
+
+interface Image {
+  data: {
+    url: string;
+  };
+}
+
+const FacebookSignup: React.FC<Props> = props => {
   const classes = useStyles();
   const [facebookSignin, { data, loading, error }] = useMutation(
     FACEBOOK_SIGNUP_MUTATION,
@@ -81,7 +99,9 @@ const FacebookSignup = props => {
   //     ]
   //   }
   // );
-  const responseFacebook = response => {
+  const responseFacebook = <T extends { [key: string]: any }>(
+    response: T
+  ): T => {
     // console.log(response);
     if (response) {
       try {

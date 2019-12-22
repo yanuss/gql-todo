@@ -3,7 +3,7 @@ import AuthTabs from "../AuthTabs/AuthTabs";
 import { useUser } from "../User/User";
 import Items from "../Items/Items";
 
-const Home = props => {
+const Home = () => {
   const { data } = useUser();
   return (
     <>

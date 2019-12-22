@@ -82,15 +82,17 @@ const useStyles = makeStyles((theme: Theme) =>
 );
 
 interface State {
+  id: string;
   title: string;
   description?: string;
-  image?: string;
+  image: string;
   large_image?: string;
-  date?: object;
+  date?: Date | null;
   done: boolean;
 }
 
 const initialInputs = {
+  id: "",
   title: "",
   description: "",
   image: "",
@@ -99,12 +101,25 @@ const initialInputs = {
   done: false
 };
 
-const CreateItem = ({
+interface Props {
+  open: boolean;
+  itemData: {
+    id: string;
+    title: string;
+    done: boolean;
+    image: string;
+  };
+  handleClose: () => void;
+}
+interface ItempImages {
+  image: string;
+  large_image: string | undefined;
+}
+
+const CreateItem: React.FunctionComponent<Props> = ({
   open,
   itemData,
-  handleClose,
-  setModalData,
-  editItem
+  handleClose
 }) => {
   const classes = useStyles();
   const [inputs, setInputs] = useState<State>({
@@ -112,7 +127,7 @@ const CreateItem = ({
   });
   const [imgLoad, setImageLoad] = useState(false);
   const [deleteImage] = useMutation(DELETE_CLOUDINARY_IMAGE);
-  const [tempImages, setTempImages] = useState([]);
+  const [tempImages, setTempImages] = useState<ItempImages[]>([]);
 
   useEffect(() => {
     setTempImages([]);
@@ -141,7 +156,7 @@ const CreateItem = ({
       imagesArr.push({ image: inputs.image, large_image: inputs.large_image });
       setTempImages(imagesArr);
     }
-    const files = e.target.files;
+    const files: any = e.target.files;
     const data = new FormData();
     data.append("file", files[0]);
     data.append("upload_preset", "gql-todo");

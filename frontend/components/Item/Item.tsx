@@ -1,18 +1,19 @@
-import React from "react";
-import gql from "graphql-tag";
+// @ts-nocheck
 import { useMutation } from "@apollo/react-hooks";
-import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
-import { GET_TODOS } from "../Items/Items";
-import Edit from "@material-ui/icons/Edit";
-import DeleteTodo from "../DeleteTodo/DeleteTodo";
-import DoneIcon from "@material-ui/icons/Done";
-import RadioButtonUncheckedIcon from "@material-ui/icons/RadioButtonUnchecked";
-import IconButton from "@material-ui/core/IconButton";
-import Tooltip from "@material-ui/core/Tooltip";
-import clsx from "clsx";
 import ButtonBase from "@material-ui/core/ButtonBase";
+import IconButton from "@material-ui/core/IconButton";
 import Paper from "@material-ui/core/Paper";
+import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
+import Tooltip from "@material-ui/core/Tooltip";
 import Typography from "@material-ui/core/Typography";
+import DoneIcon from "@material-ui/icons/Done";
+import Edit from "@material-ui/icons/Edit";
+import RadioButtonUncheckedIcon from "@material-ui/icons/RadioButtonUnchecked";
+import clsx from "clsx";
+import gql from "graphql-tag";
+import React from "react";
+import DeleteTodo from "../DeleteTodo/DeleteTodo";
+import { GET_TODOS } from "../Items/Items";
 
 export const UPDATE_TODO = gql`
   mutation UPDATE_TODO(
@@ -156,7 +157,6 @@ const Item = ({ itemData, setModalData, handleShowModal }) => {
         <Tooltip title="Edit item" aria-label="menu">
           <IconButton
             aria-label="delete"
-            className={classes.margin}
             onClick={() => {
               setModalData({
                 ...itemData

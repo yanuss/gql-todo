@@ -31,7 +31,7 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 );
 
-const Page = props => {
+const Page = (props: any) => {
   const classes = useStyles();
   const { palette, togglePalette, theme } = useDarkMode();
   const [open, setOpen] = React.useState(false);

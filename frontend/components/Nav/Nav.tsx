@@ -1,26 +1,24 @@
-import React, { useEffect } from "react";
-import { makeStyles, Theme, createStyles } from "@material-ui/core/styles";
-import styled from "styled-components";
 import AppBar from "@material-ui/core/AppBar";
+import CircularProgress from "@material-ui/core/CircularProgress";
+import { green } from "@material-ui/core/colors";
+import IconButton from "@material-ui/core/IconButton";
+import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
 import Toolbar from "@material-ui/core/Toolbar";
 import Typography from "@material-ui/core/Typography";
-import IconButton from "@material-ui/core/IconButton";
 import MenuIcon from "@material-ui/icons/Menu";
-import SideMenu from "../SideMenu/SideMenu";
 import clsx from "clsx";
-import { drawerWidth } from "../Page/Page";
-import User, { useUser } from "../User/User";
-import CircularProgress from "@material-ui/core/CircularProgress";
+import React from "react";
 import AvatarMenu from "../AvatarMenu/AvatarMenu";
+import { drawerWidth } from "../Page/Page";
+import SideMenu from "../SideMenu/SideMenu";
 import ToggleDarkModeButton from "../ToggleDarkModeButton/ToggleDakrModeButton";
-import { green } from "@material-ui/core/colors";
-
-const NavWrapper = styled.nav`
-  flex-grow: 1;
-`;
+import User, { useUser } from "../User/User";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
+    nav: {
+      flexGrow: 1
+    },
     root: {},
     menuButton: {
       marginRight: theme.spacing(2)
@@ -55,12 +53,12 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 );
 
-const Nav = props => {
+const Nav = (props: any) => {
   const classes = useStyles();
   const { data } = useUser();
 
   return (
-    <NavWrapper>
+    <div className={classes.nav}>
       <AppBar
         position="static"
         className={clsx(classes.appBar, {
@@ -83,7 +81,7 @@ const Nav = props => {
           <div className={classes.sideContainer}>
             <ToggleDarkModeButton togglePalette={props.togglePalette} />
             <User>
-              {(data, loading) => {
+              {(data?: object, loading?: boolean) => {
                 if (loading) return <CircularProgress size={34} />;
                 return (
                   <AvatarMenu data={data} togglePalette={props.togglePalette} />
@@ -94,7 +92,7 @@ const Nav = props => {
         </Toolbar>
       </AppBar>
       <SideMenu {...props} />
-    </NavWrapper>
+    </div>
   );
 };
 export default Nav;

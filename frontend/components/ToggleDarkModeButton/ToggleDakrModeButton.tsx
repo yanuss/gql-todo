@@ -5,7 +5,11 @@ import Brightness4Icon from "@material-ui/icons/Brightness4";
 import BrightnessHighIcon from "@material-ui/icons/BrightnessHigh";
 import Tooltip from "@material-ui/core/Tooltip";
 
-const ToggleDarkModeButton = props => {
+interface TogglePalette {
+  togglePalette: (event: React.MouseEvent<HTMLButtonElement>) => void;
+}
+
+const ToggleDarkModeButton = (props: TogglePalette) => {
   const { palette } = useTheme();
   return (
     <Tooltip title="Toggle ligh/dark theme" aria-label="toggle theme">

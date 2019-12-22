@@ -34,9 +34,7 @@ const SignoutButton = () => {
     <Button
       variant="contained"
       color="primary"
-      onClick={() => {
-        signout();
-      }}
+      onClick={(event: React.MouseEvent<HTMLElement>) => signout()}
     >
       Logout
     </Button>

@@ -44,7 +44,15 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 );
 
-const DeleteTodo = ({ id }) => {
+interface Item {
+  id: string;
+}
+
+interface Data {
+  items: Item[];
+}
+
+const DeleteTodo: React.FC<{ id: string }> = ({ id }) => {
   const classes = useStyles();
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState(false);
@@ -54,18 +62,18 @@ const DeleteTodo = ({ id }) => {
     [classes.buttonError]: error
   });
 
-  const handleError = () => {
-    setError(true);
-    setSuccess(false);
-    timer.current = setTimeout(() => {
-      setError(false);
-    }, 2000);
-  };
+  // const handleError = () => {
+  //   setError(true);
+  //   setSuccess(false);
+  //   timer.current = setTimeout(() => {
+  //     setError(false);
+  //   }, 2000);
+  // };
 
-  const [deleteTodo, { data, loading }] = useMutation(DELETE_TODO, {
+  const [deleteTodo, { loading }] = useMutation(DELETE_TODO, {
     variables: { id },
     update: (cache, { data: { deleteItem } }) => {
-      const data = cache.readQuery({ query: GET_TODOS });
+      const data = cache.readQuery<Data>({ query: GET_TODOS })!;
       const updatedItems = [...data.items].filter(
         item => item.id !== deleteItem.id
       );

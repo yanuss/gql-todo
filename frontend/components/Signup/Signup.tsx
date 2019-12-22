@@ -87,6 +87,12 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 );
 
+interface Data {
+  name?: string;
+  email?: string;
+  password?: string;
+}
+
 const schema = yup.object().shape({
   name: yup.string().required("This field is required"),
   email: yup
@@ -123,8 +129,11 @@ const Singup = () => {
     event.preventDefault();
   };
 
-  const onSubmit = (data: object, e: React.ChangeEvent<HTMLInputElement>) => {
-    e.preventDefault();
+  const onSubmit = (
+    data: Data
+    // , e: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    // e.preventDefault();
     signup({
       variables: {
         name: data.name,
@@ -175,7 +184,7 @@ const Singup = () => {
           margin="normal"
           variant="outlined"
           size="small"
-          error={!!errors.email || (error && error.email)}
+          error={!!errors.email}
           helperText={errors.email && errors.email.message}
           inputRef={register}
           InputProps={{

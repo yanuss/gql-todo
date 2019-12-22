@@ -1,14 +1,14 @@
-import React, { useState } from "react";
-import gql from "graphql-tag";
 import { useQuery } from "@apollo/react-hooks";
-import Spinner from "../Spinner/Spinner";
-import Item from "../Item/Item";
-import CreateItem from "../CreateItem/CreateItem";
 import Divider from "@material-ui/core/Divider";
-import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
 import Fab from "@material-ui/core/Fab";
-import AddIcon from "@material-ui/icons/Add";
+import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
 import Tooltip from "@material-ui/core/Tooltip";
+import AddIcon from "@material-ui/icons/Add";
+import gql from "graphql-tag";
+import React, { useState } from "react";
+import CreateItem from "../CreateItem/CreateItem";
+import Item from "../Item/Item";
+import Spinner from "../Spinner/Spinner";
 
 export const GET_TODOS = gql`
   query GET_TODOS {
@@ -42,28 +42,45 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 );
 
-const Items = () => {
+interface Item {
+  id: string;
+  title: string;
+  done: boolean;
+  image: string;
+}
+interface Data {
+  items: Item[];
+}
+
+const itemDefaults = {
+  id: "",
+  title: "",
+  done: false,
+  image: ""
+};
+
+const Items: React.FC = () => {
   const classes = useStyles();
-  const { data, loading, error } = useQuery(GET_TODOS);
+  const { data, loading, error } = useQuery<Data>(GET_TODOS)!;
   const [showModal, handleShowModal] = useState(false);
-  const [modalData, setModalData] = useState({});
+  const [modalData, setModalData] = useState<Item>({ ...itemDefaults });
   if (loading) return <Spinner />;
   if (error) return <p>error</p>;
   return (
     <div className={classes.root}>
-      {data.items.map(item => {
-        return (
-          <React.Fragment key={item.id}>
-            <Item
-              id={item.id}
-              itemData={item}
-              setModalData={setModalData}
-              handleShowModal={handleShowModal}
-            />
-            <Divider />
-          </React.Fragment>
-        );
-      })}
+      {data &&
+        data.items.map(item => {
+          return (
+            <React.Fragment key={item.id}>
+              <Item
+                itemData={item}
+                setModalData={setModalData}
+                handleShowModal={handleShowModal}
+              />
+              <Divider />
+            </React.Fragment>
+          );
+        })}
       <Tooltip title="Add new item" aria-label="menu">
         <Fab
           color="primary"
@@ -77,10 +94,9 @@ const Items = () => {
       <CreateItem
         open={showModal}
         itemData={modalData}
-        setModalData={setModalData}
         handleClose={() => {
           handleShowModal(false);
-          setModalData({});
+          setModalData({ ...itemDefaults });
         }}
       />
     </div>

@@ -49,7 +49,11 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 );
 
-const GoogleSignin = props => {
+interface Props {
+  label?: string;
+}
+
+const GoogleSignin: React.FC<Props> = props => {
   const classes = useStyles();
 
   const [googleSignin, { loading }] = useMutation(GOOGLE_SIGNIN_MUTATION, {
@@ -62,7 +66,7 @@ const GoogleSignin = props => {
       }
     ]
   });
-  const responseGoogle = response => {
+  const responseGoogle = <T extends { [key: string]: any }>(response: T) => {
     if (response) {
       try {
         googleSignin({

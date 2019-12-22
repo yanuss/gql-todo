@@ -14,13 +14,21 @@ const CURRENT_USER_QUERY = gql`
   }
 `;
 
+interface Props {
+  children: (
+    data: object,
+    loading?: boolean,
+    error?: object
+  ) => JSX.Element | null;
+}
+
 const useUser = () => {
   const { data, loading, error } = useQuery(CURRENT_USER_QUERY);
   return { data, loading, error };
 };
-const User = props => {
+const User = ({ children }: Props) => {
   const { data, loading, error } = useQuery(CURRENT_USER_QUERY);
-  return props.children(data, loading, error);
+  return children(data, loading, error);
 };
 
 export { CURRENT_USER_QUERY, useUser };
