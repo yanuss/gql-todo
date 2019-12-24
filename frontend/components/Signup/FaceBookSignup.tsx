@@ -32,15 +32,15 @@ const FACEBOOK_SIGNUP_MUTATION = gql`
   }
 `;
 
-const FACEBOOK_SIGNIN_WITH_TOKEN_MUTATION = gql`
-  mutation FACEBOOK_SIGNIN_WITH_TOKEN_MUTATION($idToken: String!) {
-    facebookSigninWithToken(idToken: $idToken) {
-      id
-      email
-      name
-    }
-  }
-`;
+// const FACEBOOK_SIGNIN_WITH_TOKEN_MUTATION = gql`
+//   mutation FACEBOOK_SIGNIN_WITH_TOKEN_MUTATION($idToken: String!) {
+//     facebookSigninWithToken(idToken: $idToken) {
+//       id
+//       email
+//       name
+//     }
+//   }
+// `;
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     buttonProgress: {
