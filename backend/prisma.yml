@@ -1,5 +1,6 @@
 #endpoint: ${env:PRISMA_ENDPOINT}
-endpoint: https://gql-todo-production-d996dcc939.herokuapp.com/gql-todo-prod/prod
+#endpoint: https://gql-todo-production-d996dcc939.herokuapp.com/gql-todo-prod/prod
+endpoint: https://gql-todo-production-d996dcc939.herokuapp.com/gql-todo-production/prod
 datamodel: datamodel.graphql
 secret: ${env:PRISMA_SECRET}
 hooks:
