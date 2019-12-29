@@ -48,7 +48,7 @@ const AvatarMenu = (props: any) => {
   const handleClose = () => {
     setAnchorEl(null);
   };
-  const { me } = props.data;
+  const me = props.data && props.data.me;
   return (
     <>
       <Tooltip
