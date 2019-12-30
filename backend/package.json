@@ -6,7 +6,8 @@
   "scripts": {
     "start": "nodemon -e js,graphql -x node src/index.js",
     "dev": "nodemon -e js,graphql -x node --inspect src/index.js",
-    "deploy": "prisma deploy --env-file variables.env"
+    "deploy": "prisma deploy --env-file variables.env && npm run writeSchema",
+    "writeSchema": "node src/utils/writeSchema.js"
   },
   "author": "PJ",
   "license": "ISC",
@@ -19,6 +20,7 @@
     "dotenv": "^8.2.0",
     "graphql": "^14.5.8",
     "graphql-cli": "^3.0.14",
+    "graphql-import": "^0.7.1",
     "graphql-yoga": "^1.18.3",
     "jsonwebtoken": "^8.5.1",
     "nodemailer": "^6.4.1",

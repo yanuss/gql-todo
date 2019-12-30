@@ -1,5 +1,39 @@
 {
   "name": "gql-todo-backend",
   "builds": [{ "src": "src/index.js", "use": "@now/node-server" }],
-  "routes": [{ "src": "/.*", "dest": "src/index.js" }]
+  "routes": [{ "src": "/.*", "dest": "src/index.js" }],
+  "env": {
+    "FRONTEND_URL": "@frontend_url",
+    "FRONTEND_URL2": "@frontend_url2",
+    "FRONTEND_URL3": "@frontend_url3",
+    "PRISMA_ENDPOINT": "@prisma_endpoint",
+    "APP_SECRET": "@app_secret",
+    "PRISMA_SECRET": "@prisma_secret",
+    "PORT": "@port",
+    "MAIL_HOST": "@mail_host",
+    "MAIL_PORT": "@mail_port",
+    "MAIL_USER": "@mail_user",
+    "MAIL_PASS": "@mail_pass",
+    "CLOUDINARY_NAME": "@cloudinary_name",
+    "CLOUDINARY_API_KEY": "@cloudinary_api_key",
+    "CLOUDINARY_API_SECRET": "@cloudinary_api_secret"
+  },
+  "build": {
+    "env": {
+      "FRONTEND_URL": "@frontend_url",
+      "FRONTEND_URL2": "@frontend_url2",
+      "FRONTEND_URL3": "@frontend_url3",
+      "PRISMA_ENDPOINT": "@prisma_endpoint",
+      "APP_SECRET": "@app_secret",
+      "PRISMA_SECRET": "@prisma_secret",
+      "PORT": "@port",
+      "MAIL_HOST": "@mail_host",
+      "MAIL_PORT": "@mail_port",
+      "MAIL_USER": "@mail_user",
+      "MAIL_PASS": "@mail_pass",
+      "CLOUDINARY_NAME": "@cloudinary_name",
+      "CLOUDINARY_API_KEY": "@cloudinary_api_key",
+      "CLOUDINARY_API_SECRET": "@cloudinary_api_secret"
+    }
+  }
 }

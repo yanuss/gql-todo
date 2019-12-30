@@ -1,3 +1,4 @@
+import React from "react";
 import App from "next/app";
 import Page from "../components/Page/Page";
 import { ApolloProvider } from "react-apollo";
