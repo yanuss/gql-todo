@@ -126,7 +126,9 @@ const Profile = () => {
   });
 
   useEffect(() => {
-    setImage(user.me.image);
+    if (user.me.image) {
+      setImage(user.me.image);
+    }
     setSuccess(false);
     setFailed(false);
   }, [user.me]);
@@ -167,13 +169,14 @@ const Profile = () => {
         }
       );
       if (res) {
-        const file: any = res.json();
+        const file: any = await res.json();
         setImage(file.secure_url);
         setImageLoad(false);
       }
     } catch (err) {
       console.log(err);
     }
+    setImageLoad(false);
   };
 
   const onSubmit = (data: FormData) => {
@@ -202,7 +205,6 @@ const Profile = () => {
     [classes.buttonSuccess]: success,
     [classes.buttonFailed]: failed
   });
-
   return (
     <div className={classes.root}>
       <form
@@ -210,14 +212,16 @@ const Profile = () => {
         onSubmit={handleSubmit(onSubmit)}
         noValidate
       >
-        <ImageInput
-          image={image}
-          loading={imgLoad}
-          onDelete={() => setImage("")}
-          onClick={uploadFile}
-          circle
-          // avatar
-        />
+        <div>
+          <ImageInput
+            image={image}
+            loading={imgLoad}
+            onDelete={() => setImage("")}
+            onClick={uploadFile}
+            circle
+            // avatar
+          />
+        </div>
         <TextField
           label="Name"
           name="name"

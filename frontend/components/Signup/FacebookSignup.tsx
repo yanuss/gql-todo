@@ -130,6 +130,7 @@ const FacebookSignup: React.FC<Props> = props => {
         fields="name,email,picture"
         callback={responseFacebook}
         icon="fa-facebook"
+        isMobile={false}
         render={renderProps => (
           <Button
             variant="contained"

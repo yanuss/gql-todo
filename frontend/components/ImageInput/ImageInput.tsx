@@ -12,6 +12,7 @@ const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
       position: "relative",
+      // width: "auto"
       width: props => (props.size ? props.size : 128) + 16 + "px"
     },
     button: {

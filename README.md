@@ -1,17 +1,5 @@
 # gql-todo
 
-## STACK
-### Frontend:
-  * React
-  * Apollo Client
-### Backend:
-  - GraphQL Yoga
-  - Prisma
-
-
-### scripts
-
-```js
-yarn dev
-```
-to start frontend and backend
+preview:
+* https://gql-todo-frontend.now.sh/
+* https://gql-todo-frontend-prod.herokuapp.com/

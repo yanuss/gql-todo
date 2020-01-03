@@ -5,8 +5,9 @@ import Header from "../Header/Header";
 import { ThemeProvider } from "@material-ui/core/styles";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import { useDarkMode } from "../../lib/useDarkMode";
+import useWindowDimensions from "../../lib/useWindowDimensions";
 
-export const drawerWidth = 150;
+export const drawerWidth = 100;
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -32,6 +33,7 @@ const useStyles = makeStyles((theme: Theme) =>
 );
 
 const Page = (props: any) => {
+  const { width } = useWindowDimensions();
   const classes = useStyles();
   const { palette, togglePalette, theme } = useDarkMode();
   const [open, setOpen] = React.useState(false);
@@ -56,7 +58,7 @@ const Page = (props: any) => {
       <CssBaseline />
       <main
         className={clsx(classes.content, {
-          [classes.contentShift]: open
+          [classes.contentShift]: open && width && width > 500
         })}
       >
         {props.children}

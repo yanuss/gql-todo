@@ -2,7 +2,12 @@ import AppBar from "@material-ui/core/AppBar";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import { green } from "@material-ui/core/colors";
 import IconButton from "@material-ui/core/IconButton";
-import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
+import {
+  createStyles,
+  makeStyles,
+  Theme,
+  withStyles
+} from "@material-ui/core/styles";
 import Toolbar from "@material-ui/core/Toolbar";
 import Typography from "@material-ui/core/Typography";
 import MenuIcon from "@material-ui/icons/Menu";
@@ -12,7 +17,9 @@ import AvatarMenu from "../AvatarMenu/AvatarMenu";
 import { drawerWidth } from "../Page/Page";
 import SideMenu from "../SideMenu/SideMenu";
 import ToggleDarkModeButton from "../ToggleDarkModeButton/ToggleDakrModeButton";
-import User, { useUser } from "../User/User";
+import User from "../User/User";
+import SwipeDrawer from "../SwipeDrawer/SwipeDrawer";
+import useWindowDimensions from "../../lib/useWindowDimensions";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -53,16 +60,22 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 );
 
+const ColorCircularProgress = withStyles({
+  root: {
+    color: green[500]
+  }
+})(CircularProgress);
+
 const Nav = (props: any) => {
+  const { width } = useWindowDimensions();
   const classes = useStyles();
-  const { data } = useUser();
 
   return (
     <div className={classes.nav}>
       <AppBar
         position="static"
         className={clsx(classes.appBar, {
-          [classes.appBarShift]: props.open
+          [classes.appBarShift]: props.open && width && width > 500
         })}
       >
         <Toolbar>
@@ -76,13 +89,13 @@ const Nav = (props: any) => {
             <MenuIcon />
           </IconButton>
           <Typography variant="h6" className={classes.title}>
-            ToDo list
+            Todo list
           </Typography>
           <div className={classes.sideContainer}>
             <ToggleDarkModeButton togglePalette={props.togglePalette} />
             <User>
               {(data?: object, loading?: boolean) => {
-                if (loading) return <CircularProgress size={34} />;
+                if (loading) return <ColorCircularProgress size={34} />;
                 return (
                   <AvatarMenu data={data} togglePalette={props.togglePalette} />
                 );
@@ -91,7 +104,11 @@ const Nav = (props: any) => {
           </div>
         </Toolbar>
       </AppBar>
-      <SideMenu {...props} />
+      {width && width > 500 ? (
+        <SideMenu {...props} />
+      ) : (
+        <SwipeDrawer {...props} />
+      )}
     </div>
   );
 };

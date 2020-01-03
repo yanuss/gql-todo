@@ -61,11 +61,7 @@ const AvatarMenu = (props: any) => {
           src={(me && me.image) || ""}
           aria-controls="menu"
           aria-haspopup="true"
-          onClick={e => {
-            if (me) {
-              handleClick(e);
-            }
-          }}
+          onClick={handleClick}
           size="medium"
         >
           {!me && <AccountCircleIcon />}

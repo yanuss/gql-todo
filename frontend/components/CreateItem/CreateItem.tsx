@@ -70,7 +70,8 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     form: {
       // margin: theme.spacing(2),s
-      width: 400,
+      width: "100%",
+      maxWidth: 400,
       "& > *": {
         display: "block"
       }
@@ -160,19 +161,26 @@ const CreateItem: React.FunctionComponent<Props> = ({
     const data = new FormData();
     data.append("file", files[0]);
     data.append("upload_preset", "gql-todo");
-    const res = await fetch(
-      "https://api.cloudinary.com/v1_1/yanus/image/upload",
-      {
-        method: "POST",
-        body: data
+    try {
+      const res = await fetch(
+        "https://api.cloudinary.com/v1_1/yanus/image/upload",
+        {
+          method: "POST",
+          body: data
+        }
+      );
+      if (res) {
+        const file = await res.json();
+        setInputs({
+          ...inputs,
+          image: file.secure_url,
+          large_image: file.eager[0].secure_url
+        });
       }
-    );
-    const file = await res.json();
-    setInputs({
-      ...inputs,
-      image: file.secure_url,
-      large_image: file.eager[0].secure_url
-    });
+    } catch (err) {
+      console.log(err);
+    }
+
     setImageLoad(false);
   };
 
@@ -259,7 +267,8 @@ const CreateItem: React.FunctionComponent<Props> = ({
             style={{
               display: "flex",
               justifyContent: "space-between",
-              alignItems: "flex-end"
+              alignItems: "flex-end",
+              flexWrap: "wrap"
             }}
           >
             <MuiPickersUtilsProvider utils={DateFnsUtils}>

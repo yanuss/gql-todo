@@ -30,8 +30,8 @@ const useStyles = makeStyles((theme: Theme) =>
       alignItems: "center",
       justifyContent: "center",
       flexDirection: "column",
-      minWidth: "500px",
-      maxWidth: "80%"
+      maxWidth: "500px",
+      width: "100%"
       // "& > *": {
       //   margin: theme.spacing(1)
       // }
