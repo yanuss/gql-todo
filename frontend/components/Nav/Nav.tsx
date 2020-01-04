@@ -1,13 +1,6 @@
 import AppBar from "@material-ui/core/AppBar";
-import CircularProgress from "@material-ui/core/CircularProgress";
-import { green } from "@material-ui/core/colors";
 import IconButton from "@material-ui/core/IconButton";
-import {
-  createStyles,
-  makeStyles,
-  Theme,
-  withStyles
-} from "@material-ui/core/styles";
+import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
 import Toolbar from "@material-ui/core/Toolbar";
 import Typography from "@material-ui/core/Typography";
 import MenuIcon from "@material-ui/icons/Menu";
@@ -17,7 +10,6 @@ import AvatarMenu from "../AvatarMenu/AvatarMenu";
 import { drawerWidth } from "../Page/Page";
 import SideMenu from "../SideMenu/SideMenu";
 import ToggleDarkModeButton from "../ToggleDarkModeButton/ToggleDakrModeButton";
-import User from "../User/User";
 import SwipeDrawer from "../SwipeDrawer/SwipeDrawer";
 import useWindowDimensions from "../../lib/useWindowDimensions";
 
@@ -53,18 +45,9 @@ const useStyles = makeStyles((theme: Theme) =>
       "& > *": {
         marginLeft: theme.spacing(2)
       }
-    },
-    loader: {
-      color: green[500]
     }
   })
 );
-
-const ColorCircularProgress = withStyles({
-  root: {
-    color: green[500]
-  }
-})(CircularProgress);
 
 const Nav = (props: any) => {
   const { width } = useWindowDimensions();
@@ -93,14 +76,7 @@ const Nav = (props: any) => {
           </Typography>
           <div className={classes.sideContainer}>
             <ToggleDarkModeButton togglePalette={props.togglePalette} />
-            <User>
-              {(data?: object, loading?: boolean) => {
-                if (loading) return <ColorCircularProgress size={34} />;
-                return (
-                  <AvatarMenu data={data} togglePalette={props.togglePalette} />
-                );
-              }}
-            </User>
+            <AvatarMenu togglePalette={props.togglePalette} />
           </div>
         </Toolbar>
       </AppBar>

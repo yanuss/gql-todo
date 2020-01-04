@@ -78,7 +78,7 @@ const useStyles = makeStyles((theme: Theme) =>
     dividerText: {
       position: "absolute",
       top: "-12px",
-      left: "50%",
+      left: "calc(50% - 28px)",
       background: theme.palette.background.default,
       paddingLeft: theme.spacing(2),
       paddingRight: theme.spacing(2),

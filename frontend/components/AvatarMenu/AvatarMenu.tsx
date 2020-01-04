@@ -1,5 +1,7 @@
 // @ts-nocheck
 import Avatar from "@material-ui/core/Avatar";
+import CircularProgress from "@material-ui/core/CircularProgress";
+import { green } from "@material-ui/core/colors";
 import ButtonBase from "@material-ui/core/ButtonBase";
 import Divider from "@material-ui/core/Divider";
 import Fade from "@material-ui/core/Fade";
@@ -14,6 +16,7 @@ import PowerSettingsNewIcon from "@material-ui/icons/PowerSettingsNew";
 import Router from "next/router";
 import React from "react";
 import { useSignout } from "../Signout/Singout";
+import { useUser } from "../User/User";
 // import { ButtonBaseProps } from "@material-ui/core/ButtonBase";
 // import Icon from "@material-ui/core/Icon";
 // import Fab from "@material-ui/core/Fab";
@@ -28,11 +31,24 @@ const useStyles = makeStyles((theme: Theme) =>
       fontSize: theme.typography.fontSize - 2,
       marginLeft: theme.spacing(1.5)
     },
-    avatar: {}
+    avatar: {},
+    wrapper: {
+      margin: theme.spacing(1),
+      position: "relative"
+    },
+    loader: {
+      color: green[500],
+      position: "absolute",
+      top: "50%",
+      left: "50%",
+      marginTop: -23,
+      marginLeft: -23
+    }
   })
 );
 
 const AvatarMenu = (props: any) => {
+  const { data, loading } = useUser();
   const classes = useStyles(props);
   const { signout } = useSignout();
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
@@ -48,25 +64,35 @@ const AvatarMenu = (props: any) => {
   const handleClose = () => {
     setAnchorEl(null);
   };
-  const me = props.data && props.data.me;
+
+  const me = data && data.me;
   return (
     <>
-      <Tooltip
-        title={me ? "Open menu" : "You are not logged in"}
-        aria-label="menu"
-      >
-        <ButtonBase
-          component={Avatar}
-          alt={(me && me.name) || ""}
-          src={(me && me.image) || ""}
-          aria-controls="menu"
-          aria-haspopup="true"
-          onClick={handleClick}
-          size="medium"
+      <div className={classes.wrapper}>
+        <Tooltip
+          title={me ? "Open menu" : "You are not logged in"}
+          aria-label="menu"
         >
-          {!me && <AccountCircleIcon />}
-        </ButtonBase>
-      </Tooltip>
+          <ButtonBase
+            component={Avatar}
+            alt={(me && me.name) || ""}
+            src={(me && me.image) || ""}
+            aria-controls="menu"
+            aria-haspopup="true"
+            onClick={handleClick}
+            size="medium"
+          >
+            {!me && <AccountCircleIcon />}
+          </ButtonBase>
+        </Tooltip>
+        {loading && (
+          <CircularProgress
+            size={46}
+            thickness={5}
+            className={classes.loader}
+          />
+        )}
+      </div>
       {me && (
         <Menu
           anchorEl={anchorEl}
