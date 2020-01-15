@@ -40,7 +40,7 @@
     "build": "next build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "heroku-postbuild": "next build --env.HOST=heroku"
+    "heroku-postbuild": "HOST=heroku next build"
   },
   "eslintConfig": {
     "extends": "react-app"
