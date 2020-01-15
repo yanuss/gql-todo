@@ -8,7 +8,7 @@ import FacebookIcon from "@material-ui/icons/Facebook";
 import gql from "graphql-tag";
 import React from "react";
 import FacebookLogin from "react-facebook-login/dist/facebook-login-render-props";
-import { fbAppId } from "../../config";
+import { fbAppId, fbAppIdSec } from "../../config";
 import { GET_TODOS } from "../Items/Items";
 import { CURRENT_USER_QUERY } from "../User/User";
 
@@ -123,10 +123,11 @@ const FacebookSignup: React.FC<Props> = props => {
       }
     }
   };
+
   return (
     <>
       <FacebookLogin
-        appId={fbAppId}
+        appId={process.env.HOST === "heroku" ? fbAppIdSec : fbAppId}
         fields="name,email,picture"
         callback={responseFacebook}
         icon="fa-facebook"

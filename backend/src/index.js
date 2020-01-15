@@ -7,6 +7,20 @@ require("dotenv").config({ path: "variables.env" });
 const server = createServer();
 server.express.use(cookieParser());
 
+// server.express.use(async (req, res, next) => {
+//   const { serverAwake } = req.cookies;
+//   console.log(serverAwake);
+//   if (!serverAwake) {
+//     const maxAge = 1000 * 60 * 1; //30 * 1; // 30minn
+//     res.cookie("serverAwake", "true", {
+//       SameSite: "None",
+//       httpOnly: true,
+//       maxAge
+//     });
+//   }
+//   next();
+// });
+
 server.express.use(async (req, res, next) => {
   const { token } = req.cookies;
   if (token) {
