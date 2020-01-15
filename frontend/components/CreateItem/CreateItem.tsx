@@ -117,6 +117,14 @@ interface ItempImages {
   large_image: string | undefined;
 }
 
+interface Item {
+  id: string;
+}
+
+interface Data {
+  items: Item[];
+}
+
 const CreateItem: React.FunctionComponent<Props> = ({
   open,
   itemData,
@@ -191,10 +199,36 @@ const CreateItem: React.FunctionComponent<Props> = ({
         query: GET_TODOS
       }
     ],
-    onCompleted: data => {
+    optimisticResponse: {
+      __typename: "Mutation",
+      updateToDo: {
+        id: inputs.id,
+        __typename: "Item",
+        date: null,
+        ...inputs
+      }
+    },
+    onCompleted: () => {
       setInputs({ ...initialInputs });
-      handleClose();
     }
+    // update: (cache, { data }) => {
+    //   const existingTodos = cache.readQuery<Data>({
+    //     query: GET_TODOS
+    //   });
+    //   if (existingTodos) {
+    //     const updatedItems = existingTodos.items.map(item => {
+    //       if (item.id === data.updateTodo.id) {
+    //         return data.updateTodo;
+    //       } else {
+    //         return item;
+    //       }
+    //     });
+    //     cache.writeQuery({
+    //       query: GET_TODOS,
+    //       data: { items: updatedItems }
+    //     });
+    //   }
+    // }
   });
   const [createItem] = useMutation(ADD_TODO, {
     variables: { ...inputs },
@@ -203,9 +237,26 @@ const CreateItem: React.FunctionComponent<Props> = ({
         query: GET_TODOS
       }
     ],
-    onCompleted: data => {
+    // optimisticResponse: {
+    //   __typename: "Mutation",
+    //   createItem: {
+    //     id: Math.round(Math.random() * 10000),
+    //     date: null,
+    //     ...inputs,
+    //     __typename: "Item"
+    //   }
+    // },
+    update: (cache, { data }) => {
+      const getExistingTodos: any = cache.readQuery({ query: GET_TODOS });
+      const existingTodos = getExistingTodos ? getExistingTodos.items : [];
+      existingTodos.push(data && data.createItem);
+      cache.writeQuery({
+        query: GET_TODOS,
+        data: { items: existingTodos }
+      });
+    },
+    onCompleted: () => {
       setInputs({ ...initialInputs });
-      handleClose();
     }
   });
 
@@ -315,6 +366,7 @@ const CreateItem: React.FunctionComponent<Props> = ({
                 createItem();
               }
               deleteTempImages();
+              handleClose();
             }}
           >
             Save

@@ -5,6 +5,7 @@ import {
   Theme,
   createStyles
 } from "@material-ui/core/styles";
+import { useUser } from "../User/User";
 import Drawer from "@material-ui/core/Drawer";
 import Divider from "@material-ui/core/Divider";
 import List from "@material-ui/core/List";
@@ -45,9 +46,10 @@ const useStyles = makeStyles((theme: Theme) =>
 );
 
 const SideMenu = (props: any) => {
+  const { data } = useUser();
   const classes = useStyles();
   const theme = useTheme();
-
+  const me = data && data.me;
   return (
     <Drawer
       className={classes.drawer}
@@ -72,6 +74,22 @@ const SideMenu = (props: any) => {
         <Link href="/" passHref>
           <ListItem button component="a">
             <ListItemText primary={"Home"} />
+          </ListItem>
+        </Link>
+        {me && (
+          <>
+            <Divider />
+            <Link href="/profile" passHref>
+              <ListItem button component="a">
+                <ListItemText primary={"Profile"} />
+              </ListItem>
+            </Link>
+          </>
+        )}
+        <Divider />
+        <Link href="/about" passHref>
+          <ListItem button component="a">
+            <ListItemText primary={"About"} />
           </ListItem>
         </Link>
       </List>

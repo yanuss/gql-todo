@@ -90,9 +90,13 @@ const useStyles = makeStyles((theme: Theme) =>
 const schema = yup.object().shape({
   email: yup
     .string()
+    .max(20, "Input too long")
     .required("This field is required")
     .email("Please provide correct email"),
-  password: yup.string().required("This field is required")
+  password: yup
+    .string()
+    .max(20, "Input too long")
+    .required("This field is required")
 });
 
 interface Data {

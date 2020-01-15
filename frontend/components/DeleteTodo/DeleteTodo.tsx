@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { useMutation } from "@apollo/react-hooks";
 import gql from "graphql-tag";
 import DeleteForeverIcon from "@material-ui/icons/Delete";
@@ -56,7 +56,7 @@ const DeleteTodo: React.FC<{ id: string }> = ({ id }) => {
   const classes = useStyles();
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState(false);
-  const timer = React.useRef<number>();
+  // const timer = React.useRef<number>();
   const buttonClassname = clsx({
     [classes.buttonSuccess]: success,
     [classes.buttonError]: error

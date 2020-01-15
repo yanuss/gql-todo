@@ -116,10 +116,8 @@ const Item = ({ itemData, setModalData, handleShowModal }) => {
       <div className={classes.root}>
         <IconButton
           aria-label="check"
-          // className={classes.margin}
           onClick={() => {
             updateTodo({
-              //TODO: add optimistic update
               variables: {
                 id: itemData.id,
                 done: !itemData.done,
@@ -130,7 +128,34 @@ const Item = ({ itemData, setModalData, handleShowModal }) => {
                 {
                   query: GET_TODOS
                 }
-              ]
+              ],
+              optimisticResponse: {
+                __typename: "Mutation",
+                updateToDo: {
+                  id: itemData.id,
+                  __typename: "Item",
+                  date: null,
+                  ...itemData,
+                  done: !itemData.done
+                }
+              }
+              // update: (cache, { data }) => {
+              //   console.log(data.updateToDo.done);
+              //   const existingTodos: any = cache.readQuery({
+              //     query: GET_TODOS
+              //   });
+              //   const updatedList = [...existingTodos.items].map(item => {
+              //     if (item.id === data.updateToDo.id) {
+              //       return data.updateToDo;
+              //     } else {
+              //       return item;
+              //     }
+              //   });
+              //   cache.writeQuery({
+              //     query: GET_TODOS,
+              //     data: { items: updatedList }
+              //   });
+              // }
             });
           }}
         >

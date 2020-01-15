@@ -94,12 +94,19 @@ interface Data {
 }
 
 const schema = yup.object().shape({
-  name: yup.string().required("This field is required"),
+  name: yup
+    .string()
+    .max(20, "Input too long")
+    .required("This field is required"),
   email: yup
     .string()
+    .max(20, "Input too long")
     .required("This field is required")
     .email("Incorrect Email"),
-  password: yup.string().required("This field is required")
+  password: yup
+    .string()
+    .max(20, "Input too long")
+    .required("This field is required")
 });
 
 const Singup = () => {
