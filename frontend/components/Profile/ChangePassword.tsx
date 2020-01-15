@@ -74,10 +74,12 @@ const schema = yup.object().shape({
   password: yup
     .string()
     .min(4)
+    .max(20, "Input too long")
     .required("This field is required"),
   confirmPassword: yup
     .string()
     .min(4)
+    .max(20, "Input too long")
     .required("This field is required")
 });
 

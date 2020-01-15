@@ -8,7 +8,7 @@ import gql from "graphql-tag";
 import React, { useState } from "react";
 import CreateItem from "../CreateItem/CreateItem";
 import Item from "../Item/Item";
-import Spinner from "../Spinner/Spinner";
+import CircularProgress from "@material-ui/core/CircularProgress";
 
 export const GET_TODOS = gql`
   query GET_TODOS {
@@ -64,7 +64,7 @@ const Items: React.FC = () => {
   const { data, loading, error } = useQuery<Data>(GET_TODOS)!;
   const [showModal, handleShowModal] = useState(false);
   const [modalData, setModalData] = useState<Item>({ ...itemDefaults });
-  if (loading) return <Spinner />;
+  if (loading) return <CircularProgress />;
   if (error) return <p>error</p>;
   return (
     <div className={classes.root}>
