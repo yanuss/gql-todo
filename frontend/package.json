@@ -40,7 +40,7 @@
     "build": "DOMAIN=heroku next build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "heroku-postbuild": "next build"
+    "heroku-postbuild": "DOMAIN=heroku next build"
   },
   "eslintConfig": {
     "extends": "react-app"
