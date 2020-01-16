@@ -1,15 +1,18 @@
 import withApollo from "next-with-apollo";
 import ApolloClient from "apollo-boost";
-import { endpoint, prodEndpointNow, prodEndpointHeroku } from "../config";
+import {
+  endpoint,
+  prodEndpointNow,
+  prodEndpointHeroku,
+  prodEndpoint
+} from "../config";
 
 function createClient({ headers }: { headers?: any }) {
   return new ApolloClient({
-    uri:
-      process.env.NODE_ENV === "development"
-        ? endpoint
-        : process.env.DOMAIN === "heroku"
-        ? prodEndpointHeroku
-        : prodEndpointNow,
+    uri: process.env.NODE_ENV === "development" ? endpoint : prodEndpoint,
+    // process.env.DOMAIN === "heroku"
+    // ? prodEndpointHeroku
+    // : prodEndpointNow,
     request: operation => {
       operation.setContext({
         fetchOptions: {
