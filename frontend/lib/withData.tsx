@@ -8,7 +8,7 @@ function createClient({ headers }: { headers?: any }) {
       process.env.NODE_ENV === "development"
         ? endpoint
         : process.env.DOMAIN === "heroku"
-        ? prodEndpointHeroku
+        ? process.env.ENDPOINT_HEROKU
         : prodEndpointNow,
     request: operation => {
       operation.setContext({
