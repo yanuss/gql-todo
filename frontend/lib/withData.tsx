@@ -7,7 +7,7 @@ function createClient({ headers }: { headers?: any }) {
     uri:
       process.env.NODE_ENV === "development"
         ? endpoint
-        : process.env.PROVIDER === "heroku"
+        : process.env.DOMAIN === "heroku"
         ? prodEndpointHeroku
         : prodEndpointNow,
     request: operation => {
