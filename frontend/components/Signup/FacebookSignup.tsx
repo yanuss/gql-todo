@@ -83,7 +83,8 @@ const FacebookSignup: React.FC<Props> = props => {
         {
           query: GET_TODOS
         }
-      ]
+      ],
+      awaitRefetchQueries: true
     }
   );
   // const [facebookSigninWithToken, { data, loading, error }] = useMutation(

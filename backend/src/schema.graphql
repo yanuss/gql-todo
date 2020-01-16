@@ -56,6 +56,7 @@ type Mutation {
     password: String!
     confirmPassword: String!
   ): SuccessMessage
+  deleteUser: SuccessMessage
 }
 
 type Query {

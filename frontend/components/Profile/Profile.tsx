@@ -1,25 +1,24 @@
-import React, { useState, useEffect } from "react";
-import useForm from "react-hook-form";
-import * as yup from "yup";
-import gql from "graphql-tag";
 import { useMutation } from "@apollo/react-hooks";
-import TextField from "@material-ui/core/TextField";
-import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
-import InputAdornment from "@material-ui/core/InputAdornment";
+import InputAdornment from "@material-Pui/core/InputAdornment";
 import Button from "@material-ui/core/Button";
 import CircularProgress from "@material-ui/core/CircularProgress";
-import ImageInput from "../ImageInput/ImageInput";
-import PersonOutlinedIcon from "@material-ui/icons/PersonOutlined";
-import MailOutlineIcon from "@material-ui/icons/MailOutline";
-import Typography from "@material-ui/core/Typography";
-import { CURRENT_USER_QUERY } from "../User/User";
+import { green, red } from "@material-ui/core/colors";
 import Divider from "@material-ui/core/Divider";
-import { useUser } from "../User/User";
-import ChangePassword from "./ChangePassword";
-import { green } from "@material-ui/core/colors";
-import { red } from "@material-ui/core/colors";
+import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
+import TextField from "@material-ui/core/TextField";
+import Typography from "@material-ui/core/Typography";
+import MailOutlineIcon from "@material-ui/icons/MailOutline";
+import PersonOutlinedIcon from "@material-ui/icons/PersonOutlined";
 import clsx from "clsx";
+import gql from "graphql-tag";
+import React, { useEffect, useState } from "react";
+import useForm from "react-hook-form";
+import * as yup from "yup";
 import { DELETE_CLOUDINARY_IMAGE } from "../CreateItem/CreateItem";
+import ImageInput from "../ImageInput/ImageInput";
+import { CURRENT_USER_QUERY, useUser } from "../User/User";
+import ChangePassword from "./ChangePassword";
+import DeleteUser from "./DeleteUser";
 
 const UPDATE_USER_DETAILS = gql`
   mutation UPDATE_USER_DETAILS(
@@ -145,6 +144,7 @@ const Profile = () => {
           query: CURRENT_USER_QUERY
         }
       ],
+      awaitRefetchQueries: true,
       onCompleted: () => {
         setSuccess(true);
         deleteTempImages();
@@ -312,6 +312,7 @@ const Profile = () => {
       ) : (
         <ChangePassword showPasswordChange={setChangePassword} />
       )}
+      <DeleteUser userId={user.me.userId} />
     </div>
   );
 };

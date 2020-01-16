@@ -121,6 +121,7 @@ const Singup = () => {
         query: CURRENT_USER_QUERY
       }
     ],
+    awaitRefetchQueries: true,
     onCompleted: () => {
       reset();
     }

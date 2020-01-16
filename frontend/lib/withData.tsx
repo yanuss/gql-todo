@@ -1,18 +1,21 @@
 import withApollo from "next-with-apollo";
 import ApolloClient from "apollo-boost";
-import { endpoint, prodEndpoint } from "../config";
+import { endpoint, prodEndpointNow, prodEndpointHeroku } from "../config";
 
 function createClient({ headers }: { headers?: any }) {
   return new ApolloClient({
-    uri: process.env.NODE_ENV === "development" ? endpoint : prodEndpoint,
+    uri:
+      process.env.NODE_ENV === "development"
+        ? endpoint
+        : process.env.HOST === "heroku"
+        ? prodEndpointHeroku
+        : prodEndpointNow,
     request: operation => {
       operation.setContext({
         fetchOptions: {
           credentials: "include"
         },
-        headers: {
-          cookie: headers && headers.cookie
-        }
+        headers
       });
     },
     onError: ({ graphQLErrors, networkError }) => {

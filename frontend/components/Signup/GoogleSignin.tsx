@@ -64,7 +64,8 @@ const GoogleSignin: React.FC<Props> = props => {
       {
         query: GET_TODOS
       }
-    ]
+    ],
+    awaitRefetchQueries: true
   });
   const responseGoogle = <T extends { [key: string]: any }>(response: T) => {
     if (response) {

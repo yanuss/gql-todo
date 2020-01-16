@@ -120,6 +120,7 @@ const Singin = () => {
         query: GET_TODOS
       }
     ],
+    awaitRefetchQueries: true,
     onCompleted: () => {
       reset();
     }

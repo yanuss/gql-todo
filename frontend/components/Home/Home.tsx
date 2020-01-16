@@ -25,6 +25,7 @@ const Home = () => {
       }
     }
   }, [data, loading, serverAwake]);
+
   return (
     <>
       {loading && !serverAwake && !error && (

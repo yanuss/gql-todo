@@ -43,6 +43,14 @@ const useStyles = makeStyles((theme: Theme) =>
       left: "50%",
       marginTop: -23,
       marginLeft: -23
+    },
+    buttonProgress: {
+      color: green[500],
+      position: "absolute",
+      top: "50%",
+      left: "50%",
+      marginTop: -17,
+      marginLeft: -17
     }
   })
 );
@@ -50,7 +58,7 @@ const useStyles = makeStyles((theme: Theme) =>
 const AvatarMenu = (props: any) => {
   const { data, loading } = useUser();
   const classes = useStyles(props);
-  const { signout } = useSignout();
+  const { signout, loading: loadingSignout } = useSignout();
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
 
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
@@ -137,6 +145,9 @@ const AvatarMenu = (props: any) => {
               <PowerSettingsNewIcon fontSize="small" />
             </ListItemIcon>
             <Typography variant="inherit">Logout</Typography>
+            {loadingSignout && (
+              <CircularProgress size={34} className={classes.buttonProgress} />
+            )}
           </MenuItem>
         </Menu>
       )}

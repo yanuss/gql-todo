@@ -2,20 +2,21 @@ const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const { randomBytes } = require("crypto");
 const { promisify } = require("util");
-const { forwardTo } = require("prisma-binding");
 const { transport, makeANiceEmail } = require("../mail");
 const {
   createPrismaUserFromFacebook,
   getFacebookUser
 } = require("../utils/facebook");
-const {
-  deleteCloudinaryImage,
-  getPublicId,
-  deleteCloudinaryImageHandler
-} = require("../utils/cloudinary");
-const RError = require("../utils/errors");
+const { deleteCloudinaryImageHandler } = require("../utils/cloudinary");
 
 const maxAge = 1000 * 60 * 60 * 24 * 10; // 10 days
+
+const cookieOptions = {
+  sameSite: "Strict",
+  httpOnly: true,
+  // secure: true,
+  maxAge
+};
 
 const Mutation = {
   async createItem(parent, args, ctx, info) {
@@ -88,11 +89,7 @@ const Mutation = {
       info
     );
     const token = jwt.sign({ userId: user.id }, process.env.APP_SECRET);
-    ctx.response.cookie("token", token, {
-      SameSite: "None",
-      httpOnly: true,
-      maxAge
-    });
+    ctx.response.cookie("token", token, cookieOptions);
     return user;
   },
   async signin(parent, { email, password }, ctx, info) {
@@ -112,10 +109,7 @@ const Mutation = {
     // 3. generate the JWT Token
     const token = jwt.sign({ userId: user.id }, process.env.APP_SECRET);
     // 4. Set the cookie with the token
-    ctx.response.cookie("token", token, {
-      httpOnly: true,
-      maxAge
-    });
+    ctx.response.cookie("token", token, cookieOptions);
     // 5. Return the user
     return user;
   },
@@ -150,11 +144,7 @@ const Mutation = {
         );
       }
       const token = jwt.sign({ userId: user.id }, process.env.APP_SECRET);
-      ctx.response.cookie("token", token, {
-        SameSite: "None",
-        httpOnly: true,
-        maxAge
-      });
+      ctx.response.cookie("token", token, cookieOptions);
       return user;
     } catch (error) {
       throw new Error(error);
@@ -175,11 +165,7 @@ const Mutation = {
         user = await createPrismaUserFromFacebook(ctx, facebookUser);
       }
       const token = jwt.sign({ userId: user.id }, process.env.APP_SECRET);
-      ctx.response.cookie("token", token, {
-        SameSite: "None",
-        httpOnly: true,
-        maxAge
-      });
+      ctx.response.cookie("token", token, cookieOptions);
       return user;
     } catch (error) {
       throw new Error(error);
@@ -216,11 +202,7 @@ const Mutation = {
         );
       }
       const token = jwt.sign({ userId: user.id }, process.env.APP_SECRET);
-      ctx.response.cookie("token", token, {
-        SameSite: "None",
-        httpOnly: true,
-        maxAge
-      });
+      ctx.response.cookie("token", token, cookieOptions);
       return user;
     } catch (error) {
       throw new Error(error);
@@ -286,10 +268,7 @@ const Mutation = {
     // 6. Generate JWT
     const token = jwt.sign({ userId: updatedUser.id }, process.env.APP_SECRET);
     // 7. Set the JWT cookie
-    ctx.response.cookie("token", token, {
-      httpOnly: true,
-      maxAge
-    });
+    ctx.response.cookie("token", token, cookieOptions);
     // 8. return the new user
     return updatedUser;
   },
@@ -317,11 +296,7 @@ const Mutation = {
       }
     });
     const token = jwt.sign({ userId: user.id }, process.env.APP_SECRET);
-    ctx.response.cookie("token", token, {
-      SameSite: "None",
-      httpOnly: true,
-      maxAge
-    });
+    ctx.response.cookie("token", token, cookieOptions);
     return user;
   },
   async changeUserPassword(parent, args, ctx, info) {
@@ -343,6 +318,32 @@ const Mutation = {
       }
     });
     return { message: "password changed!" };
+  },
+  async deleteUser(parent, args, ctx, info) {
+    const { userId } = ctx.request;
+    if (!userId) {
+      throw new Error("You must be logged in");
+    }
+    //delete user
+    await ctx.db.mutation.deleteUser(
+      {
+        where: { id: userId }
+      },
+      info
+    );
+    // delete user items
+    await ctx.db.mutation.deleteManyItems(
+      {
+        where: {
+          user: {
+            id: userId
+          }
+        }
+      },
+      info
+    );
+    ctx.response.clearCookie("token");
+    return { message: "User account deleted!" };
   }
 };
 
