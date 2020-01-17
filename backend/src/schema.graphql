@@ -23,22 +23,27 @@ type Mutation {
     done: Boolean!
   ): Item!
   deleteItem(id: String!): Item
-  signup(email: String!, password: String!, name: String!, image: String): User!
-  signin(email: String!, password: String!): User!
+  signup(
+    email: String!
+    password: String!
+    name: String!
+    image: String
+  ): UserLogin!
+  signin(email: String!, password: String!): UserLogin!
   facebookSignin(
     email: String!
     name: String!
     facebookUserId: String!
     image: String
-  ): User!
-  facebookSigninWithToken(idToken: String!): User!
+  ): UserLogin!
+  facebookSigninWithToken(idToken: String!): UserLogin!
   googleSignin(
     email: String!
     name: String!
     googleUserId: String!
     image: String
-  ): User!
-  googleSigninWithToken(idToken: String!): User!
+  ): UserLogin!
+  googleSigninWithToken(idToken: String!): UserLogin!
   signout: SuccessMessage
   requestReset(email: String!): SuccessMessage
   resetPassword(
@@ -72,4 +77,10 @@ type User {
   image: String
   items: [Item]!
   permissions: [Permission!]!
+}
+
+## for header jwt auth
+type UserLogin {
+  user: User!
+  token: String!
 }

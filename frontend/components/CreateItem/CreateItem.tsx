@@ -1,21 +1,21 @@
-import React, { useState, useEffect } from "react";
-import gql from "graphql-tag";
 import { useMutation } from "@apollo/react-hooks";
-import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
-import TextField from "@material-ui/core/TextField";
-import Button from "@material-ui/core/Button";
 import DateFnsUtils from "@date-io/date-fns";
+import Button from "@material-ui/core/Button";
 import Dialog from "@material-ui/core/Dialog";
-import { GET_TODOS } from "../Items/Items";
-import ImageInput from "../ImageInput/ImageInput";
 import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
-
+import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
+import TextField from "@material-ui/core/TextField";
 import {
-  MuiPickersUtilsProvider,
-  KeyboardDatePicker
+  KeyboardDatePicker,
+  MuiPickersUtilsProvider
 } from "@material-ui/pickers";
+import "date-fns";
+import gql from "graphql-tag";
+import React, { useEffect, useState } from "react";
+import ImageInput from "../ImageInput/ImageInput";
 import { UPDATE_TODO } from "../Item/Item";
+import { GET_TODOS } from "../Items/Items";
 
 const ADD_TODO = gql`
   mutation ADD_TODO(
@@ -236,15 +236,15 @@ const CreateItem: React.FunctionComponent<Props> = ({
         query: GET_TODOS
       }
     ],
-    // optimisticResponse: {
-    //   __typename: "Mutation",
-    //   createItem: {
-    //     id: Math.round(Math.random() * 10000),
-    //     date: null,
-    //     ...inputs,
-    //     __typename: "Item"
-    //   }
-    // },
+    optimisticResponse: {
+      __typename: "Mutation",
+      createItem: {
+        __typename: "Item",
+        id: Math.round(Math.random() * 10000),
+        date: null,
+        ...inputs
+      }
+    },
     update: (cache, { data }) => {
       const getExistingTodos: any = cache.readQuery({ query: GET_TODOS });
       const existingTodos = getExistingTodos ? getExistingTodos.items : [];

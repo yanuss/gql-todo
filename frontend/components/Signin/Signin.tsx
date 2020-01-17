@@ -26,9 +26,12 @@ import { CURRENT_USER_QUERY } from "../User/User";
 const SIGNIN_MUTATION = gql`
   mutation SIGNIN_MUTATION($email: String!, $password: String!) {
     signin(email: $email, password: $password) {
-      id
-      email
-      name
+      user {
+        id
+        email
+        name
+      }
+      token
     }
   }
 `;
@@ -125,7 +128,10 @@ const Singin = () => {
       }
     ],
     awaitRefetchQueries: true,
-    onCompleted: () => {
+    onCompleted: data => {
+      const token = data.signin.token;
+      localStorage.setItem("token", token);
+      // console.log(token);
       reset();
     }
   });

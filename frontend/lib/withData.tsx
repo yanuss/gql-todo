@@ -14,11 +14,14 @@ function createClient({ headers }: { headers?: any }) {
     // ? prodEndpointHeroku
     // : prodEndpointNow,
     request: operation => {
+      const token =
+        typeof window !== "undefined" && window.localStorage.getItem("token");
       operation.setContext({
         fetchOptions: {
           credentials: "include"
         },
         headers: {
+          authorization: token ? `${token}` : "",
           cookie: headers && headers.cookie
         }
       });

@@ -52,7 +52,10 @@ const SignoutButton = () => {
     <Button
       variant="contained"
       color="primary"
-      onClick={(event: React.MouseEvent<HTMLElement>) => signout()}
+      onClick={(event: React.MouseEvent<HTMLElement>) => {
+        window.localStorage.removeItem("token");
+        signout();
+      }}
     >
       Logout
       {loading && (

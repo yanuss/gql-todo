@@ -12,7 +12,7 @@ const { deleteCloudinaryImageHandler } = require("../utils/cloudinary");
 const maxAge = 1000 * 60 * 60 * 24 * 10; // 10 days
 
 const cookieOptions = {
-  sameSite: "none",
+  // sameSite: "none",
   httpOnly: true,
   // secure: true,
   maxAge
@@ -86,7 +86,10 @@ const Mutation = {
     );
     const token = jwt.sign({ userId: user.id }, process.env.APP_SECRET);
     ctx.response.cookie("token", token, cookieOptions);
-    return user;
+    return {
+      user,
+      token
+    };
   },
   async signin(parent, { email, password }, ctx, info) {
     const user = await ctx.db.query.user({ where: { email } });
@@ -102,7 +105,10 @@ const Mutation = {
     }
     const token = jwt.sign({ userId: user.id }, process.env.APP_SECRET);
     ctx.response.cookie("token", token, cookieOptions);
-    return user;
+    return {
+      user,
+      token
+    };
   },
   async facebookSignin(parent, args, ctx, info) {
     args.email = args.email.toLowerCase();
@@ -135,7 +141,10 @@ const Mutation = {
       }
       const token = jwt.sign({ userId: user.id }, process.env.APP_SECRET);
       ctx.response.cookie("token", token, cookieOptions);
-      return user;
+      return {
+        user,
+        token
+      };
     } catch (error) {
       throw new Error(error);
     }
@@ -156,7 +165,10 @@ const Mutation = {
       }
       const token = jwt.sign({ userId: user.id }, process.env.APP_SECRET);
       ctx.response.cookie("token", token, cookieOptions);
-      return user;
+      return {
+        user,
+        token
+      };
     } catch (error) {
       throw new Error(error);
     }
@@ -193,7 +205,10 @@ const Mutation = {
       }
       const token = jwt.sign({ userId: user.id }, process.env.APP_SECRET);
       ctx.response.cookie("token", token, cookieOptions);
-      return user;
+      return {
+        user,
+        token
+      };
     } catch (error) {
       throw new Error(error);
     }
@@ -260,7 +275,10 @@ const Mutation = {
     // 7. Set the JWT cookie
     ctx.response.cookie("token", token, cookieOptions);
     // 8. return the new user
-    return updatedUser;
+    return {
+      user: updatedUser,
+      token
+    };
   },
   async deleteCloudinaryImage(parent, args, ctx, info) {
     if (args.image) {
@@ -287,7 +305,10 @@ const Mutation = {
     });
     const token = jwt.sign({ userId: user.id }, process.env.APP_SECRET);
     ctx.response.cookie("token", token, cookieOptions);
-    return user;
+    return {
+      user,
+      token
+    };
   },
   async changeUserPassword(parent, args, ctx, info) {
     const { userId } = ctx.request;

@@ -136,7 +136,12 @@ const AvatarMenu = (props: any) => {
             </div>
           </MenuItem>
           <Divider />
-          <MenuItem onClick={signout}>
+          <MenuItem
+            onClick={() => {
+              window.localStorage.removeItem("token");
+              signout();
+            }}
+          >
             <ListItemIcon>
               <PowerSettingsNewIcon fontSize="small" />
             </ListItemIcon>
