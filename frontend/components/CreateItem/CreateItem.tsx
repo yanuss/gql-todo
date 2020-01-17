@@ -69,7 +69,6 @@ const useStyles = makeStyles((theme: Theme) =>
       }
     },
     form: {
-      // margin: theme.spacing(2),s
       width: "100%",
       maxWidth: 400,
       "& > *": {

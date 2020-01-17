@@ -91,11 +91,6 @@ type ShowPassword2 = {
   [key: string]: boolean;
 };
 
-// interface ShowPassword {
-//   password: keyof typeof ShowPassword2;s
-//   confirmPassword: boolean;
-// }
-
 interface FormValues {
   password?: string;
   confirmPassword?: string;

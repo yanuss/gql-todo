@@ -65,8 +65,6 @@ const useStyles = makeStyles((theme: Theme) =>
       display: "flex",
       alignItems: "center",
       width: "100%",
-      // justifyContent: "center",
-      // flexDirection: "column",
       "&:after": {
         content: " ",
         position: "absolute",
@@ -91,8 +89,6 @@ const useStyles = makeStyles((theme: Theme) =>
       position: "relative",
       height: 44,
       padding: "6px"
-      // borderRadius: "10%"
-      // border: `2px solid ${theme.palette.primary.light}`
     },
     imageSrc: {
       backgroundSize: "cover",
@@ -100,7 +96,6 @@ const useStyles = makeStyles((theme: Theme) =>
       width: "38px",
       height: "38px",
 
-      // border: `1px solid ${theme.palette.text.primary}`,
       borderRadius: "10%"
     }
   })
@@ -108,7 +103,6 @@ const useStyles = makeStyles((theme: Theme) =>
 
 const Item = ({ itemData, setModalData, handleShowModal }) => {
   const [updateTodo, { data, loading, error }] = useMutation(UPDATE_TODO);
-  // const [showLargeI];
   const classes = useStyles(itemData);
 
   return (
@@ -168,8 +162,6 @@ const Item = ({ itemData, setModalData, handleShowModal }) => {
         <div className={clsx(classes.content, classes.done)}>
           <Typography variant="h6">{itemData.title}</Typography>
           <Typography variant="body1">{itemData.description}</Typography>
-          {/* <Box fontWeight="fontWeightBold">{itemData.title}</Box>
-          <Box>{itemData.description}</Box> */}
         </div>
         <ButtonBase focusRipple key={itemData.title} className={classes.image}>
           <span

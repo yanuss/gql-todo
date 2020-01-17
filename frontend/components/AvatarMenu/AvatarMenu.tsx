@@ -17,9 +17,6 @@ import Router from "next/router";
 import React from "react";
 import { useSignout } from "../Signout/Singout";
 import { useUser } from "../User/User";
-// import { ButtonBaseProps } from "@material-ui/core/ButtonBase";
-// import Icon from "@material-ui/core/Icon";
-// import Fab from "@material-ui/core/Fab";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({

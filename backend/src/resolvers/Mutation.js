@@ -68,10 +68,6 @@ const Mutation = {
     args.email = args.email.toLowerCase();
     const email = await ctx.db.query.user({ where: { email: args.email } });
     if (email) {
-      // throw new RError({
-      //   name: "email",
-      //   message: `User already exist ${email.email}`
-      // });
       throw new Error(`User already exists ${email.email}`);
     }
     if (!args.password) {
@@ -93,7 +89,6 @@ const Mutation = {
     return user;
   },
   async signin(parent, { email, password }, ctx, info) {
-    // 1. check if there is a user with that email
     const user = await ctx.db.query.user({ where: { email } });
     if (!user) {
       throw new Error(`No such user found for email ${email}`);
@@ -101,16 +96,12 @@ const Mutation = {
     if (!user.password && (user.facebookUserId || user.googleUserId)) {
       throw new Error("Incorrect username or password.");
     }
-    // // 2. Check if their password is correct
     const valid = await bcrypt.compare(password, user.password);
     if (!valid) {
       throw new Error("Invalid Password!");
     }
-    // 3. generate the JWT Token
     const token = jwt.sign({ userId: user.id }, process.env.APP_SECRET);
-    // 4. Set the cookie with the token
     ctx.response.cookie("token", token, cookieOptions);
-    // 5. Return the user
     return user;
   },
   async facebookSignin(parent, args, ctx, info) {
@@ -118,7 +109,6 @@ const Mutation = {
     const userWithEmail = await ctx.db.query.user({
       where: { email: args.email }
     });
-    // do not overwrite image if already exist
     if (userWithEmail && userWithEmail.image && args.image) {
       delete args.image;
     }

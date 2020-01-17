@@ -7,20 +7,6 @@ require("dotenv").config({ path: "variables.env" });
 const server = createServer();
 server.express.use(cookieParser());
 
-// server.express.use(async (req, res, next) => {
-//   const { serverAwake } = req.cookies;
-//   console.log(serverAwake);
-//   if (!serverAwake) {
-//     const maxAge = 1000 * 60 * 1; //30 * 1; // 30minn
-//     res.cookie("serverAwake", "true", {
-//       SameSite: "None",
-//       httpOnly: true,
-//       maxAge
-//     });
-//   }
-//   next();
-// });
-
 server.express.use(async (req, res, next) => {
   const { token } = req.cookies;
   if (token) {
@@ -30,9 +16,7 @@ server.express.use(async (req, res, next) => {
   next();
 });
 
-// 2. Create a middleware that populates the user on each request
 server.express.use(async (req, res, next) => {
-  // if they aren't logged in, skip this
   if (!req.userId) return next();
   const user = await db.query.user(
     { where: { id: req.userId } },

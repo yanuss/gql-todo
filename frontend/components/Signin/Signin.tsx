@@ -108,7 +108,6 @@ type Form = {
   email: string;
   password: string;
 };
-// : {email?: string, password?: string}
 const Singin = () => {
   const classes = useStyles();
   const { register, handleSubmit, reset, errors } = useForm<Form>({

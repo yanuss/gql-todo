@@ -32,9 +32,6 @@ const useStyles = makeStyles((theme: Theme) =>
       flexDirection: "column",
       maxWidth: "500px",
       width: "100%"
-      // "& > *": {
-      //   margin: theme.spacing(1)
-      // }
     },
     addItemBtn: {
       marginTop: theme.spacing(2)
