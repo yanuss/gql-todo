@@ -11,6 +11,7 @@ import FacebookLogin from "react-facebook-login/dist/facebook-login-render-props
 import { fbAppId, fbAppIdSec } from "../../config";
 import { GET_TODOS } from "../Items/Items";
 import { CURRENT_USER_QUERY } from "../User/User";
+import { setToken } from "../../lib/auth";
 
 const FACEBOOK_SIGNUP_MUTATION = gql`
   mutation FACEBOOK_SIGNUP_MUTATION(
@@ -25,9 +26,12 @@ const FACEBOOK_SIGNUP_MUTATION = gql`
       facebookUserId: $facebookUserId
       image: $image
     ) {
-      id
-      email
-      name
+      token
+      user {
+        id
+        email
+        name
+      }
     }
   }
 `;
@@ -84,7 +88,11 @@ const FacebookSignup: React.FC<Props> = props => {
           query: GET_TODOS
         }
       ],
-      awaitRefetchQueries: true
+      awaitRefetchQueries: true,
+      onCompleted: data => {
+        const token = data.facebookSignin.token;
+        setToken(token);
+      }
     }
   );
   // const [facebookSigninWithToken, { data, loading, error }] = useMutation(

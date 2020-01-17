@@ -8,6 +8,7 @@ import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
 import { googleAppId } from "../../config";
 import { GET_TODOS } from "../Items/Items";
 import { green } from "@material-ui/core/colors";
+import { setToken } from "../../lib/auth";
 
 const GOOGLE_SIGNIN_MUTATION = gql`
   mutation GOOGLE_SIGNIN_MUTATION(
@@ -22,9 +23,12 @@ const GOOGLE_SIGNIN_MUTATION = gql`
       googleUserId: $googleUserId
       image: $image
     ) {
-      id
-      email
-      name
+      token
+      user {
+        id
+        email
+        name
+      }
     }
   }
 `;
@@ -65,7 +69,12 @@ const GoogleSignin: React.FC<Props> = props => {
         query: GET_TODOS
       }
     ],
-    awaitRefetchQueries: true
+    awaitRefetchQueries: true,
+    onCompleted: data => {
+      console.log(data);
+      const token = data.googleSignin.token;
+      setToken(token);
+    }
   });
   const responseGoogle = <T extends { [key: string]: any }>(response: T) => {
     if (response) {

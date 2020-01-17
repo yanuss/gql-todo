@@ -21,6 +21,7 @@ import Divider from "@material-ui/core/Divider";
 import Typography from "@material-ui/core/Typography";
 import { useForm } from "react-hook-form";
 import * as yup from "yup";
+import { setToken } from "../../lib/auth";
 
 const SIGNNUP_MUTATION = gql`
   mutation SIGNNUP_MUTATION(
@@ -29,9 +30,12 @@ const SIGNNUP_MUTATION = gql`
     $password: String!
   ) {
     signup(name: $name, email: $email, password: $password) {
-      id
-      email
-      name
+      token
+      user {
+        id
+        email
+        name
+      }
     }
   }
 `;
@@ -128,7 +132,9 @@ const Singup = () => {
       }
     ],
     awaitRefetchQueries: true,
-    onCompleted: () => {
+    onCompleted: data => {
+      const token = data.signin.token;
+      setToken(token);
       reset();
     }
   });

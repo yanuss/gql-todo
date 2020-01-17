@@ -22,6 +22,7 @@ import { GET_TODOS } from "../Items/Items";
 import FacebookSignup from "../Signup/FacebookSignup";
 import GoogleSiginin from "../Signup/GoogleSignin";
 import { CURRENT_USER_QUERY } from "../User/User";
+import { setToken } from "../../lib/auth";
 
 const SIGNIN_MUTATION = gql`
   mutation SIGNIN_MUTATION($email: String!, $password: String!) {
@@ -130,8 +131,7 @@ const Singin = () => {
     awaitRefetchQueries: true,
     onCompleted: data => {
       const token = data.signin.token;
-      localStorage.setItem("token", token);
-      // console.log(token);
+      setToken(token);
       reset();
     }
   });
