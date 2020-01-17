@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import useForm from "react-hook-form";
+import { useForm } from "react-hook-form";
 import * as yup from "yup";
 import gql from "graphql-tag";
 import { useMutation } from "@apollo/react-hooks";
@@ -92,7 +92,7 @@ type ShowPassword2 = {
 };
 
 // interface ShowPassword {
-//   password: keyof typeof ShowPassword2;
+//   password: keyof typeof ShowPassword2;s
 //   confirmPassword: boolean;
 // }
 
@@ -101,6 +101,11 @@ interface FormValues {
   confirmPassword?: string;
 }
 
+type Form = {
+  password: string;
+  confirmPassword: string;
+};
+
 const ChangePassword: React.FC<Props> = props => {
   const classes = useStyles();
   const [success, setSuccess] = useState(false);
@@ -108,7 +113,7 @@ const ChangePassword: React.FC<Props> = props => {
     password: false,
     confirmPassword: false
   });
-  const { register, handleSubmit, reset, errors, watch } = useForm({
+  const { register, handleSubmit, reset, errors, watch } = useForm<Form>({
     validationSchema: schema
   });
   const [changePassword, { data, loading, error }] = useMutation(

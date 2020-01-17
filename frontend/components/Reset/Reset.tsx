@@ -13,7 +13,7 @@ import VisibilityOff from "@material-ui/icons/VisibilityOff";
 import clsx from "clsx";
 import gql from "graphql-tag";
 import React, { useState } from "react";
-import useForm from "react-hook-form";
+import { useForm } from "react-hook-form";
 import * as yup from "yup";
 import { CURRENT_USER_QUERY } from "../User/User";
 // import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
@@ -89,19 +89,6 @@ const schema = yup.object().shape({
   confirmPassword: yup.string().required()
 });
 
-interface State {
-  password: string;
-  confirmPassword: string;
-  showPassword: boolean;
-  showConfirmPassword: boolean;
-}
-const initialInputs = {
-  password: "",
-  confirmPassword: "",
-  showPassword: false,
-  showConfirmPassword: false
-};
-
 interface Props {
   resetToken: string;
 }
@@ -114,10 +101,15 @@ type ShowPassword = {
   [key: string]: boolean;
 };
 
+type Form = {
+  password: string;
+  confirmPassword: string;
+};
+
 const Reset: React.FC<Props> = props => {
   const classes = useStyles();
   const [success, setSuccess] = useState(false);
-  const { register, handleSubmit, errors, reset } = useForm({
+  const { register, handleSubmit, errors, reset } = useForm<Form>({
     validationSchema: schema
   });
   const [showPassword, setShowPassword] = useState<ShowPassword>({

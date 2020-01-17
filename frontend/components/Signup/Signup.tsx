@@ -19,7 +19,7 @@ import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
 import PersonOutlinedIcon from "@material-ui/icons/PersonOutlined";
 import Divider from "@material-ui/core/Divider";
 import Typography from "@material-ui/core/Typography";
-import useForm from "react-hook-form";
+import { useForm } from "react-hook-form";
 import * as yup from "yup";
 
 const SIGNNUP_MUTATION = gql`
@@ -109,9 +109,15 @@ const schema = yup.object().shape({
     .required("This field is required")
 });
 
+type Form = {
+  name: string;
+  email: string;
+  password: string;
+};
+
 const Singup = () => {
   const classes = useStyles();
-  const { register, handleSubmit, reset, errors } = useForm({
+  const { register, handleSubmit, reset, errors } = useForm<Form>({
     validationSchema: schema
   });
   const [showPassword, setShowPassword] = useState(false);

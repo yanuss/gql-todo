@@ -18,7 +18,9 @@ function createClient({ headers }: { headers?: any }) {
         fetchOptions: {
           credentials: "include"
         },
-        headers
+        headers: {
+          cookie: headers && headers.cookie
+        }
       });
     },
     onError: ({ graphQLErrors, networkError }) => {

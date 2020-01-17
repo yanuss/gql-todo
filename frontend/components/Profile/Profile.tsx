@@ -12,7 +12,7 @@ import PersonOutlinedIcon from "@material-ui/icons/PersonOutlined";
 import clsx from "clsx";
 import gql from "graphql-tag";
 import React, { useEffect, useState } from "react";
-import useForm from "react-hook-form";
+import { useForm } from "react-hook-form";
 import * as yup from "yup";
 import { DELETE_CLOUDINARY_IMAGE } from "../CreateItem/CreateItem";
 import ImageInput from "../ImageInput/ImageInput";
@@ -93,6 +93,11 @@ interface FormData {
   email?: string;
   image?: string;
 }
+type Form = {
+  name?: string;
+  email?: string;
+  image?: string;
+};
 
 interface Image {
   image: string;
@@ -120,7 +125,7 @@ const Profile = () => {
   const [imgLoad, setImageLoad] = useState(false);
   const [tempImages, setTempImages] = useState<Image[]>([]);
   const [deleteImage] = useMutation(DELETE_CLOUDINARY_IMAGE);
-  const { register, handleSubmit, errors, watch, reset } = useForm({
+  const { register, handleSubmit, errors, watch, reset } = useForm<Form>({
     validationSchema: schema,
     defaultValues: {
       name: user && user.me.name,

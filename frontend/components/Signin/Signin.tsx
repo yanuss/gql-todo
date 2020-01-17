@@ -16,7 +16,7 @@ import clsx from "clsx";
 import gql from "graphql-tag";
 import Link from "next/link";
 import React, { useState } from "react";
-import useForm from "react-hook-form";
+import { useForm } from "react-hook-form";
 import * as yup from "yup";
 import { GET_TODOS } from "../Items/Items";
 import FacebookSignup from "../Signup/FacebookSignup";
@@ -104,9 +104,14 @@ interface Data {
   password?: string;
 }
 
+type Form = {
+  email: string;
+  password: string;
+};
+// : {email?: string, password?: string}
 const Singin = () => {
   const classes = useStyles();
-  const { register, handleSubmit, reset, errors } = useForm({
+  const { register, handleSubmit, reset, errors } = useForm<Form>({
     validationSchema: schema
   });
   const [showPassword, setShowPassword] = useState(false);

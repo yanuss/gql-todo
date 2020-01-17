@@ -12,7 +12,7 @@ const { deleteCloudinaryImageHandler } = require("../utils/cloudinary");
 const maxAge = 1000 * 60 * 60 * 24 * 10; // 10 days
 
 const cookieOptions = {
-  sameSite: "Strict",
+  sameSite: "none",
   httpOnly: true,
   // secure: true,
   maxAge
