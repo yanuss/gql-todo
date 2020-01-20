@@ -74,7 +74,8 @@ const Mutation = {
       throw new Error(`Password not provided`);
     }
     const password = await bcrypt.hash(args.password, 10);
-    const user = await ctx.db.mutation.createUser(
+
+    await ctx.db.mutation.createUser(
       {
         data: {
           ...args,
@@ -82,12 +83,16 @@ const Mutation = {
           permissions: { set: ["USER"] }
         }
       },
-      info
+      info,
+      `{ id, permissions, email, name }`
     );
-    const token = jwt.sign({ userId: user.id }, process.env.APP_SECRET);
+
+    const usr = await ctx.db.query.user({ where: { email: args.email } });
+
+    const token = jwt.sign({ userId: usr.id }, process.env.APP_SECRET);
     ctx.response.cookie("token", token, cookieOptions);
     return {
-      user,
+      user: usr,
       token
     };
   },
@@ -129,7 +134,7 @@ const Mutation = {
         );
       }
       if (!user) {
-        user = await ctx.db.mutation.createUser(
+        await ctx.db.mutation.createUser(
           {
             data: {
               ...args,
@@ -138,6 +143,7 @@ const Mutation = {
           },
           info
         );
+        user = await ctx.db.query.user({ where: { email: args.email } });
       }
       const token = jwt.sign({ userId: user.id }, process.env.APP_SECRET);
       ctx.response.cookie("token", token, cookieOptions);
@@ -193,7 +199,7 @@ const Mutation = {
         );
       }
       if (!user) {
-        user = await ctx.db.mutation.createUser(
+        await ctx.db.mutation.createUser(
           {
             data: {
               ...args,
@@ -202,6 +208,7 @@ const Mutation = {
           },
           info
         );
+        user = await ctx.db.query.user({ where: { email: args.email } });
       }
       const token = jwt.sign({ userId: user.id }, process.env.APP_SECRET);
       ctx.response.cookie("token", token, cookieOptions);
@@ -335,13 +342,6 @@ const Mutation = {
     if (!userId) {
       throw new Error("You must be logged in");
     }
-    //delete user
-    await ctx.db.mutation.deleteUser(
-      {
-        where: { id: userId }
-      },
-      info
-    );
     // delete user items
     await ctx.db.mutation.deleteManyItems(
       {
@@ -353,6 +353,14 @@ const Mutation = {
       },
       info
     );
+    //delete user
+    await ctx.db.mutation.deleteUser(
+      {
+        where: { id: userId }
+      },
+      info
+    );
+
     ctx.response.clearCookie("token");
     return { message: "User account deleted!" };
   }

@@ -8,6 +8,7 @@ import React, { useState } from "react";
 import { GET_TODOS } from "../Items/Items";
 import { CURRENT_USER_QUERY } from "../User/User";
 import DeleteUserDialog from "./DeleteUserDialog";
+import { deleteToken } from "../../lib/auth";
 
 const DELETE_USER = gql`
   mutation DELETE_USER {
@@ -44,7 +45,11 @@ const DeleteUser = ({ userId }: { userId: string }) => {
       {
         query: GET_TODOS
       }
-    ]
+    ],
+    awaitRefetchQueries: true,
+    onCompleted: () => {
+      deleteToken();
+    }
   });
   return (
     <>

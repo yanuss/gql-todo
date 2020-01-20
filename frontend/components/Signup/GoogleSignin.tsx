@@ -71,7 +71,6 @@ const GoogleSignin: React.FC<Props> = props => {
     ],
     awaitRefetchQueries: true,
     onCompleted: data => {
-      console.log(data);
       const token = data.googleSignin.token;
       setToken(token);
     }

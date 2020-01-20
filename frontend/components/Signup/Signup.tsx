@@ -23,19 +23,17 @@ import { useForm } from "react-hook-form";
 import * as yup from "yup";
 import { setToken } from "../../lib/auth";
 
-const SIGNNUP_MUTATION = gql`
-  mutation SIGNNUP_MUTATION(
+const SIGNUP_MUTATION = gql`
+  mutation SIGNUP_MUTATION(
     $name: String!
     $email: String!
     $password: String!
   ) {
     signup(name: $name, email: $email, password: $password) {
-      token
       user {
         id
-        email
-        name
       }
+      token
     }
   }
 `;
@@ -125,7 +123,7 @@ const Singup = () => {
     validationSchema: schema
   });
   const [showPassword, setShowPassword] = useState(false);
-  const [signup, { loading, error }] = useMutation(SIGNNUP_MUTATION, {
+  const [signup, { loading, error }] = useMutation(SIGNUP_MUTATION, {
     refetchQueries: [
       {
         query: CURRENT_USER_QUERY
@@ -133,7 +131,7 @@ const Singup = () => {
     ],
     awaitRefetchQueries: true,
     onCompleted: data => {
-      const token = data.signin.token;
+      const token = data.signup.token;
       setToken(token);
       reset();
     }
